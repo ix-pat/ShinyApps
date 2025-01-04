@@ -1,0 +1,277 @@
+---
+title: Compito (con soluzioni)
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'sol.css' 
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("intro.R")
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r 2024-41}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 200,100,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Milano è stato rilevata la spesa annua per le vacanze (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2024-42}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14 su 103 (4.08 su 30))**  Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2024-43}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3 su 103 (0.87 su 30))** Quante famiglie spendono meno di 5 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+```{r 2024-44}
+F_print(x = 5,verso = "<")
+```
+:::  
+
+
+1.c **(Punti 2 su 103 (0.58 su 30))** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2 su 103 (0.58 su 30))** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia spendesse 2 mila euro in più all'anno, quanto varrebbero la media e la SD dei dati trasformati?
+
+
+### Esercizio 2
+2.a **(Punti 14 su 103 (4.08 su 30))**  Si lancia una moneta perfetta 4 volte. Sia $X$ la variabile casuale che conta il numero di Teste su 4 lanci. Calcolare la probabilità che $X\leq 2$.
+
+:::{.sol data-latex=""}
+```{r 2024-1,,results='asis'}
+bin_dis(x1 = 2,n = 4,pp = .5)
+```
+:::  
+
+2.b **(Punti 3 su 103 (0.87 su 30))** Sia lancia una seconda moneta perfetta 3 volte. Sia $Y$ la variabile casuale che conta il numero di Teste su 3 lanci. Calcolare la probabilità che $X+Y=3$.
+
+:::{.sol data-latex=""}
+Siccome $X+Y\sim\text{Binom(4+3,0.5)}$, allora
+```{r 2024-2,,results='asis'}
+bin_dis(x1 = 3,n = 7,pp = .5,sing = T,vnam = "X+Y")
+```
+:::  
+
+2.c **(Punti 2 su 103 (0.58 su 30))** Se $P(A)=0.4$ e $P(B)=0.8$, $A$ e $B$ possono essere incompatibili? Perché?
+
+:::{.sol data-latex=""}
+Se $A$ e $B$ fossero incompatibili, allora $A\cap B=\emptyset$ allora $P(A\cup B)=P(A)+P(B)$, ma essendo $0.4+0.8=1.2>1$ allora $A\cap B\neq\emptyset$
+:::
+
+2.d **(Punti 2 su 103 (0.58 su 30))** Cosa significa che la funzione di ripartizione è continua a destra?
+
+
+### Esercizio 3
+3.a **(Punti 14 su 103 (4.08 su 30))** Una catena di montaggio a ciclo continuo produce ogni giorno un numero di pezzi variabile, con una media pari a
+$\mu=1.3$ mila pezzi al giorno e una varianza di $\sigma^2=8.1$.
+
+Calcolare la probabilità che la media annuale ($n=365$) sia inferiore a 1.2 (mila) pezzi prodotti.
+
+:::{.sol data-latex=""}
+```{r 2023-69,,results='asis'}
+cat(tlc(tipo = "media",x1 = 1.2,verso = "<",mu = 1.3,s2 = 8.1,n = 365))
+```
+:::
+
+
+### Esercizio 4
+4.a **(Punti 3 su 103 (0.87 su 30))** Si consideri il modello normale $X\sim N(\mu,\sigma^2)$. Sia $\hat\mu$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\mu = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Estratti $n=25$ dati si è ottenuto $\sum_{i=1}^n x_i = 45$ e $\sum_{i=1}^n x_i^2 = 105$. Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \hat\mu  &=&\frac{45}{25}=`r 42/25`\\
+  \hat\sigma &=&\sqrt{\frac 1{25}105-`r 42/25`^2}=`r sqrt(105/25-(42/25)^2)`\\
+  S &=&\sqrt{\frac{n}{n-1}}\hat\sigma=`r sqrt(25/24)*sqrt(105/25-(42/25)^2)`\\
+  SE(\hat\mu) &=&  \frac{\sigma}{\sqrt{n}}\\
+  \widehat{SE(\hat\mu)} &=& \frac{S}{\sqrt{n}}\\
+  \widehat{SE(\hat\mu)} &=& \frac{`r sqrt(25/24)*sqrt(105/25-(42/25)^2)`}{\sqrt{25}}=`r sqrt(25/24)*sqrt(105/25-(42/25)^2)/5`\\
+\end{eqnarray*}
+:::
+4.b **(Punti 3 su 103 (0.87 su 30))** Sia $h$ uno stimatore per $\theta$, cosa significa che $h$ è consistente?
+
+4.c **(Punti 3 su 103 (0.87 su 30))** Definire la significatività e la potenza di un test.
+
+```{r 2024-110}
+tabella_aziendale <- matrix(c(30, 15, 20, 20, 25, 40, 45, 30, 35), nrow = 3, ncol = 3, byrow = TRUE)
+n_aziendale <- sum(tabella_aziendale)
+pval  <- format(chisq.test(t(tabella_aziendale))$p.value, digits = 4, nsmall = 4)
+```
+
+4.d **(Punti 3 su 103 (0.87 su 30))** Un responsabile delle risorse umane sta conducendo uno studio sull'associazione tra il tipo di formazione ricevuta e la performance lavorativa. Ha somministrato un questionario a `r n_aziendale` dipendenti, chiedendo loro di indicare la propria performance lavorativa (Alta, Media, Bassa) e il tipo di formazione ricevuta (Tecnica, Manageriale, Soft Skills). L'obiettivo è determinare se c'è un'associazione tra il tipo di formazione ricevuta e la performance lavorativa.
+
+```{r 2024-111}
+
+colnames(tabella_aziendale) <-  c("Alta", "Media", "Bassa")
+rownames(tabella_aziendale) <- c("Tecnica", "Manageriale", "Soft Skills")
+
+tabl(tabella_aziendale) %>%
+  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
+  pack_rows("Tipo di Formazione", 1, 3) %>%
+  add_header_above(c(" " = 1, "Performance Lavorativa" = 3))
+```
+
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra il livello di istruzione e il comportamento di voto, il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+
+### Esercizio 5
+```{r 2023-166}
+set.seed(12)
+n <- 50
+x <- runif(n,0,30)
+y <- abs(.5*x + rnorm(n,0,2+x*.1))
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia dell'investimento pubblicitario sono stati rilevati, per $n=50$ aziende si sono rilevati l'incremento di spesa in
+pubblicità ($X$) e l'incremento di utile ($Y$) nell'ultimo quinquennio. Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+5.a **(Punti 14 su 103 (4.08 su 30))** Stimare il modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-36,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+5.b **(Punti 3 su 103 (0.87 su 30))** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2023-37,,results='asis'}
+cat(R2())
+```
+:::
+
+5.c **(Punti 14 su 103 (4.08 su 30))** Testare l'ipotesi che l'intercetta sia uguale a zero contro l'alternativa che sia diversa da zero.
+
+
+:::{.sol data-latex=""}
+```{r 2023-38,,results='asis'}
+cat(ttest_beta(0,0,h1 = "\\neq",alpha = 0.05))
+```
+:::
+
+
+5.d **(Punti 2 su 103 (0.58 su 30))** Interpretare il diagramma dei residui.
+
+```{r 2023-39,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-40,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+5.e **(Punti 2 su 103 (0.58 su 30))** Perché una previsione per $x=15$ è più affidabile di una per $x=50$?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-167}
+
+source("intro.R")
+
+
+
+
+```
+
+

@@ -1,0 +1,125 @@
+# Definisci il server
+source("script.R")
+library(knitr)
+library(kableExtra)
+options(knitr.kable.NA = '')
+
+brk_def <- c(0,1.5,3,5,10)
+nnn_def <- c(10,25,12,5)
+
+server <- function(input, output, session) {
+  
+  observeEvent(input$submit_k, {
+    k <- as.integer(input$k_value)
+    
+    output$numeric_inputs <- renderUI({
+      lapply(1:(k+1), function(j) {
+        numericInput(
+          inputId = paste0("brk_", j), 
+          label = paste("brk[", j, "]:", sep = ""),
+          value = brk_def[j]
+        )
+      })
+    })
+    
+    output$integer_inputs <- renderUI({
+      lapply(1:k, function(j) {
+        numericInput(
+          inputId = paste0("nnn_", j),
+          label = paste("nnn[", j, "]:", sep = ""),
+          value = nnn_def[j],
+          min = 1
+        )
+      })
+    })
+  })
+  
+  output$range_slider <- renderUI({
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    if (length(brk_values) > 0 && all(!is.na(brk_values))) {
+      min_brk <- min(brk_values) - (max(brk_values)-min(brk_values))/10
+      max_brk <- max(brk_values) + (max(brk_values)-min(brk_values))/10
+      sliderInput("range", "Seleziona x1 e x2:", 
+                  min = min_brk, max = max_brk, 
+                  value = c(min_brk, max_brk),
+                  step = 0.01)
+    }
+  })
+
+
+  
+  checkOrder <- reactive({
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    all(diff(brk_values) > 0)
+  })
+  
+  samp_reactive <- reactive({
+    req(checkOrder())  # Assicurati che i valori siano in ordine crescente
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    nnn_values <- sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])
+    n <- sum(nnn_values)
+    
+    # Chiama la funzione genera_dati
+    genera_dati(brk = brk_values, nnn = nnn_values)
+  })
+  
+  output$error_message <- renderText({
+    req(input$submit_k)
+    if (!checkOrder()) {
+      "Errore: i valori brk devono essere in ordine crescente (brk[j] < brk[j+1])."
+    } else {
+      NULL
+    }
+  })
+  
+  output$values_output <- renderText({
+    req(input$submit_k)
+    req(checkOrder())
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    nnn_values <- sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])
+    paste("Valori brk in ordine crescente:", paste(brk_values, collapse = ", "),
+          "\nValori nnn:", paste(nnn_values, collapse = ", "))
+  })
+  output$dens <- renderPlot({
+    req(checkOrder())  # Assicurati che i valori siano in ordine crescente
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    nnn_values <- sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])
+#    req(input$range_slider)  # Assicurati che i valori dello slider siano stati selezionati
+    x <- input$range
+    dens(brk_values,nnn_values,x)
+  })
+  output$rip <- renderPlot({
+    req(checkOrder())  # Assicurati che i valori siano in ordine crescente
+    brk_values <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    nnn_values <- sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])
+#    req(input$range_slider)  # Assicurati che i valori dello slider siano stati selezionati
+    x <- input$range
+    rip(brk_values,nnn_values,x)
+  })
+  output$mon <- renderText({ 
+    paste("ver 1.0 Patrizio Frederic, 2024", "oggi è il", date())
+  })
+  output$tab2 <- renderTable({
+    # req(checkOrder())  # Assicurati che i valori siano in ordine crescente
+    brk <- isolate(unlist(sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])))
+    nnn <- isolate(unlist(sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])))
+    # req(samp_reactive())  # Assicurati che i dati siano disponibili
+    samp <- samp_reactive()
+    source(src_("stat-base.R"),local = T)
+    names(dat3)[1] <- "$[\\text{x}_j,$"
+    names(dat3)<- paste("$",names(dat3),"$",sep="")
+    names(dat3) <- names(dat2)
+    # kable(dat3[,c(1:7)],booktabs=T,escape = F,linesep="") %>%
+    #   kable_styling(full_width = F, latex_options = "HOLD_position")
+    dat3[,1:7]
+  }, sanitize.text.function = function(x) x)
+  
+  output$tab1 <- renderTable({  
+    brk <- sapply(1:(as.integer(input$k_value)+1), function(j) input[[paste0("brk_", j)]])
+    nnn <- sapply(1:as.integer(input$k_value), function(j) input[[paste0("nnn_", j)]])
+    #samp <- runif(10,brk[1],max(brk))
+    df_ <- data.frame(A = c("$$\\alpha+\\beta$$", 33.1, 6),B = c(111111, 3333333, 3123.233))  
+    names(df_) <- c("$$[\\text{x}_j,$$","$$\\text{x}_{j+1})$$")
+    df_  
+  }, sanitize.text.function = function(x) x)
+}

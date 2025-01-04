@@ -1,0 +1,340 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+# Basic settings
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- c(-10,-5,0,2,4,6)
+nnn <- c(10,70,120,40,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le frequenze cumulate.
+
+
+```{r}
+tabl(dat3[,c(1,2,7)])
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 106 (3.96 su 30)**) Disegnare l'istogramma delle densità percentuali.
+
+:::{.sol data-latex=""}
+```{r}
+tabl(dat3[,1:7])
+
+histp()
+axis(1,brk)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Quante aziende hanno un bilancio compreso tra il 25-esimo 
+percentile e 3.5 mila euro?
+
+:::{.sol data-latex=""}
+$$\#(x_{0.25}<X<0)=n(F(3.5)-0.25)=`r n`(`r F.int(3.5)`-0.25)=`r n*(F.int(3.5)-0.25)`$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+:::{.sol data-latex=""}
+$$\bar x<x_{0.5}<x_{Mo}$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Siano $x_1,...,x_n$, $n$ numeri. Si consideri la funzione:
+$$g(x)=(x_1-x)^2+...+(x_n-x)^2.$$
+Per quale valore di $x$, $g(x)$ è minima?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+`r i2 <- i2+1;item()` (**Punti 14 su 106 (3.96 su 30)**) Siano $X\sim N(10,1.5)$ e sia $Y\sim N(10,0.5)$, $X$ e $Y$ indipendenti. Posto $A=\{8<X<10\}$, $B=\{Y<11\}$. 
+Quanto vale $P(A\cup B)$? 
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+res1 <- norm_int(x1 = 8,x2 = 10,mm = 10,ss = 1.5,verso = NULL,vnam = "X",mu = "\\mu_X",sigma = "\\sigma_X")
+res2 <- norm_int(x1 = 11,x2 = 10,mm = 10,ss = 0.5,verso = "<",vnam = "Y",mu = "\\mu_Y",sigma = "\\sigma_Y")
+cat(res1)
+cat(res2)
+```
+
+\begin{eqnarray*}
+  P(A\cup B) &=&  `r .5-pnorm(8,10,sqrt(1.5))`+ `r pnorm(11,10,sqrt(0.5))`-`r (.5-pnorm(8,10,sqrt(1.5)))*pnorm(11,10,sqrt(0.5))`\\
+             &=&  `r .5-pnorm(8,10,sqrt(1.5)) +    pnorm(11,10,sqrt(0.5)) -   (.5-pnorm(8,10,sqrt(1.5)))*pnorm(11,10,sqrt(0.5))`\\
+\end{eqnarray*}
+:::
+
+
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Un'urna contiene due palline rosse, due bianche e una nera. Si estrae due volte senza reinserimento. Qual è la probabilità di avere due colori diversi?  
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \text{due colori diversi} &=& RB\cup BR \cup\\
+                            &&  RN\cup NR \cup\\
+                            &&  BN\cup NB\\
+  P(\text{due colori diversi}) &=& P(RB)+P(BR)+P(RN)+P(NR)+P(BN)+P(NB)\\
+  &=& \frac 25\frac 24+\frac 25\frac 24+\frac 25\frac 14+\frac 15\frac 24+\frac 25\frac 14+\frac 15\frac 24\\
+  &=& \frac{4+4+2+2+2+2}{20}\\
+  &=& `r 16/20`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Se $X\sim\text{Pois}(3.2)$ e $Y\sim\text{Pois}(1.2)$, $X$ e $Y$ indipendenti, quali sono valore atteso e varianza di $X+Y$ e di $X-Y$? 
+
+`r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Sia $X$ una VC e sia $F$ la sua funzione di ripartizione. Cosa significa dire che $F$ è continua a destra?
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+`r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Enunciare il teorema centrale del limite per la somma. 
+
+`r i2 <- i2+1;item()` (**Punti 14 su 106 (3.96 su 30)**) Il numero di incidenti giornalieri sul lavoro del comparto $A$ è distribuito come una
+Poisson di parametro $\lambda = 0.1$. In un anno $n=365$ quale è la probabilità che il numero totale di
+incidenti sia minore di 40?
+
+::: {.sol data-latex=""}
+$E(X_i)=0.1$, $V(X_i)=0.1$ e quindi
+```{r}
+x0 <- 40
+x2 <- 40
+mm <- 36.5
+ss <- 36.5
+vnam <- "S_n"
+cat(tlc(tipo = "somma",x1 = x0,mu = mm,s2 = ss,n = 365,verso = "<"))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Ricavare il $MSE$ (Mean Squared Error) di $\hat\mu$. 
+
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Si $h$ uno stimatore per $\theta$ tale che $E(h)\ne\theta$, ma che $\lim_{n\to\infty}E(h)=\theta$. Di quale proprietà gode $h$? 
+
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Quali sono gli errori di primo e secondo tipo? 
+
+`r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) In uno studio sull'efficacia degli integratori alimentari, a 120 atleti è stato somministrato un particolare integratore alimentare giornalmente e a 120 atleti è stato dato un placebo. Dopo 30 giorni di sperimentazione sono state eseguite prove fisiche che hanno restituito la performance degli atleti misurata in scala numerica. Gli atleti che hanno assunto l'integratore hanno ottenuto un risultato medio pari a $\hat\mu_\text{Integratore}=53.4$, mentre gli atleti che hanno assunto l'integratore hanno ottenuto un risultato medio pari a $\hat\mu_\text{Placebo}=50.8$.
+Sotto ipotesi di omogeneità è stato messo a test
+\[
+\begin{cases}
+H_0:\mu_\text{Integratore}=\mu_\text{Placebo}\\
+H_1:\mu_\text{Integratore}>\mu_\text{Placebo}
+\end{cases}
+\]
+il $p_\text{value}$ è risultato pari a $p_\text{value}=0.092$. Cosa possiamo concludere?
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+```{r}
+# Dati campionari
+# Dati campionari
+n1 <- 80
+n2 <- 80
+x2 <- 40
+x1 <- 48
+p0 <- 0.5
+alpha <- 0.01
+```
+
+(**Punti 12 su 106 (3.4 su 30)**) In uno studio clinico per valutare l'efficacia di un nuovo farmaco, sono stati selezionati `r n1+n2` pazienti con una particolare condizione medica. Tra questi, `r n1` sono stati trattati con un farmaco sperimentale e `r n2` col placebo. Tra i trattati, `r x1` pazienti hanno mostrato un miglioramento utilizzando il nuovo farmaco, mentre sono `r x2` quelli che hanno assunto il placebo e hanno mostrato miglioramenti. Testare al livello di significatività dell'un percento l'ipotesi che il farmaco sia maggiormente efficace rispetto al placebo.
+
+:::{.sol}
+```{r,results='asis'}
+cat(ztest_2c_pi(s1 = x1,s2 = x2,n1 = n1,n2 = n2,h1 = ">",alpha = alpha,a = "F",b = "P"))
+```
+:::
+
+(**Punti 2 su 106 (0.57 su 30)**) Calcolare e interpretare il $p_\text{value}$ del test precedente.
+
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+
+### Esercizio 6
+```{r}
+
+
+set.seed(34)
+n <- 15
+x <- sort(runif(n,0,10))
+
+eps <- rchisq(n,df = 1)
+y <- (x/10)^2*.7 +eps*.05
+
+x <- round(x,2)
+y <- round(y,2)
+
+RGX <- regr(x,y,ax = 2,semp = T)
+attach(RGX)
+```
+
+In uno studio sul risparmio gestito sono stati intervistati $n=`r n`$ individui 
+sui quali è stato rilevato il reddito mensile $X$ (in migliaia di euro), e il risparmio gestito $Y$ (in migliaia di euro). Il modello di regressione. Qui di seguito i dati e le statistiche di interesse:
+
+```{r}
+kable(prn[],format.args = list(big.mark = " "),digits = 4,booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  column_spec(1,background = "#E6E6E6",width = "3em")
+```
+
+
+  `r i2 <- i2+1;item()` (**Punti 14 su 106 (3.96 su 30)**) Stimare il modello di regressione dove il risparmio è funzione del reddito e quello in cui il reddito è funzione del risparmio.
+  
+::: {.sol data-latex=""}
+```{r,results='asis'}
+cat(calcolo_beta())
+cat(calcolo_beta(inv = T))
+```
+:::
+
+
+  `r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) I due modelli si adattano bene ai dati?
+
+::: {.sol data-latex=""}
+$$
+r^2=(`r r`)^2=`r r^2`>0.75
+$$
+
+Sì, i modelli si adattano bene
+:::
+
+  `r i2 <- i2+1;item()` (**Punti 3 su 106 (0.85 su 30)**) Discutere il diagramma dei residui del modello di regressione dove $Y$ viene spiegata da $X$.
+```{r}
+plot(x,ml$residuals,xlab="Reddito",ylab = "residui",type = "p",pch=16)
+abline(h=0,lty=2)
+
+```
+
+::: {.sol data-latex=""}
+C'è una non linearità evidente, l'assunto zero non è rispettato
+:::
+
+ `r i2 <- i2+1;item()` (**Punti 2 su 106 (0.57 su 30)**) Se ogni individuo risparmiasse 10€ in più al mese, quanto varrebbe $r$?
+ 
+::: {.sol data-latex=""}
+Se ogni individuo risparmiasse 10€ in più al mese allora
+$$
+W=Y+10
+$$
+e in virtù dell'invarianza del coefficiente di correlazione alle trasformazioni lineari otterremmo:
+$$
+r_{XW}=r_{XY}=`r r`
+$$
+:::

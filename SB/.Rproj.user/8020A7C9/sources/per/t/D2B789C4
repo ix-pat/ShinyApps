@@ -1,0 +1,26 @@
+{
+    "id": "D2B789C4",
+    "path": "~/Dropbox/Stat/App/SB/app.R",
+    "project_path": "app.R",
+    "type": "r_source",
+    "hash": "3586096192",
+    "contents": "",
+    "dirty": false,
+    "created": 1705392190816.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "9,8",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1705589894,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1705589894522,
+    "read_only": false,
+    "read_only_alternatives": []
+}

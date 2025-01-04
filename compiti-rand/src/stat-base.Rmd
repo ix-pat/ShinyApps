@@ -1,0 +1,30 @@
+```{r, echo=FALSE}
+K <- length(brk)
+dat2 <- data.frame(
+  xinf = brk[1:(K-1)],
+  xsup = brk[2:(K)],
+  nj   = as.data.frame(table(cut(samp,brk)))$Freq
+)
+
+
+dat2$fj <- (dat2$nj/sum(dat2$nj))
+dat2$bj <- (dat2$xsup-dat2$xinf)
+dat2$hj <- (dat2$fj/dat2$bj*100)
+dat2$Fj <- cumsum(dat2$fj)
+dat2$x  <- apply(dat2[,1:2],1,mean)
+dat2$x2 <- dat2$x^2
+dat2$xn <- dat2$x *dat2$nj
+dat2$x2n<- dat2$x2*dat2$nj
+dat3 <- dat2
+dat3 <- rbind(dat3,colSums(dat3))
+dat3[K,c(1:2,6:9)] <- NA
+
+names(dat3) <- c("($x_j$,","$x_{j+1}]$","$n_j$","$f_j$","$b_j$","$h_j$","$F_j$","$\\bar x_j$","$\\bar x_j^2$","$\\bar x_jn_j$","$\\bar x_j^2 n_j$")
+
+perc <- dat2$xinf[-1]
+sper <- ""
+for (i in 1:(K-2)) sper <- c(sper,paste("$x_{",dat2$Fj[i],"}=",perc[i],"$"))
+dgl <- sapply(dat2,is.integer)
+dg <- numeric(dim(dat2)[2]+1) + 2
+dg[3]<- 0
+```

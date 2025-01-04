@@ -1,0 +1,12 @@
+name: normale
+title: normale
+username: patrizio-frederic
+account: patrizio-frederic
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11018813
+bundleId: 8179677
+url: https://patrizio-frederic.shinyapps.io/normale/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

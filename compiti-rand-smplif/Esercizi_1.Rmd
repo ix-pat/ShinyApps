@@ -1,0 +1,2280 @@
+### Esercizio 1
+```{r 2021-40}
+set.seed(121)   # per ottenere sempre la stessa simulazione
+n <- 350      # ampiezza campionaria
+
+nomex <- "Utile"
+brk  <- c(-15,-5,0,8, 10)
+nnn <- c( 5,10,20, 10)
+samp <- genera_dati(brk = brk,nnn = nnn,n = n)
+k <- length(brk)-1
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ aziende è stato rilevato l'utile del 2020, espresso in centinaia di migliaia euro; 
+qui di seguito l'istogramma di densità percentuale.
+
+```{r 2021-41}
+histp(T)
+kable(dat3[1:(k),c(1:2,6)],booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato della mediana.
+
+::: {.sol data-latex=""}
+Per individuare il 75-esimo percentile dobbiamo:
+$$
+b_j=x_{j+1}-x_{j}
+$$
+le frequenze relative,
+$$
+f_j=h_j\cdot b_j,
+$$
+le cumulate
+$$
+F_j=f_1+...+f_j
+$$
+ricostruire la tabella 
+
+```{r 2021-1,, results='asis'}
+options(digits=4,nsmall=4)
+kable(dat3[,c(1,2,6,5,4,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+cat(percentile(p = 0.75))
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di imprese con utile negativo?
+
+::: {.sol data-latex=""}
+```{r 2021-2,,results='asis'}
+cat(F_print(0,verso=">"))
+```
+:::
+
+1.c **(Punti 2)** L'utile medio è pari a $\bar x=`r mean(samp)`$, e la sua standard deviation
+$\sigma_X=`r sc(samp)`$. Se l'utile $X$ viene trasformato in perdita $Y$,
+$$
+Y=-X,
+$$
+quanto valgono la media $\bar y$ e la deviazione standard $\sigma_Y$ di $Y$?.
+
+::: {.sol data-latex=""}
+$$
+\bar y=-\bar x=`r -mean(samp)`
+$$
+mentre
+$$
+\sigma_Y=\sigma_X=`r sc(samp)`
+$$
+:::
+
+### Esercizio 1
+```{r 2021-45}
+set.seed(120)   # per ottenere sempre la stessa simulazione
+n <- 300      # ampiezza campionaria
+nomex <- "Temperature"
+
+brk  <- c(-15,-5,0,5, 15)
+nnn  <- c( 5,10,10, 5)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Sono state registrate le temperature del comune $C$ per $n=200$ giorni. Qui di seguito l'istogramma di densità percentuale.
+
+```{r 2021-46}
+histp(axes = T)
+
+kbl((dat3[1:(k),c(1:2,6)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato del 25-esimo percentile.
+
+::: {.sol data-latex=""}
+Per individuare il 25-esimo percentile dobbiamo:
+$$
+b_j=x_{j+1}-x_{j}
+$$
+le frequenze relative,
+$$
+f_j=h_j\cdot b_j,
+$$
+le cumulate
+$$
+F_j=f_1+...+f_j
+$$
+ricostruire la tabella 
+
+```{r 2021-8,, results='asis'}
+options(digits=4,nsmall=4)
+kable(dat3[,c(1,2,6,5,4,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+cat(percentile(p = 0.25))
+```
+:::
+ 
+1.b **(Punti 3)** Analizzando l'istogramma, individuare il valore della media aritmetica e della mediana.
+
+
+::: {.sol data-latex=""}
+L'istogramma è perfettamente simmetrico
+$$
+\bar x\approx x_{0.5}\approx 0
+$$
+:::
+
+
+1.c **(Punti 2)** Qual è la percentuale di dati compresa tra il 25-esimo e il 75-esimo percentile?
+
+::: {.sol data-latex=""}
+Per definizione
+\begin{eqnarray*}
+\%(X\le x_{0.25})&=&25\%\\
+\%(X\le x_{0.75})&=&75\%, \qquad\text{e quindi}\\
+\%(x_{0.25}< X\le x_{0.75})&=&50\%
+\end{eqnarray*}
+:::
+
+### Esercizio 1
+```{r 2021-56}
+set.seed(121)   # per ottenere sempre la stessa simulazione
+n <- 350      # ampiezza campionaria
+nomex<- "Costo"
+brk  <- c(0,5,8,13, 20)
+nnn  <- c( 5,20,20, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ aziende è stato rilevato il costo in spese legali (espresso in migliaia di euro). Qui di seguito i dati in classi e le frequenze cumulate:
+```{r 2021-57}
+kable((dat3[1:(k),c(1:2,7)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+::: {.sol data-latex=""}
+La classe modale è per definizione la classe cui compete densità maggiore e dunque dobbiamo calcolare
+le frequenze relative,
+$$
+f_j=F_j-F_{j-1},
+$$
+calcolare l'ampiezza delle classi,
+$$
+b_j=x_{j+1}-x_{j}
+$$
+e la densità di frequenza percentuale
+$$
+d_j=\frac{f_j}{b_j}\times 100
+$$
+ricostruire la tabella 
+```{r 2021-58}
+kable(dat3[,c(1,2,7,4,5,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+e osservare che la classe $[5,8)$ è la classe modale perché è quella con densità maggiore.
+:::
+
+1.b **(Punti 3)** Calcolare la percentuale approssimata di aziende 
+con spese maggiori di 10 mila euro.
+
+::: {.sol data-latex=""}
+```{r 2021-13,,results='asis'}
+cat(F_print(10,">"))
+```
+:::
+
+1.c **(Punti 3)** Calcolare la percentuale approssimata di aziende 
+con spese maggiori di 10 mila euro.
+
+::: {.sol data-latex=""}
+La mediana $x_{0.5}$ è il minimante
+
+$$
+\sum_{i=1}^n|x_i-x_{0.5}|<\sum_{i=1}^n|x_i-x^*|, ~~\forall x^*\neq x_{0.5}
+$$
+:::
+
+### Esercizio 1
+Su un campione di $12$ famiglie della provincia $Q$ è stato rilevato il reddito mensile, qui di seguito i dati **non ordinati** espressi in migliaia di euro al mese.
+
+```{r 2021-62}
+par(cex=0.5)
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 12      # ampiezza campionaria
+nomex <- "Consumo"
+samp <- round(sample(c(runif(4,0,1),runif(4,1.01,4),runif(4,4.01,8),runif(4,8.01,20))),1)[1:12]
+
+brk <- c(0,1,4,8,20)
+n <- length(samp)
+
+c1 <- paste("$", 1:4 ,"$",sep="")
+c2 <- paste("$", 5:8,"$",sep="")
+c3 <- paste("$",9:12,"$",sep="")
+
+out <- data.frame(c1,s1=samp[1:4],c2,s2=samp[5:8],c3,s2=samp[9:12])
+
+names(samp) <- nomex
+#source("T1/stat-base.R")
+
+kable(out,col.names = c("$i$","$x_{i}$","$i$","$x_{i}$","$i$","$x_{i}$"),booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position") %>%
+  column_spec(c(1,3,5),background = "#E6E6E6",width = "3em")
+
+i25 <- ceiling(n*.25)
+x25 <- samp[i25]
+
+i50 <- ceiling(n*.50)
+x50 <- samp[i50]
+
+i75 <- ceiling(n*.75)
+x75 <- samp[i75]
+
+
+```
+
+1.a **(Punti 14)** Individuare il 25-esimo, 50-esimo e l'75-esimo percentile
+
+::: {.sol data-latex=""}
+Dobbiamo prima riordinare i dati
+```{r 2021-63}
+
+c1 <- paste("$(", 1:4 ,")$",sep="")
+c2 <- paste("$(", 5:8,")$",sep="")
+c3 <- paste("$(",9:12,")$",sep="")
+
+samp <- sort(samp)
+out <- data.frame(c1,s1=samp[1:4],c2,s2=samp[5:8],c3,s2=samp[9:12])
+
+kable(out,col.names = c("$i$","$x_{i}$","$i$","$x_{i}$","$i$","$x_{i}$"),booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position") %>%
+  column_spec(c(1,3,5),background = "#E6E6E6",width = "3em")
+
+i25 <- ceiling(n*.25)
+x25 <- samp[i25]
+
+i50 <- ceiling(n*.50)
+x50 <- samp[i50]
+
+i75 <- ceiling(n*.75)
+x75 <- samp[i75]
+
+x <- samp
+
+n <-12
+set.seed(1)   # per ottenere sempre la stessa simulazione
+nomex <- "Consumo"
+samp <- round(sample(c(runif(4,0,1),runif(4,1.01,4),runif(4,4.01,8),runif(4,8.01,20))),1)
+```
+
+e quindi
+
+\begin{eqnarray*}
+x_{0.25} &=& x_{(\lceil n\times0.25\rceil)}=x_{(`r i25`)}=`r x25`\\
+x_{0.50} &=& \frac{x_{(n/2)}+x_{(n/2+1)}}{2}=\frac{`r x[n/2]`+`r x[n/2+1]`}{2}
+=`r (x[n/2]+x[n/2+1])/2`\\
+x_{0.75} &=& x_{(\lceil n\times0.75\rceil)}=x_{(`r i75`)}=`r x75`
+\end{eqnarray*}
+:::
+
+1.b **(Punti 3)** La somma dei dati è `r sum(samp)`. Come dobbiamo aspettarci l'istogramma di densità?
+
+::: {.sol data-latex=""}
+La somma dei dati è `r sum(samp)` e quindi la media viene
+$$
+\bar x=\frac 1{12}`r sum(samp)`=`r sum(samp)/12`
+$$
+
+siccome $\bar x>x_{0.5}$ allora l'istogramma avrà una coda lunga a dx.
+:::
+
+1.c **(Punti 2)** Cosa significa che la media aritmetica gode della proprietà di linearità?
+
+### Esercizio 1
+```{r 2021-68}
+set.seed(12)   # per ottenere sempre la stessa simulazione
+n <- 350      # ampiezza campionaria
+
+brk  <- c(0,5,8,13, 20)/2
+nnn  <- c( 5,20,20, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+
+nomex <- "Spese per Metano"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ aziende è stato rilevato il costo annuo in gas metano (espresso in migliaia di euro). Qui di seguito l'istogramma di densità:
+
+```{r 2021-69}
+
+histp(axes = T)
+kable((dat3[1:(k),c(1:2,6)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato della mediana.
+
+::: {.sol data-latex=""}
+Per individuare la mediana dobbiamo costruire le basi:
+$$
+b_j=x_{j+1}-x_{j}
+$$
+le frequenze relative,
+$$
+f_j=h_j\cdot b_j,
+$$
+le cumulate
+$$
+F_j=f_1+...+f_j
+$$
+ricostruire la tabella 
+```{r 2021-70}
+kable(dat3[,c(1,2,6,5,4,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+e quindi:
+```{r 2021-24,,results='asis'}
+cat(percentile())
+```
+:::
+
+1.b **(Punti 3)** Che relazione dobbiamo aspettarci tra media e mediana?
+
+::: {.sol data-latex=""}
+L'istogramma presenta una coda lunga a sinistra e quindi
+$$
+\bar x > x_{0.5}
+$$
+:::
+
+1.c **(Punti 2)** La varianza dei dati è pari a $\sigma^2=`r s2c(samp)`$. Nell'ipotesi che i costi per metano aumentassero del 10%, quanto varrebbe la varianza?
+
+::: {.sol data-latex=""}
+Si tratta di una trasformazione lineare
+$$
+Y = 1.1\cdot X
+$$
+e quindi
+$$
+\sigma_Y^2=(1.1)^2\sigma_X^2=`r 1.1^2*s2c(samp)`.
+$$
+:::
+
+### Esercizio 1
+```{r 2021-77}
+set.seed(12)   # per ottenere sempre la stessa simulazione
+n <- 350      # ampiezza campionaria
+
+brk  <- c(0,5,8,13, 20)/2
+nnn  <- c( 5,20,20, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ aziende è stato rilevato il costo annuo in gas metano (espresso in migliaia di euro). Qui di seguito i dati e le frequenze percentuali
+
+```{r 2021-78}
+kable((dat3[1:(k),c(1:2,12)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Calcolare la colonna delle densità percentuali.
+
+::: {.sol data-latex=""}
+```{r 2021-79}
+kable((dat3[1:(k),c(1:6)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(T)
+```
+:::
+
+ 1.b **(Punti 3)** Calcolare il numero approssimato di aziende con consumo di gas inferiore al 25-esimo percentile $x_{0.25}$. 
+
+::: {.sol data-latex=""}
+Per definizione
+$$
+\%(X\le x_{0.25})=25\%
+$$
+$n=`r n`$ e quindi il 25% di `r n` è
+$$
+`r n`\times0.25=`r n*.25`
+$$
+:::
+
+1.c **(Punti 2)** È vero che la media aritmetica minimizza la somma dei valori assoluti degli scarti? Perché?
+
+::: {.sol data-latex=""}
+È la mediana che minimizza la somma dei valori assoluti degli scarti. Siccome media e mediana, in generale non coincidono allora no, la media non minimizza la somma dei valori assoluti degli scarti.
+:::
+
+### Esercizio 1
+```{r 2021-83}
+set.seed(12)   # per ottenere sempre la stessa simulazione
+n <- 155      # ampiezza campionaria
+nomex<- "Bilancio x 1000 euro"
+
+brk  <- c(-10,-5,0,3, 20)
+nnn  <- c( 10,110,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+
+Su un campione di $`r n`$ aziende è bilancio annuo (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze percentuali:
+```{r 2021-84}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+::: {.sol data-latex=""}
+```{r 2021-85}
+kable(dat3[,c(1:2,12,3:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+:::
+
+1.b **(Punti 3)** Quante aziende, approssimativamente, hanno un bilancio inferiore a 1.5?
+
+::: {.sol data-latex=""}
+```{r 2021-34,,results='asis'}
+histp(T)
+h.int(-10,1.5,density=20)
+axis(1,1.5,las=2,col.axis=2)
+cat(F_print(1.5))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana? 
+
+1.d **(Punti 2)** La varianza dei dati è pari a $\sigma^2=`r s2c(samp)`$. Nell'ipotesi che tutte le aziende aumentassero il loro bilancio di 10 mila ero, quanto varrebbe la varianza dei così trasformati?
+
+### Esercizio 1
+```{r 2022-5}
+set.seed(11)   # per ottenere sempre la stessa simulazione
+n <- 250      # ampiezza campionaria
+nomex <- "Spesa"
+
+brk  <- c(0,3, 5,10,20)
+nnn  <- c( 20,110,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Ferrara è stato rilevata la spesa in generi alimentari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+:::{.sol data-latex=""}
+```{r 2022-6}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+:::
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2022-7}
+kable(dat3[,c(1:2,12,3:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie hanno una spesa superiore al 75-esimo percentile?
+
+:::{.sol data-latex=""}
+$$\%(X>x_{0.75})=25\% , \rightarrow `r n`\times 0.25=`r n*.25` $$
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana?
+
+:::{.sol data-latex=""}
+$$
+\bar x > x_{0.5}
+$$
+:::
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia aumentasse la spesa di 0.5, quanto varrebbero la media e la SD dei dati?
+
+:::{.sol data-latex=""}
+Invariata
+:::
+
+### Esercizio 1
+```{r 2022-17a}
+
+
+set.seed(12)   # per ottenere sempre la stessa simulazione
+n <- 250      # ampiezza campionaria
+nomex <- "Spesa"
+
+brk  <- c(0,3, 5,10,20)
+nnn  <- c( 20,110,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Ferrara è stato rilevata la spesa in generi alimentari (espresso in migliaia di euro). Qui di seguito i dati raccolti in classe e le densità di frequenza percentuali
+
+```{r 2022-18}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r 2022-19}
+kable(dat3[,c(1:2,12,3:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+cat(percentile())
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie hanno una spesa inferiore al 25-esimo percentile?
+
+:::{.sol data-latex=""}
+$$
+`r n`\times 0.25=`r n*.25`
+$$
+:::
+
+1.c **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, che forma ci dobbiamo aspettare dell'istogramma di densità?
+
+1.d **(Punti 2)** La varianza della spesa è pari a $Var=`r var(samp)`$.
+Se ogni famiglia aumentasse la sua spesa del 5%, quanto varrebbe varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+$$`r 1.05^2*var(samp)`$$
+:::
+
+### Esercizio 1
+```{r 2022-28}
+
+
+set.seed(23)   # per ottenere sempre la stessa simulazione
+n <- 250      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- c(0,3, 5,10,20)
+nnn  <- c( 20,110,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Spesa"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Ferrara è stato rilevata la spesa in generi alimentari (espresso in migliaia di euro). Qui di seguito i dati raccolti in classe e le frequenze assolute
+
+```{r 2022-29}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+
+:::{.sol data-latex=""}
+```{r 2022-30}
+kable(dat3[,c(1:2,12,3:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+options(digits = 4)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di famiglie con spesa superiore al 25-esimo percentile?
+
+:::{.sol data-latex=""}
+$$n\cdot 0.75=`r 0.75*n`$$
+:::
+1.c **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, che forma ci dobbiamo aspettare dell'istogramma di densità?
+
+1.d **(Punti 2)** La varianza della spesa è pari a $Var=`r var(samp)`$.
+Se ogni famiglia aumentasse la sua spesa del 10%, quanto varrebbe _standard deviation_ dei dati così trasformati?
+
+:::{.sol data-latex=""}
+$$\sigma_{new}=\sqrt{1.1^2\times \sigma^2}=`r sqrt(1.1*var(samp)) `$$
+:::
+
+### Esercizio 1
+```{r 2022-39}
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+nomex <- "Spesa in investimenti Green"
+
+brk  <- sort(20-c(0,3, 5,13,20))
+nnn  <- rev(c( 20,110,120, 50))
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese energivore della provincia di Bologna è stato 
+rilevata la spesa in investimenti green, espressa in migliaia di euro. Qui di seguito i dati raccolti in classi
+e le frequenze percentuali.
+
+
+```{r 2022-40}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r 2022-41}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+pmod <- which(dat2$hj==max(dat2$hj))
+cmod <- paste("[",dat2$xinf[pmod],",",dat2$xsup[pmod],")")
+hj <- dat2$hj
+```
+la classe modale è la classe $3$ essendo la classe con densità $h_{`r pmod`}=`r hj[pmod]`$ maggiore.
+:::
+
+
+1.b **(Punti 3)** Quante imprese hanno una spesa compresa tra 15 mila euro e il 75-esimo percentile?
+
+:::{.sol data-latex=""}
+
+\begin{eqnarray*}
+F(15)&=&`r F.int(15)`\\
+F(x_{0.75})&=&.75\\
+\%(15<X<x_{0.75})&=&`r .75-F.int(15)`\\
+n(15<X<x_{0.75})&=&`r (.75-F.int(15))*n`
+\end{eqnarray*}
+
+:::
+
+1.c **(Punti 2)**  La spesa media è pari a $\bar x=`r mean(samp)`$ mila euro, 
+considerato la classe modale ricavata al punto 1.a, quale relazione ci dobbiamo attendere tra media e mediana?
+
+:::{.sol data-latex=""}
+```{r 2022-42}
+histp(T)
+```
+:::
+
+1.d **(Punti 2)** La spesa media in investimenti green su `r n` aziende modenesi è pari a $\bar x=`r mean(samp)`$ mila euro, mentre la spesa media  in investimenti green della provincia di Reggio, su un campione di 150 aziende è pari a $12.22$ mila euro.
+Calcolare la media globale delle $`r n` + 150 = `r n+150`$ aziende delle due province.
+
+:::{,sol}
+
+\begin{eqnarray*}
+\bar x_T&=&\frac{`r n`\times`r mean(samp)`+150\times12.22}{`r n`+150}\\
+&=& `r (n*mean(samp)+150*12.22)/(n+150)`
+\end{eqnarray*}
+
+:::
+
+### Esercizio 1
+```{r 2022-54}
+options(digits=3,nsmall=4,knitr.kable.NA = '',scipen = 1)
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- sort(20-c(0,3, 5,13,20))
+nnn  <- (c( 20,110,120, 50))
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Spesa in investimenti Green"
+
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese energivora della provincia di Bologna è stato 
+rilevata la spesa in investimenti green, espressa in migliaia di euro. Qui di seguito i dati raccolti in classi
+e le frequenze percentuali.
+
+```{r 2022-55}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma delle densità percentuali.
+
+:::{.sol data-latex=""}
+```{r 2022-56}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante aziende hanno una spesa compresa tra il 25-esimo percentile e 15 mila euro?
+
+:::{.sol data-latex=""}
+$$
+221(0.434-0.25)=`r  221*(.434-.25)`
+$$
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+1.d **(Punti 2)** La varianza della spesa è pari a $Var=`r var(samp)`$.
+Se ogni azienda aumentasse la sua spesa del 15%, quanto varrebbe varianza dei dati così trasformati?
+
+### Esercizio 1
+```{r 2022-66}
+options(digits=3,nsmall=4,knitr.kable.NA = '',scipen = 1)
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+
+brk  <- (c(0,3, 5,13,20))
+nnn  <- rev(c( 20,110,120, 50))
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Spesa in investimenti Green"
+
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+
+```
+
+Su un campione di $`r n`$ imprese energivora della provincia di Bologna è stato 
+rilevata la spesa in investimenti green, espressa in migliaia di euro. Qui di seguito i dati raccolti in classi
+e le frequenze percentuali.
+
+```{r 2022-67}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma delle densità percentuali.
+
+:::{.sol data-latex=""}
+```{r 2022-68}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di aziende che hanno una spesa 
+compresa tra il 25-esimo percentile e 15 mila euro?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \%(X<15) &=&  F_3+(15-13)\times h_4\\
+  &=& `r dat2$Fj[3]`\times 100+2\times `r dat2$hj[4]`\\
+  &=& `r dat2$Fj[3]*100+2*dat2$hj[4]`\\
+  \%(X<x_{0.25}) &=&  25\%\\
+  \%(x_{0.25}<X<15)&=& `r dat2$Fj[3]*100+2*dat2$hj[4]`-25\\
+  &=& `r dat2$Fj[3]*100+2*dat2$hj[4]-25`
+\end{eqnarray*}
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+1.d **(Punti 2)** La varianza della spesa è pari a $Var=`r var(samp)`$.
+Se ogni azienda aumentasse la sua spesa di 10 mila euro, quanto varrebbe la media e la varianza dei dati così trasformati?
+
+### Esercizio 1
+```{r 2022-78}
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+nnn <- c(10,140,120,60,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le frequenze percentuali.
+
+:::{.sol data-latex=""}
+```{r 2022-79}
+tabl(dat3[,c(1,2,12)])
+```
+:::
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r 2022-80}
+tabl(dat3[,1:7])
+
+histp()
+axis(1,brk)
+```
+:::
+
+1.b **(Punti 3)** Quante imprese hanno un bilancio compreso tra $-4$ mila 
+euro e zero.
+
+:::{.sol data-latex=""}
+$$\#(-1<X<0)=\frac{(0-(-4))`r dat2$hj[2]`}{100}\times `r n`=`r (F.int(0)-F.int(-4))*n`$$
+:::
+
+1.c **(Punti 2)**  La media è risultata essere $\bar x=`r mean(samp)`$; che
+relazione mi devo aspettare tra mediana e moda?
+
+:::{.sol data-latex=""}
+$$\bar x<x_{0.5}<x_{Mo}$$
+:::
+
+1.d **(Punti 2)** Siano $x_1,...,x_n$, $n$ numeri, $n$ dispari. 
+Si consideri la funzione:
+$$g(x)=|x_1-x|+...+|x_n-x|.$$
+Per quale valore di $x$, $g(x)$ è minima?
+
+:::{.sol data-latex=""}
+La funzione $g$ è minimizzata nel valore della mediana.
+$$x_{0.5}=x_{((n+1)/2)}$$
+:::
+
+### Esercizio 1
+```{r 2022-93}
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- c(-10,-5,0,2,4,6)
+nnn <- c(10,70,120,40,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le frequenze cumulate.
+
+
+```{r 2022-94}
+tabl(dat3[,c(1,2,7)])
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma delle densità percentuali.
+
+:::{.sol data-latex=""}
+```{r 2022-95}
+tabl(dat3[,1:7])
+
+histp()
+axis(1,brk)
+```
+:::
+
+1.b **(Punti 3)** Quante aziende hanno un bilancio compreso tra il 25-esimo 
+percentile e 3.5 mila euro?
+
+:::{.sol data-latex=""}
+$$\#(x_{0.25}<X<0)=n(F(3.5)-0.25)=`r n`(`r F.int(3.5)`-0.25)=`r n*(F.int(3.5)-0.25)`$$
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+:::{.sol data-latex=""}
+$$\bar x<x_{0.5}<x_{Mo}$$
+:::
+
+1.d **(Punti 2)** Siano $x_1,...,x_n$, $n$ numeri. Si consideri la funzione:
+$$g(x)=(x_1-x)^2+...+(x_n-x)^2.$$
+Per quale valore di $x$, $g(x)$ è minima?
+
+### Esercizio 1
+```{r 2022-103}
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- c(-10,-5,0,2,4,6)
+nnn <- c(10,40,120,40,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le densità di frequenza percentuale.
+
+
+```{r 2022-104}
+tabl(dat3[,c(1,2,6)]) 
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r 2022-105}
+tabl(dat3[,1:7])
+cat(percentile())
+```
+:::
+
+1.b **(Punti 3)** Quante aziende hanno un bilancio compreso tra $-1$ e il 75-esimo 
+percentile?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  F(x_{0.75}) &=&  0.75\\
+  F(-1) &=& f_1+4h_2/100\\
+  &=& `r dat2$fj[1]`+4\times `r dat2$hj[2]`/100\\
+  &=& `r dat2$fj[1]+4*dat2$hj[2]/100`\\
+  \%(-1<X<x_{0.75}) &=& (F(x_{0.75})-F(x_{-1}))\times 100\\
+  &=& (`r .75-F.int(-1)`)\times 100 \%\\
+  \#(-1<X<x_{0.75}) &=& n\%(-1<X<x_{0.75})/100 \\
+  &=& `r n*(.75-F.int(-1))`
+\end{eqnarray*}
+  
+$$
+\#(-1<X<x_{0.75})=n\%(-1<X<x_{0.75})/100=n/100(75-F(-1))
+$$
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+1.d **(Punti 2)** Sapendo che $\sigma_X=`r sc (samp)`$ la Standard Deviation di $X$
+ e posto $y_i=-x_i, \forall i$, quanto varrà $\sigma_Y$, la standard deviation dei dati così
+ trasformati?
+
+### Esercizio 1
+```{r 2023-107}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+nomex <- "Investimento"
+
+brk  <- c(0,1.5,3,5,10)
+nnn  <- c( 20,110,100, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti finanziari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-108}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2023-109}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp()
+axis(1,brk)
+axis(2,round(dat2$hj,2))
+```
+:::
+
+1.b **(Punti 3)** Che percentuale di famiglie investe più di 4.5 mila euro all'anno?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \%(X>4.5) &=&  (5.0-4.5)\times`r dat2$hj[3]`+`r dat2$fj[4]*100`\\
+  &=& `r (1-F.int(4.5))*100`
+\end{eqnarray*}
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana? 
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia aumentasse il proprio investimento di 0.5 mila euro, quanto varrebbero la media e la SD dei dati così trasformati?
+
+### Esercizio 1
+```{r 2023-115}
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- rev(10-c(0,1.5,3,5,10))
+nnn  <- rev(c( 20,110,100, 10))
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti obbligazionari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze percentuali:
+
+:::{.sol data-latex=""}
+```{r 2023-116}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+:::
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2023-117}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp()
+axis(1,brk)
+axis(2,round(dat2$hj,2))
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie investono più di 8 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X>4.5) &=&  `r n`(\frac1{100}(8.5-8)\times`r dat2$hj[3]`+`r dat2$fj[4]`)\\
+  &=& `r n*(1-F.int(8))`
+\end{eqnarray*}
+:::  
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana? 
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia aumentasse il proprio investimento del 2 percento, quanto varrebbero la media e la SD dei dati così trasformati?
+
+### Esercizio 1
+```{r 2023-125}
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,3.5,5,6.5,10)
+nnn  <- c( 20,100,100, 20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti finanziari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2023-126}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2023-127}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie investono meno di 4.5 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X<4.5) &=&  `r n`(\frac1{100}(4.5-3.5)\times`r dat2$hj[2]`+`r dat2$fj[1]`)\\
+  &=& `r n*(F.int(4.5))`
+\end{eqnarray*}
+:::  
+
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana? 
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia diminuisse il proprio investimento del 2%, quanto varrebbero la media e la SD dei dati così trasformati?
+
+### Esercizio 1
+```{r 2023-135}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 200      # ampiezza campionaria
+
+brk  <- c(-2,-1,1,5,15)
+nnn  <- c( 20,100,110, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Modena è stato rilevato l'utile dell'ultimo trimestre (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-136}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r 2023-137}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quale è il numero di imprese che hanno un utile maggiore di zero?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \%(X>0) &=&  100\%-\%(X\le 0)\\
+  &=& 100 - (0.09\times 100 + 20.8\times(0-(-1)))\%\\
+  &=& `r (1-F.int(0))*100`\%
+\end{eqnarray*}
+:::
+
+1.c **(Punti 2)** L'utile medio è pari a $\bar x=`r mean(samp)`$ che forma avrà l'istogramma?
+
+1.d **(Punti 2)** Qual è la proprietà di associatività della media aritmetica?
+
+### Esercizio 1
+```{r 2023-145}
+options(digits = 3)
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 400      # ampiezza campionaria
+
+brk  <- sort(-c(-2,-1,1,5,15))
+nnn  <- rev(c( 20,100,110, 10))
+nnn  <- round(nnn/sum(nnn)*n)
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+
+```
+
+Su un campione di $`r n`$ imprese della provincia di Modena è stato rilevato l'utile dell'ultimo trimestre (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-146}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Individuare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r 2023-147}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+```{r 2023-20,,results='asis'}
+res <- percentile(p = .5)
+cat(res)
+histp()
+h.int(0,max(brk),density=10)
+axis(1,brk)
+```
+:::
+
+1.b **(Punti 3)** Quale è il numero di imprese che hanno un utile maggiore di zero?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X>0) &=& n\times \frac{((1-0)\times `r dat2$hj[3]`+`r dat2$fj[4]`\times 100)}{100}\\
+   &=& `r n*(1-F.int(0))`
+\end{eqnarray*}
+:::
+
+1.c **(Punti 2)** L'utile medio è pari a $\bar x=`r mean(samp)`$ che forma avrà l'istogramma?
+
+1.d **(Punti 2)** Qual è la proprietà di linearità della media aritmetica?
+
+### Esercizio 1
+```{r 2023-154}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 200      # ampiezza campionaria
+
+brk  <- c(-2,-1,1,5,15)
+nnn  <- c( 20,100,110, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+```{r 2023-155}
+
+
+options(digits=4)
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 50      # ampiezza campionaria
+
+brk  <- c(-2,-1,1,5,15)
+nnn  <- c( 30,100,50, 30)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Modena è stato rilevato l'utile dell'ultimo trimestre (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2023-156}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-157}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante imprese hanno un utile negativo?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X<0) &=&  n (f_1 + 1\cdot h_2/100)\\
+  &=& `r n*dat2$fj[1]` + `r n*dat2$hj[2]/100`\\
+  &=& `r n*dat2$fj[1] + n*dat2$hj[2]/100`\\
+\end{eqnarray*}
+:::  
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media e mediana?
+
+1.d **(Punti 2)** La varianza dei dati è pari a $\hat\sigma^2=`r s2c(samp)`$, se gli utili di ogni impresa aumentassero del 3%, quanto varrebbe la varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+\[\sigma_Y^2=(1.03)^2\sigma_X^2=`r s2c(samp)*(1.03^2)`\]
+:::
+
+### Esercizio 1
+```{r 2023-163}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 160                         # ampiezza campionaria
+
+brk  <- c(0,1.5,3,5,10)          # intervalli (breaks)
+hhh  <- c( 20,110,100, 5)       # aspetto presunto istogramma
+
+nomex <- "Nome della X"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stata rilevata la spesa annua dedicata alle vacanze, espressa in migliaia di euro. Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-164}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-165}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(4,10,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di famiglie con spesa superiore a 4 mila euro?
+
+:::{.sol data-latex=""}
+```{r 2023-33,,results='asis'}
+cat(F_print(4,verso=">"))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** Cosa significa che la media aritmetica rende zero la somma degli scarti?
+
+### Esercizio 1
+```{r 2023-169}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 160                         # ampiezza campionaria
+
+brk  <- rev(10-c(0,1.5,3,5,10))          # intervalli (breaks)
+hhh  <- rev(c( 20,110,100, 5))       # aspetto presunto istogramma
+
+nomex <- "Nome della X"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stata rilevata la spesa annua dedicata alle vacanze, espressa in migliaia di euro. Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-170}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-171}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(4,8,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di famiglie con spesa compresa tra a 4 mila e 8 mila euro?
+
+:::{.sol data-latex=""}
+
+```{r 2023-41,,results='asis'}
+cat(F_print(4,x2 = 8,verso = ""))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** Cosa significa che la media aritmetica gode della proprietà di linearità?
+
+### Esercizio 1
+```{r 2023-176}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 160                         # ampiezza campionaria
+
+brk  <- c(0,2.5,4,5,6.5,9)          # intervalli (breaks)
+hhh  <- c( 10,30,50, 30,10)       # aspetto presunto istogramma
+
+nomex <- "Nome della X"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stata rilevata la spesa annua dedicata alle vacanze, espressa in migliaia di euro. Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2023-177}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-178}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(4,8,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di famiglie con spesa compresa tra a 4 mila e 8 mila euro?
+
+:::{.sol data-latex=""}
+
+```{r 2023-49,,results='asis'}
+cat(F_print(4,x2 = 8,verso = ""))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** Cosa significa che la media aritmetica goe della proprietà di linearità?
+
+### Esercizio 1
+```{r 2023-184}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 250                         # ampiezza campionaria
+
+brk  <- c(0,15,30,50,100,250)          # intervalli (breaks)
+hhh  <- c( 20,120,100, 50,10)       # aspetto presunto istogramma
+
+nomex <- "Spesa"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevata la spesa mensile in telecomunicazioni (in euro), qui di seguito 
+la distribuzione delle frequenze relative:
+
+```{r 2023-185}
+kable(dat3[,c(1,2,4)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-186}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(60,250,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di famiglie con spesa superiore a 60 euro?
+
+:::{.sol data-latex=""}
+```{r 2023-57,,results='asis'}
+cat(F_print(60,verso=">"))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$ e la standard deviation $\hat\sigma=`r sd(samp)`$, se tutte le famiglie risparmiassero
+il 10%, come cambierebbero la media e la standard deviation?
+
+### Esercizio 1
+```{r 2023-191}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 250                         # ampiezza campionaria
+
+brk  <- rev(250-c(0,15,30,50,100,250))          # intervalli (breaks)
+hhh  <- rev(c( 20,120,100, 50,10))       # aspetto presunto istogramma
+
+nomex <- "Spesa"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ piccole imprese della provincia di Modena è stato rilevata la spesa mensile in telecomunicazioni (in euro), qui di seguito 
+la distribuzione delle frequenze assolute:
+
+```{r 2023-192}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale.
+
+:::{.sol data-latex=""}
+```{r 2023-193}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(60,250,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di imprese con spesa superiore ai 100 euro?
+
+:::{.sol data-latex=""}
+```{r 2023-66,,results='asis'}
+cat(F_print(100,verso="<"))
+cat(F_print(100,verso=">"))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$ e varianza $\hat\sigma^2=`r s2c(samp)`$, se tutte le famiglie aumentassero 
+del 10% la loro spesa, come cambierebbero la media e la varianza?
+
+### Esercizio 1
+```{r 2023-197}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 200                         # ampiezza campionaria
+
+brk  <- c(0,15,30,50,100,250)          # intervalli (breaks)
+hhh  <- c( 10,13,9, 4,0.5)       # aspetto presunto istogramma
+
+nomex <- "Spesa"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ piccole imprese della provincia di Modena è stato rilevata la spesa mensile in telecomunicazioni (in euro), qui di seguito 
+la divisione in classi e le densità percentuali
+
+```{r 2023-198}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14)** Calcolare il valore approssimato della mediana
+
+:::{.sol data-latex=""}
+```{r 2023-76,,results='asis'}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(60,250,density=20)
+cat(percentile())
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di imprese con spesa superiore ai 60 euro?
+
+:::{.sol data-latex=""}
+```{r 2023-77,,results='asis'}
+cat(F_print(60,verso=">"))
+```
+:::
+
+1.c **(Punti 2)** Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+1.d **(Punti 2)** Scrivere la proprietà di associatività della media aritmetica.
+
+### Esercizio 1
+```{r 2023-202}
+
+
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 180                         # ampiezza campionaria
+
+brk  <- c(-10,-5,0,1,5)          # intervalli (breaks)
+hhh  <- c( 2,4,10, .5)       # aspetto presunto istogramma
+
+nomex <- "Bilancio"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ di piccole e medie  aziende  della provincia di Modena è stato rilevato l'utile netto (espresso in centinaia di migliaia di euro) durante il periodo del covid. Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2023-203}
+tabl(dat3[,c(1,2,3)])
+```
+
+1.a **(Punti 14)** Individuare la classe modale
+
+:::{.sol data-latex=""}
+```{r 2023-204}
+tabl(dat3[,1:7])
+histp(axes = T)
+h.int(-10,3,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di imprese con bilancio inferiore a 3 (centomila) euro?
+
+:::{.sol data-latex=""}
+```{r 2023-84,,results='asis'}
+cat(F_print(3,verso="<"))
+```
+:::
+
+1.c **(Punti 2)** la media aritmetica è pari a `r mean(samp)`, in base al punto 1a che relazione dobbiamo attenderci tra media, mediana e moda?
+
+1.d **(Punti 2)** Si considerino i seguenti dati
+
+\[
+\{x_1=1.2,x_2=2.3,x_3=6.7\}
+\]
+
+Per quale valore di $x$
+\[
+f(x)=(x_1-x)^2+(x_2-x)^2+(x_3-x)^2
+\]
+$f$ è minima?
+
+### Esercizio 1
+```{r 2023-210}
+
+
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 200                         # ampiezza campionaria
+
+brk  <- c(0, 2, 5, 10, 20, 50)   # intervalli (breaks)
+hhh  <- c(50, 90, 60, 40, 10)    # aspetto presunto istogramma
+
+nomex <- "Utilizzo servizi di streaming"
+samp <- genera_dati(brk = brk, hhh = hhh, n = n)
+
+ls2e(stat_base(samp,brk))      # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stata rilevata la quantità mensile di ore dedicate all'utilizzo di servizi di streaming. Di seguito è riportata la distribuzione delle frequenze percentuali:
+
+```{r 2023-211}
+tabl(dat3[,c(1,2,12)])
+```
+
+1.a **(Punti 14)** Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r 2023-212}
+tabl(dat3[,1:7])
+histp(axes = T)
+h.int(30,50,density=20)
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di famiglie che consuma più di 30 ore di streaming?
+
+:::{.sol data-latex=""}
+
+```{r 2023-92,,results='asis'}
+cat(percentile())
+cat(F_print(30,verso = ">"))
+```
+:::
+
+1.c **(Punti 2)** la media aritmetica è pari a `r mean(samp)`, in base al punto 1a che relazione dobbiamo attenderci tra media, mediana e moda?
+
+1.d **(Punti 2)** Si considerino i seguenti dati
+
+\[
+\{x_1=1.2,x_2=2.3,x_3=6.7\}
+\]
+
+Per quale valore di $x$
+\[
+f(x)=|x_1-x|+|x_2-x|+|x_3-x|
+\]
+$f$ è minima?
+
+### Esercizio 1
+```{r 2023-219}
+
+
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 200                         # ampiezza campionaria
+
+brk  <- c(0, 100, 300, 600, 1000)   # intervalli (breaks)
+nnn  <- c(40, 40, 15, 5)    # aspetto presunto istogramma
+
+nomex <- "Spesa mensile per abbigliamento"
+samp <- genera_dati(brk = brk, nnn = nnn, n = n)
+
+ls2e(stat_base(samp,brk))      # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ individui è stata rilevata la spesa mensile in euro per abbigliamento. Di seguito sono riportate la densità percentuali:
+
+```{r 2023-220}
+tabl(dat3[,c(1:2,6)])
+```
+
+1.a **(Punti 14)** Ricavare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r 2023-221}
+tabl(dat3[,1:7])
+histp(axes = T)
+h.int(150,1000,density=20)
+cat(percentile())
+```
+:::
+
+1.b **(Punti 3)** Qual è il numero di individui che spende più di 150€ al mese?
+
+:::{.sol data-latex=""}
+```{r 2023-99,,results='asis'}
+cat(F_print(150,verso = ">"))
+```
+:::
+
+1.c **(Punti 2)** Individuare la classe modale, metterla in relazione con la mediana e indicare la loro relazione con la media.
+
+1.d **(Punti 2)** Michele ha sostenuto tre esami e ha la media del 26, al quarto esame ha preso 28. Qual è la media calcolata sui 4 esami?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \bar x &=&\frac {26\times 3+28}{3+1}\\
+  &=& \frac {`r 26*3+28`}{4}\\
+  &=& `r (26*3+28)/4`
+\end{eqnarray*}
+  
+:::
+
+### Esercizio 1
+```{r 2024-41}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 200,100,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Milano è stato rilevata la spesa annua per le vacanze (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2024-42}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2024-43}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie spendono meno di 5 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+```{r 2024-44}
+F_print(x = 5,verso = "<")
+```
+:::  
+
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia spendesse 2 mila euro in più all'anno, quanto varrebbero la media e la SD dei dati trasformati?
+
+### Esercizio 1
+```{r 2024-51}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 10,100,110, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Milano è stato rilevata la spesa annua per le vacanze (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze relative:
+
+```{r 2024-52}
+kable(dat3[,c(1,2,4)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Individuare l'intervallo modale. 
+
+:::{.sol data-latex=""}
+```{r 2024-53}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie investono più di 4 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+```{r 2024-54}
+F_print(x = 4,verso = ">")
+```
+:::  
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2)** La spesa media è pari a $`r mean(samp)`$, mentre la varianza è pari a $`r s2c(samp)`$.
+Se ogni famiglia aumentasse la propria spesa del 2%, quanto varrebbero la media e la varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+\[
+\bar y = `r 1.02*mean(samp)`\qquad \sigma^2 = `r (1.02)^2*s2c(samp)`
+\]
+:::
+
+### Esercizio 1
+```{r 2024-61}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 50,100,110, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Milano è stato rilevata la spesa annua per le vacanze (espresso in migliaia di euro). Qui di seguito la distribuzione delle densità percentuali:
+
+```{r 2024-62}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Calcolare il valore approssimativo della mediana. 
+
+:::{.sol data-latex=""}
+```{r 2024-63}
+percentile()
+histp(T)
+draw_dist(dist = H.int,z1 = 4,z2 = 10)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie spendono tra 4 mila e 10 mila euro l'anno? 
+
+:::{.sol data-latex=""}
+```{r 2024-64}
+F_print(x = 4,x2 = 10,verso = F)
+```
+:::  
+
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2)** La spesa media è pari a $`r mean(samp)`$, mentre la varianza è pari a $`r s2c(samp)`$.
+Se ogni famiglia diminuisse la propria spesa del 2%, quanto varrebbero la media e la varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+\[
+\bar y = `r 0.98*mean(samp)`\qquad \sigma^2 = `r (0.98)^2*s2c(samp)`
+\]
+:::
+
+### Esercizio 1
+```{r 2024-71}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 250      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 200,100,80, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie dell'Emilia-Romagna sono stati rilevati i consumi annui in beni tecnologici (dati espressi in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2024-72}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2024-73}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie spendono meno di 5 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+```{r 2024-74}
+F_print(x = 5,verso = "<")
+```
+:::  
+
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2)** La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia spendesse 2 mila euro in più all'anno, quanto varrebbero la media e la SD dei dati trasformati?
+
+### Esercizio 1
+```{r 2024-83}
+
+set.seed(10)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,5,20)
+nnn  <- c( 30,100,110, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n,rand = F)
+  
+ls2e(x = stat_base(samp,brk))
+
+n_ER <- n 
+n_L <- n_ER + 20 
+n_V <- n_ER - 10 
+set.seed(10) 
+x_ER <- mean(samp) 
+x_L <- mean(samp) + rnorm(1, 0, sd(samp))
+x_V <- mean(samp) + rnorm(1, 0, sd(samp))
+x_agg <- (n_ER * x_ER + n_L * x_L + n_V * x_V) / (n_ER + n_L + n_V)
+
+```
+
+Su un campione di $`r n`$ famiglie dell'Emilia-Romagna sono stati rilevati i consumi annui in beni tecnologici (dai espressi in migliaia di euro). Qui di seguito la distribuzione delle frequenze relative:
+
+```{r 2024-84}
+kable(dat3[,c(1,2,4)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Individuare l'intervallo modale. 
+
+:::{.sol data-latex=""}
+```{r 2024-85}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante famiglie spendono più del 25-esimo percentile $x_{0.25}$? 
+
+:::{.sol data-latex=""}
+```{r 2024-86}
+F_print(x = Q.int(.25),verso = ">")
+```
+:::  
+
+1.c **(Punti 2)** La media è pari a $\bar x=`r p(mean(samp),2)`$, senza disegnare l'istogramma, che forma distributiva dobbiamo aspettarci?
+
+1.d **(Punti 2)** `r round_all(2)`La spesa media della regione Emilia-Romagna, calcolata su `r n_ER` famiglie è pari $\bar x_{ER}=`r x_ER`$, quella della Lombardia, calcolata su `r n_L` famiglie è pari $\bar x_{L}=`r x_L`$, mentre quella del Veneto,  calcolata su `r n_V` famiglie è pari $\bar x_{V}=`r x_V`$. Qual è la spesa media complessiva delle tre regioni?
+
+:::{.sol data-latex=""}
+Per trovare la spesa media delle tre regioni aggregate, dobbiamo considerare sia le medie delle singole regioni sia il numero di famiglie su cui sono state calcolate. La formula per la media aggregata \(\bar{x}_{agg}\) è:
+
+\begin{eqnarray*}
+\bar{x}_{agg}    &=&  \frac{n_{ER} \bar{x}_{ER} + n_{L} \bar{x}_{L} + n_{V} \bar{x}_{V}}{n_{ER} + n_{L} + n_{V}}\\
+&=& \frac{`r n_ER`\cdot`r x_ER`+`r n_L`\cdot`r x_L`+`r n_V`\cdot`r x_V`}{`r n_ER`+`r n_L`+`r n_V`}\\
+&=& `r x_agg`
+\end{eqnarray*}
+  
+
+Dove:
+
+- \(n_{ER}\) è il numero di famiglie in Emilia-Romagna
+- \(n_{L}\) è il numero di famiglie in Lombardia
+- \(n_{V}\) è il numero di famiglie in Veneto
+- \(\bar{x}_{ER}\), \(\bar{x}_{L}\), \(\bar{x}_{V}\) sono le spese medie delle rispettive regioni
+
+:::
+
+### Esercizio 1
+```{r 2024-93}
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,20)
+nnn  <- c( 50,100,110, 20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ famiglie dell'Emilia-Romagna sono stati rilevati i consumi annui in beni tecnologici (dai espressi in migliaia di euro). Qui di seguito la distribuzione delle densità percentuali:
+
+```{r 2024-94}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+1.a **(Punti 14)**  Calcolare il valore approssimativo della mediana. 
+
+:::{.sol data-latex=""}
+```{r 2024-95}
+percentile()
+histp(T)
+draw_dist(dist = H.int,z1 = 4,z2 = 10)
+```
+:::
+
+1.b **(Punti 3)** Qual è la percentuale di famiglie spendono più del 55-esimo percentile $x_{0.55}$? 
+
+:::{.sol data-latex=""}
+```{r 2024-96}
+F_print(x = Q.int(.55),verso = ">")
+```
+:::  
+
+1.c **(Punti 2)** La media è pari a $\bar x=`r p(mean(samp),2)`$, senza disegnare l'istogramma, che forma distributiva dobbiamo aspettarci?
+
+1.d **(Punti 2)** La spesa media è pari a $`r mean(samp)`$, mentre la varianza è pari a $`r s2c(samp)`$.
+Se ogni famiglia diminuisse la propria spesa del 2%, quanto varrebbero la media e la varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+\[
+\bar y = `r 0.98*mean(samp)`\qquad \sigma^2 = `r (0.98)^2*s2c(samp)`
+\]
+:::
+
+### Esercizio 1
+```{r 2024-104}
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 150      # ampiezza campionaria
+
+brk  <- c(0,2,4,8,16)
+nnn  <- c( 50,100,50, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ di piccole e medie imprese dell'Emilia-Romagna sono stati rilevati gli investimenti in infrastrutture tecnologiche (dati espressi in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r 2024-105}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+i2 <- 0
+```
+
+1.a **(Punti 14)** Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r 2024-106}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 3)** Quante imprese investono tra $x_{0.15}$ il 15-esimo e $x_{0.85}$ l'85-esimo percentile? 
+
+:::{.sol data-latex=""}
+```{r 2024-107}
+F_print(x = Q.int(.15),x2 = Q.int(.85),verso = "alt")
+```
+:::  
+
+
+1.c **(Punti 2)** Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+1.d **(Punti 2)** Siano $x_1,...,x_n$, $n$ dati e $\bar x=\frac 1n \sum_{i=1}^n x_i$ la loro media aritmetica. Quanto vale
+
+$$
+\sum_{i=1}^n (x_i-\bar x)=~~?
+$$
+
+### Esercizio 1
+```{r 2024-114}
+
+punti <- list(
+  e1 = c(14,3,2,2),
+  e2 = c(14,3,2,2),
+  e3 = c(14),
+  e4 = c(3,3,3,3),
+  e5 = c(14),
+  e6 = c(14,3,2,2,2)
+)
+
+set.seed(10)   # per ottenere sempre la stessa simulazione
+n <- 200      # ampiezza campionaria
+
+brk  <- c(0,2,4,8,16)
+nnn  <- c( 30,100,110, 50)
+brk <- 16-rev(brk)
+nnn <- rev(nnn)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n,rand = F)
+  
+ls2e(x = stat_base(samp,brk))
+
+n_ER <- n 
+n_L <- n_ER + 15 
+n_V <- n_ER -  5 
+set.seed(10) 
+x_ER <- mean(samp) 
+x_L <- mean(samp) + rnorm(1, 0, sd(samp))
+x_V <- mean(samp) + rnorm(1, 0, sd(samp))
+x_agg <- (n_ER * x_ER + n_L * x_L + n_V * x_V) / (n_ER + n_L + n_V)
+
+```
+
+Su un campione di $`r n`$ di piccole e medie imprese dell'Emilia-Romagna sono stati rilevati gli investimenti in infrastrutture tecnologiche (dati espressi in migliaia di euro). Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r 2024-115}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+i2 <- 0
+```
+
+1.a **(Punti 3)** Individuare l'intervallo modale. 
+
+:::{.sol data-latex=""}
+```{r 2024-116}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+1.b **(Punti 2)** Quante imprese investono tra $x_{0.25}$ il 25-esimo e $x_{0.75}$ il 75-esimo percentile? 
+
+:::{.sol data-latex=""}
+```{r 2024-117}
+F_print(x = Q.int(.25),x2 = Q.int(.75),verso = "alt")
+invisible(round_all(2))
+```
+:::  
+
+1.c **(Punti 2)** La media è pari a $\bar x=`r p(mean(samp),2)`$, senza disegnare l'istogramma, che forma distributiva dobbiamo aspettarci?
+
+1.d **(Punti 14)** La spesa media della regione Emilia-Romagna, calcolata su `r n_ER` famiglie è pari $\bar x_{ER}=`r x_ER`$, quella della Lombardia, calcolata su `r n_L` famiglie è pari $\bar x_{L}=`r x_L`$, mentre quella del Veneto,  calcolata su `r n_V` famiglie è pari $\bar x_{V}=`r x_V`$. Qual è la spesa media complessiva delle tre regioni?
+
+:::{.sol data-latex=""}
+Per trovare la spesa media delle tre regioni aggregate, dobbiamo considerare sia le medie delle singole regioni sia il numero di famiglie su cui sono state calcolate. La formula per la media aggregata \(\bar{x}_{agg}\) è:
+
+\begin{eqnarray*}
+\bar{x}_{agg}    &=&  \frac{n_{ER} \bar{x}_{ER} + n_{L} \bar{x}_{L} + n_{V} \bar{x}_{V}}{n_{ER} + n_{L} + n_{V}}\\
+&=& \frac{`r n_ER`\cdot`r x_ER`+`r n_L`\cdot`r x_L`+`r n_V`\cdot`r x_V`}{`r n_ER`+`r n_L`+`r n_V`}\\
+&=& `r x_agg`
+\end{eqnarray*}
+  
+
+Dove:
+
+- \(n_{ER}\) è il numero di famiglie in Emilia-Romagna
+- \(n_{L}\) è il numero di famiglie in Lombardia
+- \(n_{V}\) è il numero di famiglie in Veneto
+- \(\bar{x}_{ER}\), \(\bar{x}_{L}\), \(\bar{x}_{V}\) sono le spese medie delle rispettive regioni
+
+:::
+
+### Esercizio 1
+```{r 2024-123}
+punti <- list(
+  e1 = c(14,3,2,2),
+  e2 = c(14,3,2,2),
+  e3 = c(14),
+  e4 = c(3,3,3,3),
+  e5 = c(4,10),
+  e6 = c(14,3,2,2,2)
+)
+
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 200      # ampiezza campionaria
+
+brk  <- c(0,3,4.5,5.5,7,10)
+nnn  <- c(5,20,35,20,5)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,hhh = nnn,n=n)
+  
+ls2e(x = stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ di piccole e medie imprese dell'Emilia-Romagna sono stati rilevati gli investimenti in infrastrutture tecnologiche (dati espressi in migliaia di euro).  Qui di seguito la distribuzione delle densità percentuali:
+
+```{r 2024-124}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 3)** Calcolare il valore approssimativo della mediana. 
+
+:::{.sol data-latex=""}
+```{r 2024-125}
+kable(dat3[,c(1:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+percentile()
+histp(T)
+draw_dist(dist = H.int,z1 = Q.int(.30),z2 = 7,col=ablue,border = T,lwd=2)
+```
+:::
+
+1.b **(Punti 2)** Qual è la percentuale di imprese che investe tra il 30-esimo percentile $x_{0.30}$ e 7? 
+
+:::{.sol data-latex=""}
+$$
+\%(x_{0.30}<X<7) = (F(7)-F(x_{0.30}))\times 100 = (`r F.int(7)`- 0.30)\times 100=`r F.int(7)- 0.30`\times 100
+$$
+:::  
+
+1.c **(Punti 2)** La media è pari a $\bar x=`r 5`$, senza disegnare l'istogramma, che forma distributiva dobbiamo aspettarci?
+
+1.d **(Punti 14)** Se $\{x_1,...,x_n\}$ è una serie di dati con media aritmetica $\bar x=\frac 1n\sum_i x_i$ e varianza $\sigma_X^2=\frac 1n\sum_i(x-\bar x)^2$. Posto
+$$
+y_i = 1-x_i,~~\forall i=1,...,n
+$$
+ricavare media aritmetica e varianza delle $\{y_1,...,y_n\}$.
+
+:::{.sol data-latex=""}
+$$
+\bar y = 1-\bar x;~~~~\sigma_Y^2=(-1)^2\sigma_X^2
+$$
+
+:::
+

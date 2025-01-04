@@ -1,0 +1,13 @@
+name: prob
+title: prob
+username: ixpat
+account: ixpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11202881
+bundleId: 8323191
+url: https://ixpat.shinyapps.io/prob/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData

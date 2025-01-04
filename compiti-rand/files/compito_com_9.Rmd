@@ -1,0 +1,321 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+# Basic settings
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- rev(10-c(0,1.5,3,5,10))
+nnn  <- rev(c( 20,110,100, 10))
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti obbligazionari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze percentuali:
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,c(1,2,12)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp()
+axis(1,brk)
+axis(2,round(dat2$hj,2))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Quante famiglie investono più di 8 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X>4.5) &=&  `r n`(\frac1{100}(8.5-8)\times`r dat2$hj[3]`+`r dat2$fj[4]`)\\
+  &=& `r n*(1-F.int(8))`
+\end{eqnarray*}
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Che relazione dobbiamo aspettarci tra media e mediana? 
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia aumentasse il proprio investimento del 2 percento, quanto varrebbero la media e la SD dei dati così trasformati?
+
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Il numero di telefonate in arrivo nell'ora di punta di un centralino è distribuito come una Poisson di parametro 3.1 ($X\sim\text{Pois}(\lambda=3.1)$). Qual è la probabilità di trovare al massimo 3 telefonate ($X\le 3$)?
+
+:::{.sol data-latex=""}
+```{r}
+
+x <- 0:3
+l <- 3.1
+```
+
+\begin{eqnarray*}
+  P(X\le 3) &=&  \frac{3.1^0}{0!}e^{-3.1}+\frac{3.1^1}{1!}e^{-3.1}+\frac{3.1^2}{2!}e^{-3.1}+\frac{3.1^3}{3!}e^{-3.1}\\
+  &=& `r paste(round(dpois(0:3,3.1),4),collapse="+")`\\
+  &=& `r sum(round(dpois(0:3,3.1),4))`\\
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Un'urna contiene 4 palline: 2 rosse e 2 bianche. Si estrae seguendo il seguente schema: se esce rossa, rimettiamo la rossa estratta più altre due rosse, se esce bianca rimettiamo la bianca estratta più altre due bianche. Estraiamo con questo schema per tre volte. Calcolare la probabilità di avere tre palline rosse su tre estrazioni.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  E &=&  \text{tre rosse consecutive}\\
+  &=& R_1\cap R_2 \cap R_3\\
+P(E)  &=& P(R_1)P( R_2|R_1) P( R_3|R_1\cap R_2)\\
+&=& \frac 24 \frac 46 \frac 68\\
+&=& 0.25
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Se $X\sim N(\mu_X,\sigma_X^2)$ e $Y\sim N(\mu_Y,\sigma_Y^2)$, $X$ e $Y$ indipendenti, come si distribuiscono $X+Y$ e  $X-Y$?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Siano $A$ e $B$ due eventi diversi dal vuoto tali che $A\cap B=\emptyset$, motivare perché $A$ e $B$ non possono essere indipendenti.
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+(**Punti 14 su 104 (4.04 su 30)**) Un'urna contiene 150 di palline numerate. 
+
+- 40 palline numerate con -1
+- 70 palline numerate con  0
+- 40 palline numerate con +1
+
+Si estrae $n=81$ volte con reintroduzione, qual è la probabilità che la somma delle 81 estrazioni sia compresa tra
+$-6.6$ e $+6.6$?
+
+::: {.sol data-latex=""}
+```{r,results='asis'}
+urn <- rep(-1:1,times = c(40,70,40))
+mm <-  0
+ss <- s2c(urn)
+sd <- sqrt(ss)
+x1 <- -6.6
+x2 <-  6.6
+vnam <- "S_n"
+cat(stat_(urn,semp = T))
+cat(tlc(tipo = "somma",x1 = x1,x2 = x2,verso = NULL,mu = 0,s2 = ss,n = 81))
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le consistenza di $\hat\lambda$ in almeno tre passaggi.
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Siano $h$ uno stimatore per $\theta$, cosa significa dire che $h$ è asintoticamente corretto?
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Definire la probabilità di significatività.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Se in un test statistico $0.01 < p_\text{value} <0.05$ cosa possiamo concludere?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+Si sono intervistate 16 piccole imprese modenesi.
+L'analisi ha mostrato che sentono una forte necessità
+di investimenti nell'ambito della ricerca industriale;
+tuttavia, l'importo medio annuale speso per la ricerca industriale
+è risultato pari a 2750.00€ con una deviazione standard pari
+a 1300.00€.
+
+`r i2 <- i2+1;item()` (**Punti 7 su 104 (2.02 su 30)**) Determinare un intervallo di confidenza al 95%
+per l'importo medio annuale speso per la ricerca industriale. 
+
+```{r}
+cat(idc(sd = 1300,xm = 2750,alpha = .05,n = 16,dist_ = "t"))
+```
+
+`r i2 <- i2+1;item()` (**Punti 7 su 104 (2.02 su 30)**) Una indagine più vasta dell'anno precedente
+ha fornito una spesa media per la ricerca industriale pari a
+3250.00€ con una deviazione standard pari a 1200.00€.
+Al livello di significatività del 5%, verificare l'ipotesi
+che l'importo medio nell'ultimo anno sia stato equivalente a
+quello dell'anno precedente contro l'alternativa di una
+diminuzione dell'investimento in ricerca industriale.
+
+::: {.sol data-latex=""}
+```{r}
+s <- 1200
+n <- 16
+muh <- 2750
+mu0 <- 3250
+alpha <- 0.05
+h1 <- "<"
+cat(ztest_mu(muh = muh,s = s,n = n,mu0 = mu0,h1 = h1,alpha = alpha))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+set.seed(111)
+n <- 50
+x <- runif(n,0,1.5)
+y <- -log(x)+rnorm(n,0,.25)
+y <- y-min(y)
+# plot(x,y)
+RGX <- regr(x,y); attach(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale in altre campagne di marketing ($Y$). Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+i coefficienti $\hat\beta_0$ e $\hat\beta_1$
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(TSS())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Perché una previsione per $x=0.8$ è più affidabile di una per $x=0$?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Interpretare il diagramma dei residui.
+
+```{r,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+```
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Cosa significa dire che $r$ è invariante ai cambiamenti di scala?

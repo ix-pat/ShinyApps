@@ -1,0 +1,1089 @@
+### Esercizio 4
+4.a **(Punti 3)** Sia $h$ uno stimatore per theta, tale che
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}
+$$
+$h$ è corretto? $h$ è asintoticamente corretto?
+
+::: {.sol data-latex=""}
+$h$ **non è corretto**, infatti
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}\neq\theta
+$$
+$h$ **è asintoticamente corretto**, infatti
+$$
+\lim_{n\to\infty}E(h)=\lim_{n\to\infty}\left(\theta+\frac\theta {\sqrt{ n}}\right)=\theta+0=\theta
+$$
+:::
+
+4.b **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che:
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n
+\end{eqnarray*}
+Quale dei due stimatori è più efficiente? Perché?
+
+::: {.sol data-latex=""}
+$h_1$ **è più efficiente** di $h_2$, infatti
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n =2\cdot MSE(h_1)>MSE(h_1)
+\end{eqnarray*}
+:::
+
+4.c **(Punti 3)** Si sono osservati due gruppi di dati quantitativi e si è osservato, $\hat\mu_1=10.2$ e $\hat\mu_2=15.6$. Posto a test
+$$
+\begin{cases}
+H_0:\mu_1=\mu_2\\
+H_1:\mu_1\ne \mu_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.0612$. La differenza tra $\hat\mu_1$ e $\hat\mu_2$ è significativa? Perché?
+
+::: {.sol data-latex=""}
+Il $p_\text{value}$ è maggiore di 0.05, la differenza **non è significativa** per ogni livello di significatività.
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $h$ uno stimatore per $\theta$, tale che
+$$
+MSE(h)=\frac\theta {\sqrt{ n}}+\frac1n
+$$
+$h$ è consistente? Perché?
+
+::: {.sol data-latex=""}
+Sì, è _consistente_, infatti
+$$
+\lim_{n\to\infty}MSE(h)=\lim_{n\to\infty}\left(\frac\theta {\sqrt{ n}}+\frac1n\right)=0
+$$
+:::
+
+4.b **(Punti 3)** Siano $X_1,...,X_n$ $n$ VC IID, replicazioni di $X\sim \mathscr{L}(\theta)$ e sia $\hat\theta$ lo stimatore di massima verosimiglianza per $\theta$, 
+$\hat\theta$ è corretto?
+
+::: {.sol data-latex=""}
+No, _in generale_ $\hat\theta$ non è corretto, ad esempio
+$$
+E(\hat\sigma^2)=\frac{n-1}n\sigma^2\ne\sigma^2
+$$
+ma lo è sempre asintoticamente
+$$
+\lim_{n\to\infty}E(\hat\theta)=\theta
+$$
+ad esempio:
+$$
+\lim_{n\to\infty}E(\hat\sigma^2)=\lim_{n\to\infty}\frac{n-1}n\sigma^2=\sigma^2
+$$
+:::
+
+4.c **(Punti 3)** Definire la significatività e la potenza di un test.
+
+::: {.sol data-latex=""}
+La probabilità di **significatività** è definita con $\alpha$ e rappresenta la probabilità di rifiutare $H_0$ quando è vera
+$$\alpha=P(\text{Errore I tipo})=P(\text{Decidere $H_1$};H_0)$$
+
+La **potenza del test** è definita
+$$1-\beta =P(\text{Decidere $H_1$}; H_1)$$
+
+Cioè la probabilità di scegliere $H_1$ quando $H_1$ è vera.
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $h$ uno stimatore per $\theta$, tale che
+\begin{eqnarray*}
+E(h)&=&\theta+\frac\theta {\sqrt{ n}}\\
+V(h)&=&\frac{\theta^2}{\sqrt n}
+\end{eqnarray*}
+$h$ è consistente?
+
+::: {.sol data-latex=""}
+Uno stimatore è consistente se
+$$
+\lim_{n\to\infty} MSE(h)=0
+$$
+Essendo
+\begin{eqnarray*}
+MSE(h)&=&V(h)+B^2(h)\\
+&=&V(h)+|E(h)-\theta|^2\\
+&=&\frac{\theta^2}{\sqrt n}+\left|\theta+\frac\theta {\sqrt{ n}}-\theta\right|^2\\
+&=&\frac{\theta^2}{\sqrt n}+\frac{\theta^2} { n}\\
+\lim_{n\to\infty} \left(\frac{\theta^2}{\sqrt n}+\frac{\theta^2} { n}\right)&=&0
+\end{eqnarray*}
+Quindi sì, $h$ è consistente.
+:::
+
+4.b **(Punti 3)** Definire la funzione di verosimiglianza.
+
+::: {.sol data-latex=""}
+Siano $x_1,...,x_n$ $n$ osservazioni di $X\sim \mathscr{L}(\theta)$, $\theta\in\Theta$, si definisce la verosimiglianza $L$ di $\theta$ la funzione:
+$$L(\theta;x_1,...,x_n)=L(\theta)\propto P(X_1=x_1,...,X_n=x_n;\theta)$$
+
+Se $x_1,..,x_n$ sono osservazioni $IID$ otteniamo
+\begin{eqnarray*}
+L(\theta) &\propto& P(X_1=x_1;\theta)\cdot...\cdot P(X_n=x_n;\theta) \\
+          &\propto& \prod_{i=1}^n f(x_i;\theta)
+\end{eqnarray*}
+:::
+
+4.c **(Punti 3)** Si sono osservati due gruppi di dati quantitativi e si è osservato, $\hat\mu_1=10.2$, $\hat\sigma_1=1.12$ e $\hat\mu_2=15.6$, $\hat\sigma_2=3.72$. Posto a test
+$$
+\begin{cases}
+H_0:\sigma_1=\sigma_2\\
+H_1:\sigma_1\ne \sigma_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.0012$. I due gruppi sono da considerare omogenei o eterogenei? Perché?
+
+::: {.sol data-latex=""}
+Il $p_\text{value}=0.0012$ ci indica che i dati supportano $H_1$, quindi i due gruppi
+sono da considerarsi eterogenei.
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $h$ uno stimatore per $\theta$, tale che
+\begin{eqnarray*}
+E(h)&=&\theta+\frac\theta {n^2},\\
+V(h)&=&\frac{\sqrt\theta}{ n}.
+\end{eqnarray*}
+Ricavare $MSE(h)$, il Mean Squared Error di $h$. 
+
+::: {.sol data-latex=""}
+\begin{eqnarray*}
+MSE(h)&=&V(h)+B^2(h)\\
+&=&V(h)+|E(h)-\theta|^2\\
+&=&\frac{\sqrt\theta}{ n}+\left|\theta+\frac\theta {n^2}-\theta\right|^2\\
+&=&\frac{\sqrt\theta}{ n}+\frac{\theta^2} { n^4}\\
+\end{eqnarray*}
+:::
+
+4.b **(Punti 3)** Scrivere la funzione di verosimiglianza di una Poisson.
+
+::: {.sol data-latex=""}
+Siano $X_1,...,X_n$, $n$ VC IID, tali che, $X_i\sim\text{Pois}(\lambda)$
+La verosimiglianza è
+\begin{eqnarray*}
+  L(\lambda) &=& \prod_{i=1}^n\frac{\lambda^{x_i}}{x_i!}e^{-\lambda}\\
+             &\propto& \lambda^{s_n} e^{-n\lambda},\qquad s_n=\sum_{i=1}^n x_i
+\end{eqnarray*}
+:::
+
+4.c **(Punti 3)** Definire il $p_{\text{value}}$, la probabilità di significatività osservata.
+
+::: {.sol data-latex=""}
+La probabilità di significatività $p_{\text{value}}$ è
+
+$$p_{\text{value}}=P(|T|>|t_{\text{obs}}|;H_0)$$
+
+La probabilità di significatività osservata $p_\text{value}$ esprime la probabilità, _se fosse vera_ $H_0$, 
+di trovare un campione ancora più in favore di $H_1$ di quello disponile
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Se $h$ è uno stimatore tale che la sua distorsione va a zero per $n$ che tende all'infinito:
+$$
+\lim_{n\to \infty}B(h)=0
+$$
+di quale proprietà gode $h$?
+
+::: {.sol data-latex=""}
+Osserviamo che
+\begin{align*}
+B(h) &= E(h)-\theta&\text{e quindi}\\
+\lim_{n\to\infty}B(h)&=0\\
+\lim_{n\to\infty}(E(h)-\theta)&=0 &\text{se e solo se}\\
+\lim_{n\to\infty}E(h)&=\theta &\text{cioè $h$ è asintoticamente corretto}
+\end{align*}
+:::
+
+4.b **(Punti 3)** Definire la funzione di verosimiglianza della Bernoulli.
+
+::: {.sol data-latex=""}
+La verosimiglianza è
+\begin{eqnarray*}
+L(\pi)     &\propto& \prod_{i=1}^n \pi^{x_i}(1-\pi)^{1-x_i}\\
+           &=& \pi^{s_n}(1-\pi)^{n-s_n}, \qquad s_n=\sum_{i=1}^n x_i
+\end{eqnarray*}
+:::
+
+4.c **(Punti 3)** Un dado, che non sappiamo se è perfetto oppure no, viene lanciato 40 volte.
+Posto $\pi_i$ la probabilità che il dado mostri la faccia $i$, $i=1,...,6$, si è testato
+$$
+\begin{cases}
+H_0:\pi_1=\pi_2=...=\pi_6=\frac 16
+\end{cases}
+$$
+ed è risultato $p_\text{value}=0.21$. Possiamo concludere che il dado sia truccato?
+
+::: {.sol data-latex=""}
+Il $p_\text{value}=0.21>0.05$ non c'è motivo per rifiutare $H_0$, quindi il dado non è truccato.
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat\sigma^2$ lo stimatore di massima verosimiglianza per il parametro $\sigma^2$ della normale. $\hat\sigma^2$ è corretto? Quanto vale la sua distorsione?
+
+::: {.sol data-latex=""}
+No, $\hat\sigma^2$ non è corretto
+$$
+E(\hat\sigma^2)=\frac{n-1}n\sigma^2
+$$
+e quindi
+$$
+B(\hat\sigma^2)=|E(\hat\sigma^2)-\sigma^2|=\frac {\sigma^2}n
+$$
+:::
+
+4.b **(Punti 3)** Descrivere la tavola della verità di un test.
+
+4.c **(Punti 3)** In uno studio clinico si è osservato l'effeto sul numero di anticorpi su due gruppi trattati con un farmaco differente. Si è osservato $\hat\mu_1=10.2$, $\hat\sigma_1=1.12$ e $\hat\mu_2=15.6$, $\hat\sigma_2=3.72$. Posto a test
+$$
+\begin{cases}
+H_0:\sigma_1=\sigma_2\\
+H_1:\sigma_1\ne \sigma_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.21$. Quale test dovremmo usare per testare la differenza tra le medie?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori corretti per $\theta$, cosa significa che $h_1$ è più efficiente di $h_2$? 
+
+4.b **(Punti 3)** Definire la funzione di verosimiglianza della Poisson. 
+
+4.c **(Punti 3)** Una moneta, che non sappiamo se è perfetta oppure no, viene lanciata 40 volte.
+Posto $\pi$ la probabilità che la moneta mostri testa, si è testato
+\[
+\begin{cases}
+H_0:\pi=\frac 12\\
+H_1:\pi\ne\frac 12
+\end{cases}
+\]
+ed è risultato $p_\text{value}=0.021$. Possiamo concludere che la moneta sia truccata? 
+
+4.d **(Punti 3)** In caso di campionamento casuale semplice **senza reintroduzione**
+quanto vale la varianza della media aritmetica campionaria?
+
+::: {.sol data-latex=""}
+Siano $X_1,...,X_m$ $n$ VC estratte **senza reintroduzione** allora
+\begin{eqnarray*}
+  E(\bar X) &=&  \mu\\
+  V(\bar X) &=& \frac{N-n}{N-1}\frac{\sigma^2}{n}
+\end{eqnarray*}
+:::
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le correttezza di $\hat\lambda$ in almeno tre passaggi.
+
+
+4.b **(Punti 3)** Definire lo _Standard Error_ di uno stimatore.
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo tipo di un test statistico.
+
+4.d **(Punti 3)** In un test statistico, per quali valori di $p_\text{value}$ si tende a rifiutare $H_0$?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \mu$ lo stimatore di massima verosimiglianza di $\mu$ del modello Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le consistenza di $\hat\mu$ in almeno tre passaggi.
+
+
+4.b **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, cosa significa dire che $h_1$ è più efficiente di $h_2$?
+
+4.c **(Punti 3)** Definire la significatività e la potenza di un test statistico.
+
+4.d **(Punti 3)** Se in un test statistico il $p_\text{value}>0.1$ possiamo rifiutare $H_0$?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le consistenza di $\hat\lambda$ in almeno tre passaggi.
+
+
+4.b **(Punti 3)** Siano $h$ uno stimatore per $\theta$, cosa significa dire che $h$ è asintoticamente corretto?
+
+4.c **(Punti 3)** Definire la probabilità di significatività.
+
+4.d **(Punti 3)** Se in un test statistico $0.01 < p_\text{value} <0.05$ cosa possiamo concludere?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson: $\hat\lambda =  \frac 1n\sum_{i=1}^nx_i$
+Scrivere lo Standard Error di $\hat \lambda$.
+
+4.b **(Punti 3)** Se $h$ è uno stimatore per $\theta$ tale che
+$E(h)\ne \theta$ e che $\lim_ {n\to +\infty}E(h)=\theta$ di quale proprietà gode $h$?
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo tipo di un test statistico e le relative probabilità.
+
+4.d **(Punti 3)** In un confronto tra due campioni viene messo a test
+$$
+\begin{cases}
+H_0:\sigma_A=\sigma_B\\
+H_1:\sigma_A\ne \sigma_B
+\end{cases}
+$$
+Il $p_\text{value}=0.265$. Alla luce di questo risultato, per testare la differenza tra le medie, cosa è preferibile, un test sotto ipotesi di omogeneità, oppure sotto ipotesi di eterogeneità?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che
+
+$$
+  MSE(h_1) =  \frac{\theta}{n^2}, \qquad  MSE(h_2) =  \frac{\theta}{n}
+$$
+
+Quale dei due stimatori è più efficiente?
+
+4.b **(Punti 3)** Siano $T_1$ e $T_2$ due test statistici per la stessa $H_0$ e con la stessa significatività $\alpha$. Cosa significa dire che $T_1$ e più potente di $T_2$?
+
+4.c **(Punti 3)** Definire la probabilità di significatività osservata.
+
+4.d **(Punti 3)** Se in un test statistico che utilizza la statistica test _t_ con 10 gradi di libertà $t_\text{obs}=1.4$, il $p_\text{value}$ sarà maggiore o minore di 0.05? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che
+
+$$
+MSE(h_1) =  \frac{\theta}{n^2}, \qquad MSE(h_2) =  \frac{\theta}{n^3}
+$$
+
+Quale dei due stimatori è più efficiente?
+
+4.b **(Punti 3)** Se uno stimatore $h$ per $\theta$ è tale che $\lim_{n\to\infty}V(h)=0$, di quali proprietà gode $h$?
+
+4.c **(Punti 3)** Un intervallo di confidenza per $\theta$ al 95% è più ampio o meno ampio di uno al 99%? Perché?
+
+4.d **(Punti 3)** Se in un test statistico che utilizza la statistica test _t_ con 10 gradi di libertà $t_\text{obs}=14$, il $p_\text{value}$ sarà maggiore o minore di 0.05? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson: $\hat\lambda =  \frac 1n\sum_{i=1}^nx_i$
+Scrivere la Varianza di $\hat \lambda$.
+
+4.b **(Punti 3)** Se $h$ è uno stimatore per $\theta$ tale che
+$E(h)\ne \theta$ e che $\lim_ {n\to +\infty}V(h)=0$ di quale proprietà gode $h$?
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo 
+tipo di un test statistico e le relative probabilità.
+
+4.d **(Punti 3)** In un confronto tra due campioni viene messo a test
+$$
+\begin{cases}
+H_0:\sigma_A=\sigma_B\\
+H_1:\sigma_A\ne \sigma_B
+\end{cases}
+$$
+Risulta $p_\text{value}=0.002$. Alla luce di questo risultato, per testare la differenza tra le medie, cosa è preferibile, un test sotto ipotesi di omogeneità, oppure sotto ipotesi di eterogeneità? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che
+
+
+$$
+  MSE(h_1) =  \frac{\theta}{\sqrt{n}}, \qquad  MSE(h_2) =  \frac{\theta}{n}
+$$
+
+Quale dei due stimatori è più efficiente?
+
+4.b **(Punti 3)** Sia $\hat\sigma^2$ lo stimatore di massima verosimiglianza
+di $\sigma^2$. In virtù di quale proprietà $\hat \sigma$ è lo stimatore di
+massima verosimiglianza per $\sigma$?
+
+4.c **(Punti 3)** Siano $T_1$ e $T_2$ due test per lo stesso sistema di ipotesi,
+con uguale significatività $\alpha=0.05$ e con probabilità di errore di secondo tipo, $\beta_1=0.3$ 
+per il test $T_1$ e $\beta_2=0.15$ per il test $T_2$. Quale dei due test è più potente?
+
+4.d **(Punti 3)** Se in un test statistico bilaterale che utilizza 
+la statistica test _t_ con 11 gradi di libertà,  $t_\text{obs}=142.3$, 
+il $p_\text{value}$ sarà maggiore o minore di 0.01? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $h$ uno stimatore per $\theta$, tale che
+
+$$
+MSE(h) =  \theta+\frac{\theta}{n^2}
+$$
+
+Lo stimatore $h$ è consistente?
+
+4.b **(Punti 3)** Sia $\hat\theta$ lo stimatore di massima verosimiglianza 
+per $\theta$. Qual è la distribuzione asintotica di $\hat\theta$?
+
+4.c **(Punti 3)** Un intervallo di confidenza per $\theta$ al 90% è più ampio o meno ampio di uno al 95%? Perché?
+
+4.d **(Punti 3)** Se in un test statistico bilaterale che utilizza la statistica test _z_ , risulta $z_\text{obs}=14$, il $p_\text{value}$ sarà maggiore o minore di 0.01? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Ricavare il suo $MSE$ (Mean Squared Error). 
+
+4.b **(Punti 3)** Si $h$ uno stimatore per $\theta$ tale che $E(h)=\theta$. Di quale proprietà gode $h$? 
+
+4.c **(Punti 3)** Definire la potenza di un test. 
+
+4.d **(Punti 3)** In uno studio sull'efficacia degli integratori alimentari, su un gruppo di 238 atleti è stato misurato il rendimento atletico (ottimo, buono e scarso) e l'assunzione di integratori (alto, medio e basso). Qui di seguito i dati:
+
+```{r 2023-110}
+
+x <- matrix(c(21,20,18,35,26,38,15,30,35),3)
+
+dimnames(x)<-list(redimento=c("ottimo","buono","scarso"),reddito=c("alto","medio","basso"))
+kable(x,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper("striped", full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+```
+
+il test del chi-quadro sull'indipendenza tra rendimento e assunzione di integratori restituisce un $p_\text{value}=0.08$. Che cosa possiamo concludere?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \pi$ lo stimatore di massima verosimiglianza di $\pi$ del modello Binomiale.
+\begin{eqnarray*}
+  \hat\pi &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Ricavare il suo $MSE$ (Mean Squared Error). 
+
+4.b **(Punti 3)** Si $h$ uno stimatore per $\theta$ tale che $E(h)=\theta$ e $\lim_{n\to\infty} V(h)=0$. Di quale proprietà gode $h$? 
+
+4.c **(Punti 3)** Definire la significatività di un test. 
+
+4.d **(Punti 3)** In uno studio sull'efficacia della formazione nella scelta degli investimenti finanziari sono stati analizzati due gruppi di investitori, un primo gruppo senza alcuno studio specifico e un secondo gruppo di laureati in scienze economiche o affini. Sotto ipotesi di eterogeneità della varianze si è messo a test l'ipotesi che il rendimento medio degli investimenti dei laureati in scienze economiche $\mu_E$ sia uguale a quello dei non laureati $\mu_N$, contro l'alternativa che $\mu_E>\mu_N$. Il test ha restituito un $p_\text{value}$ pari a 0.092. Cosa possiamo concludere?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Ricavare il $MSE$ (Mean Squared Error) di $\hat\mu$. 
+
+4.b **(Punti 3)** Si $h$ uno stimatore per $\theta$ tale che $E(h)\ne\theta$, ma che $\lim_{n\to\infty}E(h)=\theta$. Di quale proprietà gode $h$? 
+
+4.c **(Punti 3)** Quali sono gli errori di primo e secondo tipo? 
+
+4.d **(Punti 3)** In uno studio sull'efficacia degli integratori alimentari, a 120 atleti è stato somministrato un particolare integratore alimentare giornalmente e a 120 atleti è stato dato un placebo. Dopo 30 giorni di sperimentazione sono state eseguite prove fisiche che hanno restituito la performance degli atleti misurata in scala numerica. Gli atleti che hanno assunto l'integratore hanno ottenuto un risultato medio pari a $\hat\mu_\text{Integratore}=53.4$, mentre gli atleti che hanno assunto l'integratore hanno ottenuto un risultato medio pari a $\hat\mu_\text{Placebo}=50.8$.
+Sotto ipotesi di omogeneità è stato messo a test
+\[
+\begin{cases}
+H_0:\mu_\text{Integratore}=\mu_\text{Placebo}\\
+H_1:\mu_\text{Integratore}>\mu_\text{Placebo}
+\end{cases}
+\]
+il $p_\text{value}$ è risultato pari a $p_\text{value}=0.092$. Cosa possiamo concludere?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Ricavare la sua varianza e metterla in relazione con il suo MSE.
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$. Cosa significa dire che $h$ è consistente?
+
+4.c **(Punti 3)** Siano $T_1$ e $T_2$ due test per lo stesso sistema d'ipotesi e con probabilità di errore di secondo tipo pari a, $\beta_1=0.2$ e $\beta_2=0.3$, rispettivamente. A parità di significatività, quale dei due è più potente? Perché?
+
+4.d **(Punti 3)** In uno studio sull'efficacia di farmaco sono stati analizzati due gruppi di pazienti, un primo gruppo di 132 pazienti col placebo e un secondo gruppo di 132 pazienti col farmaco. Il 28.8% (38 su 132) di chi ha preso il placebo è guarito entro i primi 5 giorni, mentre il 39.4% (42 su 132) di chi è stato trattato col farmaco è guarito entro i primi 5 giorni. Il test sulla differenza tra le due proporzioni ha restituito $p_\text{value}=0.09$. Possiamo affermare che il farmaco sia efficace?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \pi$ lo stimatore di massima verosimiglianza di $\pi$ del modello Binomiale.
+\begin{eqnarray*}
+  \hat\pi &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Ricavare la sua varianza e metterla in relazione con il suo $MSE$ (Mean Squared Error).
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$. Cosa significa dire che $h$ è consistente?
+
+4.c **(Punti 3)** Definire la significatività e la potenza di un test.
+
+4.d **(Punti 3)** In uno studio sull'effetto del titolo di studio sulla percezione del benessere, su un gruppo di 238 intervistati è stato chiesto il titolo di studio (basso: "al massimo le scuole medie inferiori", medio: "Diploma di scuola superiore", alto: "almeno il Diploma di Laurea") e la percezione del proprio benessere (basso, medio, alto). Qui di seguito i dati:
+
+```{r 2023-149}
+
+x <- matrix(c(18,21,20,26,35,38,35,30,15),3)
+dimnames(x)<-list(redimento=c("basso","medio","alto"),reddito=c("basso","medio","alto"))
+kable(x,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper("striped", full_width = F) %>%
+  pack_rows("Titolo di studio", 1, 3) %>%
+  add_header_above(c(" " = 1, "Benessere" = 3))
+```
+
+Si è testata l'indipendenza tra il titolo di studio e la percezione del benessere e il test ha restituito $p_\text{value}=0.04$. Possiamo dire che titolo di studio e benessere sono indipendenti? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Ricavare la varianza di $\hat\mu$ e metterla in relazione con il suo $MSE$ (Mean Squared Error). 
+
+4.b **(Punti 3)** Se $h_1$ e $h_2$ sono due stimatori per $\theta$ cosa significa dire che $h_1$ è più efficiente di $h_2$?
+
+4.c **(Punti 3)** Definire gli errori di primo e secondo tipo e le relativa probabilità.
+
+4.d **(Punti 3)**  Una moneta, che non sappiamo se è perfetta oppure no, viene lanciata 40 volte. Abbiamo osservato 14 volte testa su 40 lanci. Posto $\pi$ la probabilità che la moneta mostri testa, si è testato
+\[
+\begin{cases}
+H_0:\pi=\frac 12\\
+H_1:\pi\ne\frac 12
+\end{cases}
+\]
+ed è risultato $p_\text{value}=0.08$. Possiamo concludere che la moneta sia truccata?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Ricavare lo standard error stimato di $\hat\mu$.
+
+4.b **(Punti 3)** Se $h_1$ e $h_2$ sono due stimatori per $\theta$ tale per cui $MSE(h_1)=1.2$, e $MSE(h_2)=2.3$, quale dei due è più efficiente e perché?
+
+4.c **(Punti 3)** Definire gli errori di primo e secondo tipo e le relative probabilità.
+
+4.d **(Punti 3)**  Una moneta, che non sappiamo se è perfetta oppure no, viene lanciata 80 volte. Abbiamo osservato 28 volte testa su 80 lanci. Posto $\pi$ la probabilità che la moneta mostri testa, si è testato
+\[
+\begin{cases}
+H_0:\pi=\frac 12\\
+H_1:\pi\ne\frac 12
+\end{cases}
+\]
+ed è risultato $p_\text{value}=0.009683$. Possiamo concludere che la moneta sia truccata?
+
+### Esercizio 4
+4.a **(Punti 3)** Sono stati estratti $n=10$ valori da una Poisson di parametro $\lambda$ incognito e si è ottenuta un media pari a $\bar x=3.4$. Ricavare $\widehat{SE(\hat\lambda)}$ lo Standard Error stimato $\hat\lambda$ di massima verosimiglianza.
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$. Cosa significa dire che $h$ è consistente?
+
+4.c **(Punti 3)** Siano $T_1$ e $T_2$ due test per lo stesso sistema d'ipotesi e con probabilità di errore di secondo tipo pari a, $\beta_1=0.02$ e $\beta_2=0.3$, rispettivamente. A parità di significatività, quale dei due è più potente? Perché?
+
+4.d **(Punti 3)** In uno studio sull'efficacia della pubblicità televisiva sono state intervistate 64 persone suddivise in due gruppi, un primo gruppo di 32 individui che guarda abitualmente la televisione e un secondo gruppo di 32 che non la guarda. Ad ogni partecipante è stata chiesta la spesa annua in beni pubblicizzati in TV ed è risultato che la spesa media in questi prodotti di chi guarda abitualmente la TV è pari $\hat\mu_{TV}=1.4\text{ mila €}$ con una standard deviation pari a $\hat\sigma_{TV}=1.2\text{ mila €}$, mentre nel gruppo che non la guarda abitualmente è risultato $\hat\mu_{\overline{TV}}=0.9\text{ mila €}$ con una standard deviation pari a $\hat\sigma_{\overline{TV}}=1.4\text{ mila €}$. Si è testa l'uguaglianza delle medie contro l'alternativa che $\mu_{TV}$ sia maggiore di $\mu_{\overline{TV}}$ e ed è risultato un $p_\text{value}= 0.0681$. Si può concludere che la spesa in pubblicità televisiva sia efficace?
+
+### Esercizio 4
+4.a **(Punti 3)** Sono stati estratti $n=10$ valori da una Bernoulli di parametro $\pi$ incognito e si è ottenuti 4 successi in 10 estrazioni. Ricavare, $\widehat{SE(\hat\pi)}$ lo Standard Error stimato di $\hat\pi$ di massima verosimiglianza.
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$. Cosa significa dire che $h$ è corretto asintoticamente?
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo tipo e le relative probabilità.
+
+4.d **(Punti 3)** Un dado viene lanciato 60 volte e si ottiene 
+```{r 2023-179}
+set.seed(1)
+dad <- sample(1:6,size = 60,replace = T,prob=c(1,1,3,4,1,2)/sum(c(1,1,3,4,1,2)))
+kable(t(table(dad)),booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+chis <- sum((table(dad)-10)^2/10)
+pval <- 1-pchisq(chis,5)
+```
+Ci si chiede se il dado sia truccato. Posto a test
+\[
+\begin{cases}
+H_0:\pi_j=\frac 16, j = 1,...,6
+\end{cases}
+\]
+si ottiene un $p_{\text{value}}=`r pval`$. Il dado si può ritenere truccato? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Come si distribuisce $\hat\mu$?
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$ tale che 
+\[V(h)=\frac\theta {\sqrt{n}};~~~~E(h)=\theta\frac{n+2}{n}\]
+di quali proprietà gode $h$?
+
+4.c **(Punti 3)** Definire il p-value e descrivere la sua interpretazione.
+
+4.d **(Punti 3)**  Se un test è significativo al 5% può essere significativo all'1%? (scegliere la risposta tra: _mai_, _non sempre_ oppure _sempre_ e motivare la risposta)
+
+### Esercizio 4
+4.a **(Punti 3)**Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson: 
+\[\hat\lambda =  \frac 1n\sum_{i=1}^nx_i\]
+Scrivere la distribuzione asintotica di $\hat \lambda$.
+
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$ tale che 
+\[V(h)=2\frac\theta {\sqrt{n}};~~~~E(h)=\theta\frac{n+2}{n-1}\]
+$h$ è corretto? Si può correggere?
+
+4.c **(Punti 3)** Definire la significatività di un test statistico.
+
+4.d **(Punti 3)** Se un test è significativo all'1% può essere significativo all'5%? (scegliere la risposta tra: _mai_, _non sempre_ oppure _sempre_ e motivare la risposta)
+
+### Esercizio 4
+4.a **(Punti 3)**Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson: 
+\[\hat\lambda =  \frac 1n\sum_{i=1}^nx_i\]
+Scrivere la distribuzione asintotica di $\hat \lambda$.
+
+4.b **(Punti 3)** 4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$ tale che 
+\[V(h)=2\frac\theta {\sqrt{n}};~~~~E(h)=\theta\frac{n+2}{n-1}\]
+scrive il Mean Squared Error di $h$ ($MSE(h)$).
+
+4.c **(Punti 3)** Definire la potenza di un test statistico.
+
+4.d **(Punti 3)** Se un t-test bilaterale con 13 gradi libertà presenta una
+t osservata pari a $t_\text{obs}=1.974$, il $p_\text{value}$ sarà maggiore o minore di 0.05? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Siano $\hat \mu$ e $\hat\sigma^2$ gli stimatori di massima verosimiglianza di $\mu$ e $\sigma^2$ del modello di Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i \qquad \hat\sigma^2 =  \frac 1n\sum_{i=1}^n(x_i-\hat\mu)^2\\
+\end{eqnarray*}
+Dimostrare la consistenza di $\hat\mu$.
+
+4.b **(Punti 3)** Cosa significa che gli stimatori di massima verosimiglianza sono invarianti alle trasformazioni monotone invertibili?
+
+4.c **(Punti 3)** Definire la significatività di un test.
+
+```{r 2023-205}
+tabella <- matrix(c(50, 120, 50, 60, 80, 40, 40, 50, 50), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(tabella)$p.value,digits = 4,nsmall = 4)
+```
+
+4.d **(Punti 3)** Un sociologo sta conducendo uno studio sull'associazione tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio orientamento politico (Conservatore, Progressista, Indipendente) e l'atteggiamento nei confronti del cambiamento climatico (Molto, poco, per nulla) preoccupato. L'obiettivo è determinare se c'è un'associazione significativa tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico.
+
+```{r 2023-206}
+
+rownames(tabella) <- c("Conservatore", "Progressista", "Indipendente")
+colnames(tabella) <- c("Molto", "Poco", "Per nulla")
+
+
+ tabl(tabella)  %>%
+   kable_styling(full_width = F)  %>%
+   kable_paper(full_width = F)  %>%
+   pack_rows("Orientamento politico", 1, 3) %>%
+   add_header_above(c(" " = 1, "Preoccupato per i cambiamenti climatici" = 3))
+```
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra l'orientamento politico e la preoccupazione
+sui cambiamenti climatici il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \beta_1$ lo stimatore dei minimi quadrati di $\beta_1$ del modello di regressione lineare.
+\begin{eqnarray*}
+  \hat\beta_1 &=&  \frac{\text{cov}(X,Y)}{\hat\sigma_X^2}\\
+\end{eqnarray*}
+Dimostrare la consistenza di $\hat\beta_1$.
+
+4.b **(Punti 3)** Come si distribuiscono gli stimatori di massima verosimiglianze asintoticamente?
+
+4.c **(Punti 3)** Definire la potenza di un test.
+
+```{r 2023-214}
+tabella <- matrix(c(50, 80, 50, 60, 80, 40, 40, 50, 50), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(tabella)$p.value,digits = 4,nsmall = 4)
+```
+
+4.d **(Punti 3)** Un sociologo sta conducendo uno studio sull'associazione tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio orientamento politico (Conservatore, Progressista, Indipendente) e l'atteggiamento nei confronti del cambiamento climatico (Molto, poco, per nulla) preoccupato. L'obiettivo è determinare se c'è un'associazione significativa tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico.
+
+```{r 2023-215}
+
+rownames(tabella) <- c("Conservatore", "Progressista", "Indipendente")
+colnames(tabella) <- c("Molto", "Poco", "Per nulla")
+
+
+ tabl(tabella)  %>%
+   kable_styling(full_width = F)  %>%
+   kable_paper(full_width = F)  %>%
+   pack_rows("Orientamento politico", 1, 3) %>%
+   add_header_above(c(" " = 1, "Preoccupato per i cambiamenti climatici" = 3))
+```
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra l'orientamento politico e la preoccupazione
+sui cambiamenti climatici il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** Sia $\hat \beta_0$ lo stimatore dei minimi quadrati di $\beta_0$ del modello di regressione lineare.
+\begin{eqnarray*}
+  \hat\beta_0 &=&\bar y-  \hat\beta_1\bar x\\
+\end{eqnarray*}
+Dimostrare la consistenza di $\hat\beta_0$.
+
+4.b **(Punti 3)** Cosa significa che gli stimatori di massima verosimiglianza sono asintoticamente a massima efficienza?
+
+4.c **(Punti 3)** Definire gli errori di primo e secondo tipo.
+
+```{r 2023-222}
+tabella <- matrix(c(50, 80, 50, 60, 100, 40, 40, 50, 50), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(tabella)$p.value,digits = 4,nsmall = 4)
+```
+
+4.d **(Punti 3)** Un sociologo sta conducendo uno studio sull'associazione tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio orientamento politico (Conservatore, Progressista, Indipendente) e l'atteggiamento nei confronti del cambiamento climatico (Molto, poco, per nulla) preoccupato. L'obiettivo è determinare se c'è un'associazione significativa tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico.
+
+```{r 2023-223}
+
+rownames(tabella) <- c("Conservatore", "Progressista", "Indipendente")
+colnames(tabella) <- c("Molto", "Poco", "Per nulla")
+
+
+ tabl(tabella)  %>%
+   kable_styling(full_width = F)  %>%
+   kable_paper(full_width = F)  %>%
+   pack_rows("Orientamento politico", 1, 3) %>%
+   add_header_above(c(" " = 1, "Preoccupato per i cambiamenti climatici" = 3))
+```
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra l'orientamento politico e la preoccupazione
+sui cambiamenti climatici il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello normale $X\sim N(\mu,\sigma^2)$. Sia $\hat\mu$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\mu = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Dimostrare la consistenza di $\hat\mu$.
+
+4.b **(Punti 3)** Definire lo Standard Error di uno stimatore.
+
+4.c **(Punti 3)** Definire la significatività di un test.
+
+```{r 2024-46}
+tabella <- matrix(c(45, 35, 20, 25, 30, 45, 10, 15, 25), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(t(tabella))$p.value, digits = 4, nsmall = 4)
+
+```
+
+4.d **(Punti 3)** Un sociologo sta conducendo uno studio sull'associazione tra il livello di istruzione e il comportamento di voto. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio livello di istruzione (Basso, Medio, Alto) e il comportamento di voto (Regolarmente, Occasionalmente, Mai). L'obiettivo è determinare se c'è un'associazione significativa tra il livello di istruzione e il comportamento di voto.
+
+```{r 2024-47}
+
+rownames(tabella) <- c("Basso", "Medio", "Alto")
+colnames(tabella) <- c("Regolarmente", "Occasionalmente", "Mai")
+
+tabl(t(tabella)) %>%
+  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
+  pack_rows("Comportamento di Voto", 1, 3) %>%
+  add_header_above(c(" " = 1, "Livello di Istruzione" = 3))
+
+
+```
+
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra il livello di istruzione e il comportamento di voto, il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello di Bernoulli $X\sim\text{Ber}(\pi)$. Sia $\hat\pi$ lo stimatore di massima verosimiglianza per $\pi$
+
+$$
+  \hat\pi = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Dimostrare la consistenza di $\hat\pi$.
+
+4.b **(Punti 3)** Che differenza c'è tra lo Standard Error di uno stimatore e la Deviazione Standard del campione?
+
+4.c **(Punti 3)** Definire la potenza di un test.
+
+```{r 2024-56}
+tabella <- matrix(c(30, 20, 10, 40, 35, 25), nrow = 3, ncol = 2, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(tabella)$p.value, digits = 4, nsmall = 4)
+
+rownames(tabella) <- c("Basso", "Medio", "Alto")
+colnames(tabella) <- c("Sì", "No")
+```
+
+4.d **(Punti 3)** Un economista sta conducendo uno studio sull'associazione tra il livello di istruzione e il possesso di una casa. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio livello di istruzione (Basso, Medio, Alto) e se possiedono una casa (Sì, No). L'obiettivo è determinare se c'è un'associazione significativa tra il livello di istruzione e il possesso di una casa.
+
+```{r 2024-57}
+tabella <- matrix(c(30, 20, 10, 40, 35, 25), nrow = 3, ncol = 2, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(t(tabella))$p.value, digits = 4, nsmall = 4)
+
+rownames(tabella) <- c("Basso", "Medio", "Alto")
+colnames(tabella) <- c("Sì", "No")
+
+tabl(t(tabella)) %>%
+  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
+  pack_rows("Possesso \n di Casa", 1, 2) %>%
+  add_header_above(c(" " = 1, "Livello di Istruzione" = 3))
+
+
+```
+
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra il livello di istruzione e il possesso di una casa, l'economista ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello binomiale $X\sim\text{Pois}(\lambda)$. Sia $\hat\lambda$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\lambda = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Dimostrare la consistenza di $\hat\lambda$.
+
+4.b **(Punti 3)** Che differenza c'è tra lo Standard Error di uno stimatore e la Deviazione Standard di popolazione?
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo tipo.
+
+
+```{r 2024-66}
+observed <- c(5, 8, 12, 7, 6, 4, 3)
+total <- sum(observed)
+lambda <- sum((0:(length(observed) - 1)) * observed) / total
+expected <- dpois(0:(length(observed) - 1), lambda) * total
+chisq_result <- chisq.test(observed, p = expected / sum(expected))
+pval_poisson <- format(chisq_result$p.value, digits = 4, nsmall = 4)
+```
+
+
+4.d **(Punti 3)** Un biologo sta studiando il numero di cellule di una certa specie osservate in campioni di terreno. Ha raccolto dati sul numero di cellule in `r total` campioni. I dati osservati sono riportati nella tabella seguente. L'obiettivo è determinare se i dati seguono una distribuzione di Poisson.
+
+```{r 2024-67}
+observed <- c(5, 8, 12, 7, 6, 4, 3)
+total <- sum(observed)
+lambda <- sum((0:(length(observed) - 1)) * observed) / total
+expected <- dpois(0:(length(observed) - 1), lambda) * total
+chisq_result <- chisq.test(observed, p = expected / sum(expected))
+pval_poisson <- format(chisq_result$p.value, digits = 4, nsmall = 4)
+
+dati <- data.frame(
+  Numero = 0:(length(observed) - 1),
+  Osservati = observed,
+  Attesi = round(expected, 2)
+)
+
+
+ kable(dati) %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+Eseguito il test del $\chi^2$ per verificare la conformità dei dati alla distribuzione di Poisson, il biologo ottiene un $p_\text{value}=`r pval_poisson`$. Il modello Poisson è adeguato?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello normale $X\sim N(\mu,\sigma^2)$. Sia $\hat\mu$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\mu = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+4.b **(Punti 3)** Se $\hat\theta$ è lo stimatore di massima verosimiglianza 
+per $\theta$, con $E(\hat\theta)=\theta$ e $V(\hat\theta)=I^{-1}(\theta)$. 
+Com'è distribuito asintoticamente $\hat\theta$?
+
+4.c **(Punti 3)** Definire la significatività di un test.
+
+```{r 2024-76}
+tabella <- matrix(c(15, 20, 25, 25, 30, 25, 35, 30, 15), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(t(tabella))$p.value, digits = 4, nsmall = 4)
+```
+
+4.d **(Punti 3)** Un nutrizionista sta conducendo uno studio sull'associazione tra il tipo di dieta e lo stato di salute. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio stato di salute  Ottimo, Buono, Scarso e il tipo di dieta seguito (Vegano, Vegetariano, Onnivoro). L'obiettivo è determinare se c'è un'associazione tra il tipo di dieta e lo stato di salute.
+
+```{r 2024-77}
+
+colnames(tabella) <-  c("Ottimo", "Buono", "Scarso")
+rownames(tabella) <- c("Vegano", "Vegetariano", "Onnivoro")
+
+tabl((tabella)) %>%
+  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
+  pack_rows("Tipo di Dieta", 1, 3) %>%
+  add_header_above(c(" " = 1, "Stato di Salute" = 3))
+
+
+```
+
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra il livello di istruzione e il comportamento di voto, il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello di Bernoulli $X\sim\text{Ber}(\pi)$. Sia $\hat\pi$ lo stimatore di massima verosimiglianza per $\pi$
+
+$$
+  \hat\pi = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+4.b **(Punti 3)** Cosa significa che lo stimatore di massima verosimiglianza è invariante alle trasformazioni monotone invertibili?
+
+4.c **(Punti 3)** Siano $T_1$ e $T_2$ due test per lo stesso sistema di ipotesi con la stessa significatività $\alpha$, sia $\beta_1=0.23$ la probabilità di errore di secondo tipo del test $T_1$ e $\beta_2=0.18$ la probabilità di errore di secondo tipo del test $T_2$. Quale dei due test è più potente?
+
+4.d **(Punti 3)**  In un'indagine sull'opinione sul reddito di inclusione sono stati intervistate 150 persone che vivono al nord e 180 che vivono al sud: 60 su 150 che vivono al nord sono favorevoli al reddito di cittadinanza mentre 95 su 180 che vivono al sud sono favorevoli. 
+Messo a test
+
+$$
+\begin{cases}
+   H_0: \pi_\text{N} = \pi_\text{S} \\
+   H_1: \pi_\text{N} \neq \pi_\text{S} 
+\end{cases}
+$$
+
+è risultato  $p_{\text{value}} =0.0206$. Cosa possiamo concludere?
+
+### Esercizio 4
+4.a **(Punti 3)** (**Punti 3**) Si consideri il modello binomiale $X\sim\text{Pois}(\lambda)$. Sia $\hat\lambda$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\lambda = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+4.b **(Punti 3)** Che differenza c'è tra lo Standard Error di uno stimatore e la Deviazione Standard di popolazione?
+
+4.c **(Punti 3)** Definire gli errori di primo e di secondo tipo e le relative probabilità.
+
+```{r 2024-99}
+observed <- c(13, 5, 10, 10, 8, 7, 4)
+total <- sum(observed)
+lambda <- sum((0:(length(observed) - 1)) * observed) / total
+expected <- dpois(0:(length(observed) - 1), lambda) * total
+chisq_result <- chisq.test(observed, p = expected / sum(expected))
+pval_poisson <- format(chisq_result$p.value, digits = 4, nsmall = 4)
+```
+
+4.d **(Punti 3)** Un economista sta studiando il numero di piccole imprese che aprono ogni mese in una certa regione. Ha raccolto dati sul numero di nuove imprese in `r total` mesi. I dati osservati sono riportati nella tabella seguente. L'obiettivo è determinare se i dati seguono una distribuzione di Poisson.
+
+```{r 2024-100}
+
+dati <- data.frame(
+  Numero = 0:(length(observed) - 1),
+  Osservati = observed,
+  Attesi = round(expected, 2)
+)
+
+
+kable(t(dati)) %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+```
+
+Eseguito il test del $\chi^2$ per verificare la conformità dei dati alla distribuzione di Poisson, il biologo ottiene un $p_\text{value}=`r pval_poisson`$. Il modello Poisson è adeguato?
+
+### Esercizio 4
+4.a **(Punti 3)** Si consideri il modello normale $X\sim N(\mu,\sigma^2)$. Sia $\hat\mu$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\mu = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Estratti $n=25$ dati si è ottenuto $\sum_{i=1}^n x_i = 45$ e $\sum_{i=1}^n x_i^2 = 105$. Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \hat\mu  &=&\frac{45}{25}=`r 42/25`\\
+  \hat\sigma &=&\sqrt{\frac 1{25}105-`r 42/25`^2}=`r sqrt(105/25-(42/25)^2)`\\
+  S &=&\sqrt{\frac{n}{n-1}}\hat\sigma=`r sqrt(25/24)*sqrt(105/25-(42/25)^2)`\\
+  SE(\hat\mu) &=&  \frac{\sigma}{\sqrt{n}}\\
+  \widehat{SE(\hat\mu)} &=& \frac{S}{\sqrt{n}}\\
+  \widehat{SE(\hat\mu)} &=& \frac{`r sqrt(25/24)*sqrt(105/25-(42/25)^2)`}{\sqrt{25}}=`r sqrt(25/24)*sqrt(105/25-(42/25)^2)/5`\\
+\end{eqnarray*}
+:::
+4.b **(Punti 3)** Sia $h$ uno stimatore per $\theta$, cosa significa che $h$ è consistente?
+
+4.c **(Punti 3)** Definire la significatività e la potenza di un test.
+
+```{r 2024-110}
+tabella_aziendale <- matrix(c(30, 15, 20, 20, 25, 40, 45, 30, 35), nrow = 3, ncol = 3, byrow = TRUE)
+n_aziendale <- sum(tabella_aziendale)
+pval  <- format(chisq.test(t(tabella_aziendale))$p.value, digits = 4, nsmall = 4)
+```
+
+4.d **(Punti 3)** Un responsabile delle risorse umane sta conducendo uno studio sull'associazione tra il tipo di formazione ricevuta e la performance lavorativa. Ha somministrato un questionario a `r n_aziendale` dipendenti, chiedendo loro di indicare la propria performance lavorativa (Alta, Media, Bassa) e il tipo di formazione ricevuta (Tecnica, Manageriale, Soft Skills). L'obiettivo è determinare se c'è un'associazione tra il tipo di formazione ricevuta e la performance lavorativa.
+
+```{r 2024-111}
+
+colnames(tabella_aziendale) <-  c("Alta", "Media", "Bassa")
+rownames(tabella_aziendale) <- c("Tecnica", "Manageriale", "Soft Skills")
+
+tabl(tabella_aziendale) %>%
+  kable_styling(full_width = F) %>%
+  kable_paper(full_width = F) %>%
+  pack_rows("Tipo di Formazione", 1, 3) %>%
+  add_header_above(c(" " = 1, "Performance Lavorativa" = 3))
+```
+
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra il livello di istruzione e il comportamento di voto, il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 4
+4.a **(Punti 3)** Si consideri il modello di Bernoulli $X\sim\text{Ber}(\pi)$. Sia $\hat\pi$ lo stimatore di massima verosimiglianza per $\pi$
+
+$$
+  \hat\pi = \frac 1n \sum_{i=1}^n X_i
+$$
+
+
+Estratti $n=25$ dati si è ottenuto $\sum_{i=1}^n x_i = 15$. Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+
+4.b **(Punti 3)** Siano $h_1$ e $h_2$ due stimatori per $\theta$, cosa significa che $h_1$ è più efficiente di $h_2$?
+
+4.c **(Punti 3)** Siano $T_1$ e $T_2$ due test per lo stesso sistema di ipotesi con la stessa significatività $\alpha$, siano $\beta_1$ la probabilità di errore di secondo tipo del test $T_1$ e $\beta_2$ la probabilità di errore di secondo tipo del test $T_2$. Cosa significa dire che $T_1$ è più potente di $T_2$?
+
+4.d **(Punti 11)**  In un'indagine sull'opinione sull'autonomia differenziata sono stati intervistate 180 persone che vivono al nord e 130 che vivono al sud: 108 su 180 che vivono al nord sono favorevoli al reddito di cittadinanza mentre 55 su 130 che vivono al sud sono favorevoli. 
+Messo a test
+
+$$
+\begin{cases}
+   H_0: \pi_\text{N} = \pi_\text{S} \\
+   H_1: \pi_\text{N} > \pi_\text{S} 
+\end{cases}
+$$
+
+è risultato  $p_{\text{value}} =0.001041$. Possiamo concludere che al nord siano più propensi all'autonomia che al sud? Perché?
+
+### Esercizio 4
+4.a **(Punti 3)** Si consideri il modello di Poisson $X\sim\text{Pois}(\lambda)$. Sia $\hat\lambda$ lo stimatore di massima verosimiglianza per $\mu$
+
+$$
+  \hat\lambda = \frac 1n \sum_{i=1}^n X_i
+$$
+
+Estratti $n=25$ dati si è osservato $\sum_{i=1}^nx_i=54$. Ricavare il suo _Standard Error_ teorico e quello stimato.
+
+:::{.sol data-latex=""}
+Dato il modello binomiale \(X \sim \text{Pois}(\lambda)\) e \(\hat\lambda = \frac{1}{n} \sum_{i=1}^n X_i\), con \(n = 25\) e \(\sum_{i=1}^n x_i = 54\):
+
+Standard Error Teorico
+\[
+SE(\hat\lambda) = \sqrt{\frac{\lambda}{n}}
+\]
+
+Standard Error Stimato
+\[
+\hat\lambda = \frac{54}{25} = 2.16
+\]
+\[
+SE(\hat\lambda) = \sqrt{\frac{2.16}{25}} = \sqrt{0.0864} \approx 0.294
+\]
+:::
+
+4.b **(Punti 3)** Cosa significa che uno stimatore è asintoticamente corretto?
+
+4.c **(Punti 3)** Definire la significatività e la potenza di un test.
+
+4.d **(Punti 14)**L'Associazione dei Commercianti della Toscana ha condotto un'indagine sulle preferenze dei metodi di pagamento tra i clienti dei negozi della regione. Durante una settimana, sono stati intervistati 350 clienti di vari negozi. L'associazione è interessata a capire se le preferenze dei clienti per i metodi di pagamento differiscono dalla media nazionale.
+
+Qui di seguito è riportata la tabella delle preferenze dei clienti dei negozi della Toscana e le percentuali nazionali:
+
+```{r 2024-128}
+X <- c("Contanti", "Carta di Credito", "Carta di Debito", "Bonifico Bancario", "Pagamento Mobile")
+
+Y <- c("Dati Associazione", "Media Nazionale")
+ntot <- 350
+Freq_0 <- c(100, 120, 50, 30, 50)/sum(c(100, 120, 50, 30, 50))*100
+Freq_c <- c(110, 130, 40, 35, 35)
+Freq_c <- round(Freq_c/sum(Freq_c)*ntot)
+
+chi_print_conf(Freq_c = Freq_c,Freq_0 = Freq_0,X,Y)
+```
+
+Eseguito il test del $\chi^2$ per verificare la conformità delle due distribuzioni si ottiene un $p_\text{value}=0.0667$. Le due distribuzioni possono essere considerate uguali?
+

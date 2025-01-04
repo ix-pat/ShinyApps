@@ -1,0 +1,92 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, echo=FALSE}
+s1 <- sqrt(n1/(n1-1))*s1h
+s2 <- sqrt(n2/(n2-1))*s2h
+s2p <- (n1*s1h+n2*s2h)/(n1+n2-2)
+et <- T
+if (et) se <- sqrt(s1^2/n1+s2^2/n2) else se <- sqrt(s2p/n1+s2p/n2)
+tobs <- (mu1-mu2)/se
+if (h1==">") tc <- qt(1-alpha,n1+n2-2)
+if (h1=="<") tc <- -qt(1-alpha,n1+n2-2)
+if (h1=="\\neq") tc <- sign((mu1-mu2))*qt(1-alpha/2,n1+n2-2)
+if (h1=="\\neq") alpha <- alpha/2
+# if (!exists("um")) um <- ""
+# if (!exists("a")) a <- 1
+# if (!exists("b")) b <- 2
+if (et) {q1 <- a; q2 <- b} else {q1 <- "p"; q2 <- "p"}
+if (et) {s2f1<- s1^2; s2f2 <- s2^2}
+```
+
+$\fbox{A}$ FORMULAZIONE DELLE IPOTESI
+
+$$\begin{cases}
+H_0:\mu_\text{`r a`} =      \mu_\text{ `r b`}\text{`r um`}\\
+H_1:\mu_\text{`r a`} `r h1` \mu_\text{ `r b`}\text{`r um`}
+\end{cases}$$
+`r ifelse(h1=="\\neq","Siccome $H_1$ è bilaterale, considereremo $\\alpha/2$, anziché $\\alpha$","")`
+
+$\fbox{B}$ SCELTA E CALCOLO STATISTICA-TEST, $T$
+
+L'ipotesi è di eterogeneità e quindi calcoliamo:
+$$
+  S^2_\text{`r a`}=\frac{n_\text{`r a`}}{n_\text{`r a`}-1}\hat\sigma^2_\text{`r a`}=\frac{`r n1`}{`r n1`-1}`r s1h`^2=`r s1^2` \qquad
+  S^2_\text{`r b`}=\frac{n_\text{`r b`}}{n_\text{`r b`}-1}\hat\sigma^2_\text{`r b`}=\frac{`r n2`}{`r n2`-1}`r s2h`^2=`r s2^2`
+$$
+
+<!-- - L'ipotesi è di omogeneità e quindi calcoliamo: -->
+<!-- $$ -->
+<!--   S_p^2=\frac{n_\text{`r a`}\hat\sigma^2_\text{`r a`}+n_\text{`r b`}\hat\sigma^2_\text{`r b`}}{n_\text{`r a`}+n_\text{`r b`}-2} = -->
+<!--   \frac{`r n1`\cdot`r s1h^2`+`r n2`\cdot`r s2h^2`}{`r n1`+`r n2`-2}=`r s2p` -->
+<!-- $$ -->
+
+\begin{eqnarray*}
+ \frac{\hat\mu_\text{`r a`} - \hat\mu_\text{`r b`}} 
+ {\sqrt{\frac {S^2_\text{`r q1`}}{n_\text{`r a`}}+\frac {S^2_\text{`r q2`}}{n_\text{`r b`}}}}&\sim&t_{n_\text{`r a`}+n_\text{`r b`}-2}\\
+    t_{\text{obs}}
+&=& \frac{ (`r mu1`- `r mu2`)} {\sqrt{\frac{`r s2f1`}{`r n1`}+\frac{`r s2f2`}{`r n2`}}}
+ =  `r tobs`\, .
+\end{eqnarray*}
+
+```{r, echo=FALSE}
+H1 <- h1
+if (h1=='\\neq') h1 <- ifelse(tc<0,"<",">")
+```
+
+$\fbox{C}$ DECISIONE
+
+Dalle tavole si ha $t_{(`r n1`+`r n2`-2);\, `r alpha`} = `r tc`$.
+$$t_{\text{obs}} = `r tobs` `r ifelse(tobs<tc,"<",">")` t_{`r n1+n2-2`;\, `r alpha`} = `r tc`$$
+
+CONCLUSIONE: i dati `r ifelse(tobs<tc & h1=="<" | tobs>tc & h1==">", " **non** sono", "**sono**")` coerenti con $H_{0}$ al LdS del `r ifelse(H1=="\\neq",2*alpha*100,alpha*100)`%
+
+**Graficamente**
+
+```{r, echo=FALSE}
+if (H1 == ">") {R <- c(tc,4); A <- c(-4,tc)}
+if (H1 == "<") {R <- c(-4,tc); A <- c(tc,4)}
+if (H1 == "\\neq") {A <- c(-abs(tc),abs(tc)); R1 <- c(-4,-abs(tc)); R <- c(4,abs(tc))}
+curve(dt(x,n1+n2-2),-4,4,axes=F,xlab="T",ylab="")
+
+lines(A,c(0,0),lwd=2,col=4)
+if (H1 == "\\neq") {
+  lines(R1,c(0,0),lwd=2,col=2) 
+  axis(1,c(-4,-tc,0,tc,4),round(c(-4,-tc,0,tc,4),3))
+  } else axis(1,round(c(-4,4,0,tc),3))
+lines(R,c(0,0),lwd=2,col=2)
+points(tobs,0,pch=4,cex=2)
+text(tobs,.05,expression(t[obs]))
+axis(2)
+```
+
+```{r, echo=FALSE}
+if (H1 == ">") {pval <- paste("P(T_{n1+n2-2}>t_{\\text{obs}})=P(T_{n1+n2-2}>",round(tobs,3),")=",format(1-pt(tobs,n1+n2-2),digits = 4, scipen=8))}
+if (H1 == "<") {pval <- paste("P(T_{n1+n2-2}<t_{\\text{obs}})=P(T_{n1+n2-2}<",round(tobs,3),")=",format(pt(tobs,n1+n2-2),digits = 4, scipen=8))}
+if (H1 == "\\neq") {pval <- paste("P(|T_{n1+n2-2}|>|t_{\\text{obs}}|)=2P(T_{n1+n2-2}>|t_{\\text{obs}}|)=2P(T_{n1+n2-2}>|",round(tobs,4),"|)=",format(2*pt(-abs(tobs),n1+n2-2),digits = 4, scipen=8))}
+```
+
+Il $p_{\text{value}}$ è
+$$`r pval`$$

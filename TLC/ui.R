@@ -1,0 +1,60 @@
+#
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+# 
+#    http://shiny.rstudio.com/
+#
+# system("sudo cp -R ~/OneDrive/statistica-old/esempi/TCL/ /srv/shiny-server/")
+
+library(shiny)
+library(shinythemes)
+
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+  theme = shinytheme("flatly"),
+  # Application title
+  titlePanel("Teorema Centrale del Limite"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      "Patrizio Frederic v1.1, 2021",
+      selectInput("dist",
+                   "Distribuzione base",
+                  choices = c("norm","bin","pois","unif","esempio-lezione"),
+                  selected = "esempio-lezione"),
+      fluidRow(
+        column(3,
+          checkboxInput("dn","diviso n")
+        ),
+        column(3,
+          checkboxInput("tcl","mostra approssimazione")
+        )
+      ),      
+      numericInput("n","n",1,min=1,max=1000,step = 1),
+      "Normal Distribution",
+      fluidRow(
+        column(5,
+               sliderInput("mu","mu",min = -5,max = 5,value = 0,step = .1)
+        ),
+        column(5,
+               sliderInput("ss","sigma",min = 0,max = 5,value = 1,step = .1)
+        )
+      ),
+      "Binomiale",
+      sliderInput("pp","pi greco",min = 0,max = 1,value = .5,step = .01),
+      "Poisson",
+      sliderInput("ll","lambda",min = 0,max = 10,value = 1,step = .01),
+      "Uniforme",
+      sliderInput("ab","a e b",min = -5,max = 5,value = c(0,1),step = .01),
+#      sliderInput("b","b",min = -5,max = 5,value = 1,step = .01)
+    ), 
+    mainPanel(
+      plotOutput("distPlot"),
+      plotOutput("densPlot")
+    )  
+  )
+  )
+)

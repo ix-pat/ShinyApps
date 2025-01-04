@@ -1,0 +1,22 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE}
+# mm <-  10
+# sd <- 2
+# ss <- 2^2
+# x0 <- 9
+# x2 <- 11
+# vnam <- "X"
+
+z <- round((x0 - mm)/sqrt(ss),digits = 2)
+
+```
+\begin{eqnarray*}
+P(`r vnam`\leq `r x0`) 
+              &=& P\left( \frac {`r vnam` - E(`r vnam`)}{\sqrt{V(`r vnam`)}}\leq \frac {`r x0` - (`r mm`)}{\sqrt{`r ss`}}\right)  \\
+              &=& P\left(  Z \leq `r z`\right) \\
+              &=& \Phi(`r z`)\\
+              &=& `r pnorm(z)`
+\end{eqnarray*}

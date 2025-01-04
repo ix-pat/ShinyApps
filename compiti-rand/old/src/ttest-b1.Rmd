@@ -1,0 +1,87 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, echo=FALSE}
+# b10 beta_! prescritto da H_0
+# s2y var y
+# s2x var x
+# r  r
+# b1 beta_1
+# n n
+
+sh2 <- s2y*(1-r^2)
+se2 <- (n/(n-2))*sh2 
+vb1 <- se2 / (n*s2x) 
+
+tobs <- (b1 - 0)/sqrt(vb1)
+
+if (h1==">") tc <- qt(1-alpha,n-2)
+if (h1=="<") tc <- -qt(1-alpha,n-2)
+if (h1=="\\neq") tc <- sign((b1-b10))*qt(1-alpha/2,n-2)
+if (h1=="\\neq") alpha <- alpha/2
+```
+
+- $\fbox{A}$ FORMULAZIONE DELLE IPOTESI
+$$\begin{cases}
+H_0:\beta_1=`r b10`\\
+H_1:\beta_1`r h1` `r b10`
+\end{cases}$$
+`r ifelse(h1=="\\neq","Siccome $H_1$ è bilaterale, considereremo $\\alpha/2$, anziché $\\alpha$","")`
+
+\begin{eqnarray*}
+\hat{\sigma_\varepsilon}^2&=&(1-r^2)\hat\sigma_Y^2\\
+&=& (1-(`r r`^2))\times`r s2y`\\
+    &=& `r sh2`\\
+    S_\varepsilon^2 &=& \frac{n} {n-2} \hat{\sigma_\varepsilon}^2\\
+    &=&  \frac{`r n`} {`r n`-2} \hat{\sigma_\varepsilon}^2 \\
+ &=&  \frac{`r n`} {`r n`-2} \times `r sh2` = `r se2` 
+\end{eqnarray*}
+
+\begin{eqnarray*}
+V(\hat\beta_{1}) &=& \frac{\sigma_{\varepsilon}^{2}} {n \hat{\sigma}^{2}_{X}} \\
+\widehat{V(\hat\beta_{1})} &=& \frac{S_{\varepsilon}^{2}} {n \hat{\sigma}^{2}_{X}} \\
+ &=& \frac{`r se2`} {`r n`\times `r s2x`} \\
+ &=& `r vb1`\\
+ \widehat{SE(\hat\beta_{1})}           &=& \sqrt{\widehat{V(\hat\beta_{1})}}\\
+ &=& \sqrt{`r vb1`}\\
+ &=& `r sqrt(vb1)`
+\end{eqnarray*}
+
+- 
+\begin{eqnarray*}
+ \frac{\hat\beta_1 - \beta_{1;H_0}} {\widehat{SE(\hat\beta_{1})}}&\sim&t_{n-2}\\
+    t_{\text{obs}}
+&=& \frac{ (`r b1`- `r b10`)} {`r sqrt(vb1)`}
+ =  `r tobs`\, .
+\end{eqnarray*}
+
+```{r, echo=FALSE}
+H1 <- h1
+if (h1=='\\neq') h1 <- ifelse(tc<0,"<",">")
+```
+
+- $\fbox{C}$ DECISIONE
+Dalle tavole si ha $t_{(`r n`-1);\, `r alpha`} = `r tc`$.
+$$t_{\text{obs}} = `r tobs` `r ifelse(tobs<tc,"<",">")` t_{`r n-2`;\, `r alpha`} = `r tc`$$
+- CONCLUSIONE: i dati `r ifelse(tobs<tc & h1=="<" | tobs>tc & h1==">", " **non** sono", "**sono**")` coerenti con $H_{0}$ al LdS del `r ifelse(H1=="\\neq",2*alpha*100,alpha*100)`%
+
+**Graficamente**
+
+```{r, echo=FALSE}
+if (H1 == ">") {R <- c(tc,4); A <- c(-4,tc)}
+if (H1 == "<") {R <- c(-4,tc); A <- c(tc,4)}
+if (H1 == "\\neq") {A <- c(-abs(tc),abs(tc)); R1 <- c(-4,-abs(tc)); R <- c(4,abs(tc))}
+curve(dt(x,n-2),-4,4,axes=F,xlab="T",ylab="")
+
+lines(A,c(0,0),lwd=2,col=4)
+if (H1 == "\\neq") {
+  lines(R1,c(0,0),lwd=2,col=2) 
+  axis(1,c(-4,-tc,0,tc,4),round(c(-4,-tc,0,tc,4),3))
+  } else axis(1,round(c(-4,4,0,tc),3))
+lines(R,c(0,0),lwd=2,col=2)
+points(tobs,0,pch=4,cex=2)
+text(tobs,.05,expression(t[obs]))
+axis(2)
+```

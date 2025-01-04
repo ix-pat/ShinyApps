@@ -1,0 +1,76 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, echo=FALSE}
+s <- sqrt(n/(n-1))*sh
+se <- s/sqrt(n)
+tobs <- (muh-mu0)/se
+if (h1==">") tc <- qt(1-alpha,n-1)
+if (h1=="<") tc <- -qt(1-alpha,n-1)
+if (h1=="\\neq") tc <- sign((muh-mu0))*qt(1-alpha/2,n-1)
+if (h1=="\\neq") alpha <- alpha/2
+if (!exists("um")) um <- ""
+```
+
+$\fbox{A}$ FORMULAZIONE DELLE IPOTESI
+$$\begin{cases}
+H_0:\mu=\mu_0=`r mu0`\text{`r um`}\\
+H_1:\mu`r h1` \mu_0=`r mu0`\text{`r um`}
+\end{cases}$$
+`r ifelse(h1=="\\neq","Siccome $H_1$ è bilaterale, considereremo $\\alpha/2$, anziché $\\alpha$","")`
+
+$\fbox{B}$ SCELTA E CALCOLO STATISTICA-TEST, $T$
+$\sigma^{2}$ di $\cal{P}$ non è nota: $\Rightarrow$ t-Test.
+\begin{eqnarray*}
+    S
+&=& \sqrt{\frac{n} {n-1}}\ \widehat{\sigma}
+ =  \sqrt{\frac{`r n`} {`r n`-1}} \times `r sh` = `r s` 
+\end{eqnarray*}
+
+\begin{eqnarray*}
+ \frac{\hat\mu - \mu_{0}} {S/\,\sqrt{n}}&\sim&t_{n-1}\\
+    t_{\text{obs}}
+&=& \frac{ (`r muh`- `r mu0`)} {`r s`/\sqrt{`r n`}}
+ =  `r tobs`\, .
+\end{eqnarray*}
+
+```{r, echo=FALSE}
+H1 <- h1
+if (h1=='\\neq') h1 <- ifelse(tc<0,"<",">")
+```
+
+$\fbox{C}$ DECISIONE
+Dalle tavole si ha $t_{(`r n`-1);\, `r alpha`} = `r tc`$.
+$$t_{\text{obs}} = `r tobs` `r ifelse(tobs<tc,"<",">")` t_{`r n-1`;\, `r alpha`} = `r tc`$$
+CONCLUSIONE: i dati `r ifelse(tobs<tc & h1=="<" | tobs>tc & h1==">", " **non** sono", "**sono**")` coerenti con $H_{0}$ al LdS del `r ifelse(H1=="\\neq",2*alpha*100,alpha*100)`%
+
+**Graficamente**
+
+```{r, echo=FALSE}
+if (H1 == ">") {R <- c(tc,4); A <- c(-4,tc)}
+if (H1 == "<") {R <- c(-4,tc); A <- c(tc,4)}
+if (H1 == "\\neq") {A <- c(-abs(tc),abs(tc)); R1 <- c(-4,-abs(tc)); R <- c(4,abs(tc))}
+curve(dt(x,n-1),-4,4,axes=F,xlab="T",ylab="")
+
+lines(A,c(0,0),lwd=2,col=4)
+if (H1 == "\\neq") {
+  lines(R1,c(0,0),lwd=2,col=2) 
+  axis(1,c(-4,-tc,0,tc,4),round(c(-4,-tc,0,tc,4),3))
+  } else axis(1,round(c(-4,4,0,tc),3))
+lines(R,c(0,0),lwd=2,col=2)
+points(tobs,0,pch=4,cex=2)
+text(tobs,.05,expression(t[obs]))
+axis(2)
+```
+
+```{r, echo=FALSE}
+if (H1 == ">") {pval <- paste("P(T_{n-1}>t_{\\text{obs}})=P(T_{n-1}>",round(tobs,3),")=",format(1-pt(tobs,n-1),digits = 4, scipen=8))}
+if (H1 == "<") {pval <- paste("P(T_{n-1}<t_{\\text{obs}})=P(T_{n-1}<",round(tobs,3),")=",format(pt(tobs,n-1),digits = 4, scipen=8))}
+if (H1 == "\\neq") {pval <- paste("P(|T_{n-1}|>|t_{\\text{obs}}|)=2P(T_{n-1}>|t_{\\text{obs}}|)=2P(T_{n-1}>|",round(tobs,4),"|)=",format(2*pt(-abs(tobs),n-1),digits = 4, scipen=8))}
+```
+
+
+Il $p_{\text{value}}$ è
+$$`r pval`$$

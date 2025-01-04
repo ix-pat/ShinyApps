@@ -1,0 +1,22 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE}
+# mm <-  10
+# sd <- 2
+# ss <- 2^2
+# x0 <- 9
+# x2 <- 11
+# vnam <- "X"
+
+```
+\begin{eqnarray*}
+P(`r vnam`> `r x0`) &=& 1- P(`r vnam`\leq `r x0`)\\
+              &=& 1- P\left( \frac {`r vnam` - E(`r vnam`)}{\sqrt{V(`r vnam`)}} \leq \frac {`r x0` - `r mm`}{\sqrt{`r ss`}}\right)  \\
+              &=& 1- P\left(  Z \leq `r (x0 - mm)/sqrt(ss)`\right) \\
+              &=& 1- \Phi(`r (x0 - mm)/sqrt(ss)`)\\
+              &=& 1-(1-\Phi(`r -(x0 - mm)/sqrt(ss)`))\\
+              &=& 1-(1-`r pnorm(-(x0 - mm)/sqrt(ss))`) \\
+              &=& `r pnorm(-(x0 - mm)/sqrt(ss))`
+\end{eqnarray*}

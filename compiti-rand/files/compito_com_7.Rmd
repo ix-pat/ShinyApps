@@ -1,0 +1,295 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 200                         # ampiezza campionaria
+
+brk  <- c(0,15,30,50,100,250)          # intervalli (breaks)
+hhh  <- c( 10,13,9, 4,0.5)       # aspetto presunto istogramma
+
+nomex <- "Spesa"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ piccole imprese della provincia di Modena è stato rilevata la spesa mensile in telecomunicazioni (in euro), qui di seguito 
+la divisione in classi e le densità percentuali
+
+```{r}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Calcolare il valore approssimato della mediana
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(axes = T)
+h.int(60,250,density=20)
+cat(percentile())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Qual è il numero di imprese con spesa superiore ai 60 euro?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(F_print(60,verso=">"))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Che relazione dobbiamo attenderci tra moda, mediana e media?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Scrivere la proprietà di associatività della media aritmetica.
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+Siano $X\sim \text{Pois}(1.5)$ e sia $Y\sim \text{Pois}(1.5)$, $X$ e $Y$ indipendenti. Posto $A=\{X<2\}$ e $B=\{Y\ge 2\}$
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Quanto vale $P(A\cup B)$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(A) &=&  P(X=0)+P(X=1)\\
+  &=& \frac{1.5^0}{0!}e^{-1.5}+\frac{1.5^1}{1!}e^{-1.5}\\
+  &=& `r dpois(0,1.5)+dpois(1,1.5)`\\
+  P(B) &=& 1-P(A)\\
+  &=&`r 1-dpois(0,1.5)-dpois(1,1.5)`\\
+  P(A\cup B) &=& P(A)+P(B)-P(A\cap B)\\
+  &=& `r 1 - (1-dpois(0,1.5)-dpois(1,1.5))*(dpois(0,1.5)+dpois(1,1.5))`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Si estrae 6 volte da $X\sim \text{Pois}(1.5)$, posto $A=\{X<2\}$, quale è la probabilità che $A$ si avveri 3 volte su 6?
+
+:::{.sol data-latex=""}
+`r pa <- dpois(0,1.5)+dpois(1,1.5) `
+\begin{eqnarray*}
+  P(A) &=&  P(X=0)+P(X=1)\\
+  &=& \frac{1.5^0}{0!}e^{-1.5}+\frac{1.5^1}{1!}e^{-1.5}\\
+  &=& `r dpois(0,1.5)`+`r dpois(1,1.5)`\\
+  &=& `r dpois(0,1.5)+dpois(1,1.5)`\\
+  P(\text{3 successi su 6}) &=& \binom{6}{3}`r pa`^3(1-`r pa`)^{6-3}\\
+  &=&`r dbinom(3,6,pa)`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Se $X$ è una VC con valore atteso $E(X)=0.5$ e $V(X)=1.2$, posto $Y=X^2$ è vero che $E(Y)=E^2(X)$?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+(**Punti 14 su 104 (4.04 su 30)**) Un'urna contiene 3 palline col numero $\fbox{0}$, 3 col numero $\fbox{1}$ e 4 col numero $\fbox{2}$. Si estrae senza reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la somma dei risultati sia maggiore di 80.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(media_(0:2,p=c(.3,.3,.4)))
+cat(var_(0:2,p=c(.3,.3,.4)))
+cat(tlc(tipo = "somma",x1 = 80,verso = ">",mu = 1.1,n = 81,s2 = .69))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**)Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson: 
+\[\hat\lambda =  \frac 1n\sum_{i=1}^nx_i\]
+Scrivere la distribuzione asintotica di $\hat \lambda$.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sia $h$ uno stimatore per $\theta$ tale che 
+\[V(h)=2\frac\theta {\sqrt{n}};~~~~E(h)=\theta\frac{n+2}{n-1}\]
+$h$ è corretto? Si può correggere?
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Definire la significatività di un test statistico.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Se un test è significativo all'1% può essere significativo all'5%? (scegliere la risposta tra: _mai_, _non sempre_ oppure _sempre_ e motivare la risposta)
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+```{r}
+# Dati campionari
+# Dati campionari
+n1 <- 80
+n2 <- 80
+x2 <- 40
+x1 <- 48
+p0 <- 0.5
+alpha <- 0.01
+```
+
+(**Punti 12 su 104 (3.46 su 30)**) In uno studio clinico per valutare l'efficacia di un nuovo farmaco, sono stati selezionati `r n1+n2` pazienti con una particolare condizione medica. Tra questi, `r n1` sono stati trattati con un farmaco sperimentale e `r n2` col placebo. Tra i trattati, `r x1` pazienti hanno mostrato un miglioramento utilizzando il nuovo farmaco, mentre sono `r x2` quelli che hanno assunto il placebo e hanno mostrato miglioramenti. Testare al livello di significatività dell'un percento l'ipotesi che il farmaco sia maggiormente efficace rispetto al placebo.
+
+:::{.sol}
+```{r,results='asis'}
+cat(ztest_2c_pi(s1 = x1,s2 = x2,n1 = n1,n2 = n2,h1 = ">",alpha = alpha,a = "F",b = "P"))
+```
+:::
+
+(**Punti 2 su 104 (0.58 su 30)**) Calcolare e interpretare il $p_\text{value}$ del test precedente.
+
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+
+### Esercizio 6
+```{r}
+
+set.seed(666)
+n <- 5
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(5+x + eps,1)
+
+RGX <-regr(x,y)
+attach(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito i dati
+
+```{r}
+ tabl(t(prn[1:n,2:3]),col.names = LETTERS[1:n]) 
+```
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Calcolare il residuo del comune B nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+
+:::{.sol data-latex=""}
+```{r}
+ tabl((prn[,]))
+cat(calcolo_beta())
+cat(residuo(x[2],y[2]))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Scrivere la scomposizione della varianza del modello di regressione 
+e calcolare la Total Sum of Squares (TSS), la Explained Sum of Squares (ESS) e la Residual Sum of Squares (RSS) dei dati analizzati sopra.
+
+
+:::{.sol data-latex=""}
+```{r}
+cat(TSS())
+```
+:::
+  
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Interpretare il parametro di regressione $\hat\beta_1$.
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Descrivere la differenza tra punti di leva e punti influenti.
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Gli stimatori $\hat\beta_0$ e $\hat\beta_1$ dei minimi 
+quadrati per $\beta_0$ e $\beta_1$ sono corretti?

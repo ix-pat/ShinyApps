@@ -1,0 +1,382 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+i1 <- 1; 
+i2 <- 0
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 200                         # ampiezza campionaria
+
+brk  <- c(0, 2, 5, 10, 20, 50)   # intervalli (breaks)
+hhh  <- c(50, 90, 60, 40, 10)    # aspetto presunto istogramma
+
+nomex <- "Utilizzo servizi di streaming"
+samp <- genera_dati(brk = brk, hhh = hhh, n = n)
+
+source(src_("stat-base.R"))      # crea il data set e la tabella dat3
+nomex <- "Spesa per vacanze"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stata rilevata la quantità mensile di ore dedicate all'utilizzo di servizi di streaming. Di seguito è riportata la distribuzione delle frequenze percentuali:
+
+```{r}
+tabl(dat3[,c(1,2,12)])
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Individuare la classe modale.
+
+:::{.sol}
+```{r}
+tabl(dat3[,1:7])
+histp(axes = T)
+h.int(30,50,density=20)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Qual è il numero di famiglie che consuma più di 30 ore di streaming?
+
+:::{.sol}
+
+```{r,results='asis'}
+cat(percentile())
+cat(F_print(30,verso = ">"))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) la media aritmetica è pari a `r mean(samp)`, in base al punto 1a che relazione dobbiamo attenderci tra media, mediana e moda?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Si considerino i seguenti dati
+
+\[
+\{x_1=1.2,x_2=2.3,x_3=6.7\}
+\]
+
+Per quale valore di $x$
+\[
+f(x)=|x_1-x|+|x_2-x|+|x_3-x|
+\]
+$f$ è minima?
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Si lancia una moneta perfetta 8 volte. Qual è la probabilità di avere un numero di volte Testa maggiore o uguale a 6 su 8 lanci?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  X &\sim&\text{Bin}(8;0.5)\\
+  P(X\ge 6) &=& P(X=6)+p(X=7)+P(X=8)\\
+  &=& \binom{8}{6} 0.5^8 + \binom{8}{7} 0.5^8 +\binom{8}{8} 0.5^8\\
+  &=& `r choose(8,6)`\cdot `r 0.5^8` + `r choose(8,7)`\cdot `r 0.5^8` + `r choose(8,8)`\cdot `r 0.5^8` \\
+  &=& `r choose(8,6)* 0.5^8 + choose(8,7)* 0.5^8 + choose(8,8)* 0.5^8` \\
+\end{eqnarray*}
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Sia $Z\sim N(0,1)$ e siano $A=\{Z<0\}$ e $B=\{Z<1\}$. Calcolare $P(A|B)$
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(B) &=&  \Phi(1)\\
+  &=& `r pnorm(1)`\\
+  P(A\cap B) &=& P(Z<0)\\
+  &=& \Phi(0)\\
+  &=& 0.5\\
+  P(A|B) &=& \frac{P(A\cap B)}{P(B)}\\
+  &=& \frac{0.5}{`r pnorm(1)`}\\
+  &=& `r .5/pnorm(1)`
+\end{eqnarray*}
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Se $X\sim\text{Pois} (n)$, a cosa tende $X$ se $n$ diverge?
+
+:::{.sol data-latex=""}
+Se $n$ diverge allora $X$ tende ad un Normale di media $n$ e varianza $n$
+\[
+X\mathop\sim_a N(n,n)
+\]
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Sia $X\sim N(10,1)$  e sia $F$ la sua funzione di ripartizione. Disegnare approssimativamente $F(x)$ per $x$ che varia tra 6 e 14.
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+(**Punti 14 su 100 (4.2 su 30)**) Un'urna contiene 3 palline col numero $\fbox{0}$, 3 col numero $\fbox{1}$ e 4 col numero $\fbox{2}$. Si estrae senza reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la somma dei risultati sia maggiore di 80.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(media_(0:2,p=c(.3,.3,.4)))
+cat(var_(0:2,p=c(.3,.3,.4)))
+cat(tlc(tipo = "somma",x1 = 80,verso = ">",mu = 1.1,n = 81,s2 = .69))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Sia $h$ uno stimatore per theta, tale che
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}
+$$
+$h$ è corretto? $h$ è asintoticamente corretto?
+
+::: {.sol data-latex=""}
+$h$ **non è corretto**, infatti
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}\neq\theta
+$$
+$h$ **è asintoticamente corretto**, infatti
+$$
+\lim_{n\to\infty}E(h)=\lim_{n\to\infty}\left(\theta+\frac\theta {\sqrt{ n}}\right)=\theta+0=\theta
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che:
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n
+\end{eqnarray*}
+Quale dei due stimatori è più efficiente? Perché?
+
+::: {.sol data-latex=""}
+$h_1$ **è più efficiente** di $h_2$, infatti
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n =2\cdot MSE(h_1)>MSE(h_1)
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Si sono osservati due gruppi di dati quantitativi e si è osservato, $\hat\mu_1=10.2$ e $\hat\mu_2=15.6$. Posto a test
+$$
+\begin{cases}
+H_0:\mu_1=\mu_2\\
+H_1:\mu_1\ne \mu_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.0612$. La differenza tra $\hat\mu_1$ e $\hat\mu_2$ è significativa? Perché?
+
+::: {.sol data-latex=""}
+Il $p_\text{value}$ è maggiore di 0.05, la differenza **non è significativa** per ogni livello di significatività.
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+(**Punti 14 su 100 (4.2 su 30)**) In uno studio sull'efficacia degli integratori alimentari, su un gruppo di 238 atleti è stato misurato il rendimento atletico (ottimo, buono e scarso) e l'assunzione di integratori (alto, medio e basso). Qui di seguito i dati:
+
+```{r}
+
+x <- matrix(c(21,20,18,35,26,38,15,30,35),3)
+
+dimnames(x)<-list(redimento=c("ottimo","buono","scarso"),reddito=c("alto","medio","basso"))
+kable(x,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper("striped", full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+```
+
+Al livello del 5% testare l'ipotesi che integratori e rendimento siano indipendenti.
+
+:::{.sol data-latex=""}
+$\fbox{A}$ Sistema di ipotesi
+$$
+\Big\{H_0:\pi_{ij}=\pi_{i\bullet}\pi_{\bullet j}
+$$
+
+$\fbox{B}$ Si usa il test $\chi^2$, si crea la tabella delle frequenze teoriche
+$$
+n_{ij}^*=\frac{n_{i\bullet}n_{\bullet j}}{n}
+$$
+
+```{r}
+options(digits = 4)
+
+rig <- rowSums(x)
+coo <- colSums(x)
+n <- sum(x)
+xh <- outer(rig,coo)/n
+
+kable(xh,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper("striped", full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+
+kable((x-xh)^2/xh,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper("striped", full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+```
+
+\begin{eqnarray*}
+\text{gdl} &=& (3-1)\times (3-1) = 4\\
+   \chi^2_\text{obs}&=&`r sum((x-xh)^2/xh)`\\
+   \chi^2_{0.05;4}&=&`r qchisq(.95,4)`\\
+\end{eqnarray*}
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+
+set.seed(777)
+n <- 15
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(6+1.1*x + eps,1)
+
+RGX <- regr(x,y)
+attach(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito le statistiche bivariate
+
+\begin{align}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align}
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Questi sono alcuni dei dati osservati
+
+```{r}
+tabl(t(prn[sample(1:n,4),2:3]),col.names = c("","","","")) 
+```
+
+Calcolare il residuo per $x=2.1$ nel modello di regressione dove $Y$ è spiegato da $X$.
+
+:::{.sol data-latex=""}
+```{r}
+cat(calcolo_beta())
+cat(residuo(2.1,9.3))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Calcolare la percentuale di varianza di $Y$ spiegata dal modello.
+
+:::{.sol data-latex=""}
+```{r}
+cat(R2())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Se in un modello di regressione con 15 dati, 
+il residuo studentizzato del dato $i$ è $\tilde \epsilon_i=12.3$, cosa possiamo concludere?
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Sia $\hat\beta_0$ lo stimatore dei minimi quadrati per $\beta_0$.
+Scrivere il suo Standard Error stimato.

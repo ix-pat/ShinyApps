@@ -1,0 +1,2471 @@
+### Esercizio 6
+```{r 2021-42}
+
+set.seed(5)
+set.seed(8)
+set.seed(11)
+n <- 150
+x <- round(sort(runif(n,5,10)),2)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,1)
+y <- x+eps
+y <- round(y/max(y)*10,2)
+#plot(x,y,type="p")
+
+RGX <- regr(x,y,ax=0,semp=T)
+ls2e(RGX)
+options(digits = 4)
+```
+
+In uno studio sulle competenze scolastiche dei quindicenni si sono analizzati $n=`r n`$ ragazzi sui quali sono stati registrati i voti di un test in matematica $X$ e i voti in un test di scienze $Y$. Qui di seguito le statistiche di interesse:
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+Si consideri il modello di regressione dove $Y$ viene spiegata da $X$
+
+  6.a **(Punti 14)** Prevedere il voto nel test di scienze per uno studente che ha ottenuto 6 nel test di matematica.
+  
+::: {.sol data-latex=""}
+```{r 2021-5,,results='asis'}
+
+cat(calcolo_beta())
+
+```
+:::
+  
+  6.b **(Punti 3)** Calcolare la percentuale di varianza spiegata dal modello.
+
+::: {.sol data-latex=""}
+```{r 2021-6,,results='asis'}
+options(digits = 4)
+cat(R2())
+```
+:::
+
+
+  6.c **(Punti 3)** Discutere il qq-plot dei residui
+```{r 2021-7,,fig.asp=1}
+qqnorm(es/sd(es),asp=1,xlim=c(-3,3),ylim=c(-3,3))
+abline(0,1,lty=2)
+```
+
+::: {.sol data-latex=""}
+I punti sono be allineati sulla bisettrice degli assi, l'ipotesi di normalità dei residui è rispettata.
+:::
+
+ 6.d **(Punti 2)** Cosa vuol dire che $r$ è un numero puro?
+
+::: {.sol data-latex=""}
+Significa che è privo di unità di misura.
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-43}
+
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-51}
+
+set.seed(8)
+n <- 150
+x <- sort(runif(n,5,10))
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,1)*(1:n)/n
+y <- x+eps
+y <- y/max(y)*10
+#plot(x,y,type="p")
+
+RGX <- regr(x,y,ax=0,semp=T)
+ls2e(RGX)
+
+```
+
+In uno studio sulle competenze scolastiche dei quindicenni si sono analizzati $n=`r n`$ ragazzi sui quali sono stati registrati il numero di libri in casa $X$ (espresso in decine di libri) e i voti in un test di comprensione $Y$. Qui di seguito le statistiche di interesse:
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+Si consideri il modello di regressione dove $Y$ viene spiegata da $X$
+
+  6.a **(Punti 14)** Si osservino le prime 5 coppie di dati
+```{r 2021-52}
+kable(data.frame(i=1:5,Libri=x[1:5],Voto=y[1:5]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+Calcolare il residuo per il quarto dato.
+
+::: {.sol data-latex=""}
+```{r 2021-12,,results='asis'}
+
+cat(calcolo_beta())
+cat(residuo(x[4],y[4]))
+```
+:::
+
+  6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+::: {.sol data-latex=""}
+Il modello spiega il $r^2\times100=(`r r`)^2\times 100=`r r^2*100`\%>75\%$ della viarbilità totale di $Y$. Sì, il modello spiega bene i dati.
+:::
+
+  6.c **(Punti 3)** Discutere il diagramma dei residui
+```{r 2021-53}
+plot(x,y-ys,pch=16,axes=F,xlab="Libri",ylab=expression(hat(epsilon)),type="p")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+title("retta dei residui vs x")
+```
+
+::: {.sol data-latex=""}
+La variabilità dei residui cresce al crescere dalla x, l'ipotesi di omoschedasticità è chiaramente violata.
+:::
+
+6.d **(Punti 2)** Quando in un modello di regressione lineare un punto è considerato **influente**?
+
+::: {.sol data-latex=""}
+La coppia $(x_i,y_i)$ è considerata _punto influente_ se il suo residuo studentizzato è maggiore di un livello soglia deciso sulle tavole della $t$ con $n-2$ gradi di libertà:
+$$|\tilde \varepsilon_i|>t_{n-2,0.05} $$
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-54}
+
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-59}
+set.seed(11)
+n <- 75
+x <- sort(runif(n,0,10))
+
+eps <- rnorm(n,0,1.8)
+y <- 0.5 + x*.7 +eps
+y[y<0] <- -y[y<0]
+
+RGX <- regr(x,y,ax=0,semp=T)
+ls2e(RGX)
+options(digits = 4)
+
+
+```
+
+In uno studio sui consumi sono stati intervistati $n=75$ individui 
+sui quali è stato rilevato il reddito mensile $X$ (in migliaia di euro), e il consumo $Y$ (in migliaia di euro). Il modello di regressione. Qui di seguito le statistiche di interesse:
+
+\begin{align*}
+\bar x&=`r mean(x)` &\hat \sigma_X&=`r sc(x)`, &x_{(0)}&=`r min(x)`,  &x_{(n)}&=`r max(x)`,\\
+\bar y&=`r mean(y)` &\hat \sigma_Y&=`r sc(y)`, &y_{(0)}&=`r min(y)`,  &y_{(n)}&=`r max(y)`,\\
+\text{cov}(X,Y)&=`r co`.
+\end{align*}
+
+
+Si consideri il modello di regressione dove $Y$ viene spiegata da $X$
+
+  6.a **(Punti 14)** Prevedere il consumo per un individuo che guadagna $x=`r mean(x)`$ e
+  per un individuo che guadagna $x=12.3$.
+  
+::: {.sol data-latex=""}
+```{r 2021-17,,results='asis'}
+cat(calcolo_beta(semplice = T))
+cat(previsione(12.3))
+```
+:::
+
+  6.b **(Punti 3)** Quale delle due previsioni, per $x=`r mean(x)`$ e per $x=12.3$,
+  è più affidabile? Perché?
+
+::: {.sol data-latex=""}
+L'errore di previsione per $x$ dipende dalla sua distanza quadratica dalla media 
+$$
+\text{err prev}(x)=V(\hat Y_{(X=x)})=\sigma_{\varepsilon}^{2}\left(\frac 1n+\frac{(x-\bar x)^2} {n \hat{\sigma}^{2}_{X}} \right)
+$$
+quindi l'errore di previsione è minimo per $x=`r mean(x)`$, mentre $x=12.3>x_{(n)}=`r max(x)`$
+e si tratta di estrapolazione.
+
+La previsione per $x=`r mean(x)`$ è molto più affidabile che quella per $x=12.3$.
+:::
+
+  6.c **(Punti 3)** Calcolare le quantità $TSS$, $RSS$ e $ESS$.
+
+::: {.sol data-latex=""}
+Ricaviamo $R^2$
+$$R^2=\left(\frac{`r cv`}{`r sc(x)`\cdot `r sc(y)`}\right)^2=`r r`^2=`r r^2`$$
+quindi
+```{r 2021-18,,results='asis'}
+cat(TSS())
+```
+:::
+
+ 6.d **(Punti 2)** Cosa vuol dire che $r$ è invariante ai cambiamenti di scala?
+
+::: {.sol data-latex=""}
+$$\text{se }W=a+bY,\text{allora }r_{X,W}=\text{sign}(b) r_{XY},\text{ dove la funzione sign}(b)=
+\begin{cases}+1, &\text{se $b>0$}\\
+             -1, &\text{se $b<0$}
+\end{cases}$$
+:::
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-60}
+
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-64}
+
+
+set.seed(4)
+
+x <- c(1.0,2.1,3.9,5.2)
+y <- c(4.2,5.6,5.4,7.5)
+
+RGX <- regr(x,y,ax=0,semp=T)
+ls2e(RGX)
+
+options(digits = 4)
+```
+
+
+In uno studio sulla qualità della vita si è osservato su 4 provincie l'ammontare degli investimenti provinciali pro capite per attività culturali ($X$), in centinaia di euro, e un indice di qualità della vita ($Y$), espresso in opportuna scala. Qui di seguito i dati
+```{r 2021-65}
+kable(prn[1:4,1:3],booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  column_spec(1,background = "#E6E6E6",width = "3em")
+```
+
+6.a **(Punti 14)** Stimare il modello di regressione dove la qualità della vita è spiegata dagli investimenti provinciali.
+
+::: {.sol data-latex=""}
+Costruiamo le statistiche
+```{r 2021-22,,results='asis'}
+kable(prn,booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  column_spec(1,background = "#E6E6E6",width = "3em")
+
+cat(calcolo_beta())
+```
+:::
+
+6.b **(Punti 3)** Calcolare la percentuale di varianza spiegata dal modello.
+
+::: {.sol data-latex=""}
+Ricaviamo $R^2$
+$$
+R^2=\left(\frac{`r cv`}{`r sc(x)`\cdot `r sc(y)`}\right)^2=`r r`^2=`r r^2`
+$$
+Il modello si adatta molto bene ai dati, spiegando il `r r^2*100`% (>75%) della variabilità totale della Y. 
+:::
+
+
+6.c **(Punti 3)** Ricavare le quantità $TSS$, $RSS$ e $ESS$.
+
+::: {.sol data-latex=""}
+```{r 2021-23,,results='asis'}
+cat(TSS())
+```
+:::
+
+6.d **(Punti 2)** Cosa significa che gli stimatori di massima dei minimi quadrati $\hat\beta_0$ e $\hat\beta_1$ sono _BLUE_?
+
+::: {.sol data-latex=""}
+Gli stimatori $\hat\beta_{0}$ e $\hat\beta_{1}$ di $\beta_{0}$ e $\beta_{1}$
+sono, tra tutti gli stimatori lineari corretti per $\beta_0$ e $\beta_1$, _BLUE_ 
+( _Best Linear Unbiased Estimators_ Best: i più efficienti; Unbiased: corretti; 
+Linear Estimators: stimatori lineari).
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-66}
+
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-72}
+
+
+set.seed(34)
+n <- 15
+x <- sort(runif(n,0,10))
+
+eps <- rchisq(n,df = 1)
+y <- (x/10)^2*.7 +eps*.05
+
+x <- round(x,2)
+y <- round(y,2)
+
+RGX <- regr(x,y,ax = 2,semp = T)
+ls2e(RGX)
+```
+
+In uno studio sul risparmio gestito sono stati intervistati $n=`r n`$ individui 
+sui quali è stato rilevato il reddito mensile $X$ (in migliaia di euro), e il risparmio gestito $Y$ (in migliaia di euro). Il modello di regressione. Qui di seguito i dati e le statistiche di interesse:
+
+```{r 2021-73}
+kable(prn[],format.args = list(big.mark = " "),digits = 4,booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  column_spec(1,background = "#E6E6E6",width = "3em")
+```
+
+
+  6.a **(Punti 14)** Stimare il modello di regressione dove il risparmio è funzione del reddito e quello in cui il reddito è funzione del risparmio.
+  
+::: {.sol data-latex=""}
+```{r 2021-30,,results='asis'}
+cat(calcolo_beta())
+cat(calcolo_beta(inv = T))
+```
+:::
+
+
+  6.b **(Punti 3)** I due modelli si adattano bene ai dati?
+
+::: {.sol data-latex=""}
+$$
+r^2=(`r r`)^2=`r r^2`>0.75
+$$
+
+Sì, i modelli si adattano bene
+:::
+
+  6.c **(Punti 3)** Discutere il diagramma dei residui del modello di regressione dove $Y$ viene spiegata da $X$.
+```{r 2021-74}
+plot(x,ml$residuals,xlab="Reddito",ylab = "residui",type = "p",pch=16)
+abline(h=0,lty=2)
+
+```
+
+::: {.sol data-latex=""}
+C'è una non linearità evidente, l'assunto zero non è rispettato
+:::
+
+ 6.d **(Punti 2)** Se ogni individuo risparmiasse 10€ in più al mese, quanto varrebbe $r$?
+ 
+::: {.sol data-latex=""}
+Se ogni individuo risparmiasse 10€ in più al mese allora
+$$
+W=Y+10
+$$
+e in virtù dell'invarianza del coefficiente di correlazione alle trasformazioni lineari otterremmo:
+$$
+r_{XW}=r_{XY}=`r r`
+$$
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-75}
+
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-80}
+xm <- 1.1
+ym <- 12.1
+wm <- 0.9
+sx <- 0.23
+sy <- 1.17
+sw <- 0.12
+
+cxy <- sx*sy*.81
+cwy <- -sy*sw*0.23
+
+b1 <- cxy/(sx^2)
+b0 <- ym - b1*xm
+
+g1 <- cwy/(sw^2)
+g0 <- ym - g1*wm
+
+rxy <- cxy/(sx*sy)
+rwy <- cwy/(sw*sy)
+
+```
+
+In uno studio sugli effetti dell'attività sportiva sul benessere delle persone su $n=25$ atleti si è misurato:
+
+- il numero medio di ore giornaliere passate a correre ($X$), 
+- il numero medio di ore giornaliere passate a fare palestra ($W$),
+- un indice di stress misurato misurato su opportuna scala ($Y$).
+
+qui di seguito le statistiche di interesse
+
+
+\begin{align*}
+\bar x&=1.1   &\hat \sigma_X&=0.23, \\
+\bar w&=0.9   &\hat \sigma_W&=0.12,\\
+\bar y&=12.1  &\hat \sigma_Y&=1.17,\\
+\text{cov}(X,W)&=`r -0.12*0.23*.76` &\text{cov}(X,Y)&=`r 1.17*0.23*.81` \\
+&&\text{cov}(W,Y)&=`r -1.17*0.12*.14`
+\end{align*}
+
+
+6.a **(Punti 14)** Stimare il modello di regressione dove l'indice di stress ($Y$) è spiegato da $X$ e quello dove $Y$ è spiegato da $W$.
+
+::: {.sol data-latex=""}
+\begin{align*}
+  Y_i &= \beta_0+\beta_1 x_i +\varepsilon_i&Y_i &=\gamma_0+\gamma_1W_i\\
+  \hat\beta_1&=\frac{`r cxy`}{`r sx`^2} &\hat\gamma_1&=\frac{`r cwy`}{`r sw`^2}\\
+  &=`r b1` &&=`r g1`\\
+  \hat\beta_0&=`r ym`-`r b1`\cdot`r xm` &\hat\beta_0&=`r ym`-(`r g1`\cdot`r wm`)\\
+  &=`r b0` &&=`r g0`\\
+r_{XY}&=\frac{`r cxy`}{`r sx`\cdot`r sy`} &r_{WY}&=\frac{`r cwy`}{`r sw`\cdot`r sy`}\\
+  &=`r rxy` &&=`r rwy`\\
+\end{align*}
+:::
+
+6.b **(Punti 3)** Quale dei due modelli è più affidabile?
+
+::: {.sol data-latex=""}
+\begin{align*}
+  R_{XY}^2 &= `r rxy`^2 &R_{WY}^2 &= `r rwy`^2 \\
+  &=`r rxy^2` &&=`r rwy^2`
+\end{align*}
+
+
+quindi $X$ spiega $Y$ meglio di $W$.
+:::
+
+6.c **(Punti 3)** Considerata la scomposizine della TSS di $X$ rispetto ad $Y$.
+$$
+TSS = ESS + RSS
+$$
+quanto vale il rapporto
+$$
+\frac{ESS}{TSS}=~?
+$$
+
+::: {.sol data-latex=""}
+$$
+\frac{ESS}{TSS}=~R_{XY}^2=`r rxy^2`
+$$
+:::
+
+6.d **(Punti 2)** Sotto ipotesi di normalità dei residui, come sono distribuiti gli stimatori dei mini quadrati $\hat\beta_0$ e $\hat\beta_1$?
+
+::: {.sol data-latex=""}
+\begin{eqnarray*}
+\hat\beta_1&\sim& N\left(\beta_1, \frac{\sigma_{\varepsilon}^{2}} {n \hat{\sigma}^{2}_{X}} \right)\\
+\hat\beta_0&\sim& N\left(\beta_0, \sigma_{\varepsilon}^{2} \left( \frac{1} {n}  +  \frac{\bar{x}^{2}} {n \hat{\sigma}^{2}_{X}} \right) \right)
+\end{eqnarray*}
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2021-81}
+#
+
+
+source("intro.R")
+fig.def(2.5,3.5)
+
+
+
+```
+
+### Esercizio 6
+```{r 2021-91}
+
+set.seed(5)
+set.seed(34)
+n <- 15
+x <- sort(runif(n,0,10))
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rchisq(n,df = 1)
+y <- (x/10)^2*.7 +eps*.05
+#y[y<0] <- -y[y<0]
+
+x <- round(x,2)
+y <- round(y,2)
+
+RGX <- regr(x,y,ax = 0,semp = T)
+ls2e(RGX)
+```
+
+Si esaminano $n=15$ aziende e si rileva, per ognuna di esse, il
+fatturato ($X$) e il profitto ($Y$) (in unità convenzionali).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{15}x_i=`r sum(x)`$, $\sum_{i=1}^{15}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{15}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{15}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{15}x_iy_i=`r sum(x*y)`$.
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$
+
+::: {.sol data-latex=""}
+```{r 2021-92}
+cat(calcolo_beta())
+```
+:::
+
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+::: {.sol data-latex=""}
+```{r 2021-93}
+cat(R2())
+```
+:::
+
+
+6.c **(Punti 2)** Se in un modello di regressione si conoscono $\hat\beta_1$, $r^2$ e $\hat\sigma_X$ è possibile ricavare $\hat\sigma_Y$? In che modo?
+
+::: {.sol data-latex=""}
+\begin{eqnarray*}
+   \hat\beta_1 &=& \frac{\text{cov}(x,y)}{\hat\sigma_X^2}\\
+   \text{cov}(x,y)&=&\hat\beta_1\hat\sigma_X^2\\
+   r&=&\frac{\text{cov}(x,y)}{\hat\sigma_X\hat\sigma_Y}\\
+   \hat\sigma_Y&=&\frac{\text{cov}(x,y)}{r\hat\sigma_X}\\
+   &=&\frac{\hat\beta_1\hat\sigma_X^2}{r\hat\sigma_X}\\
+   &=&\frac{\hat\beta_1}{r}\hat\sigma_X
+\end{eqnarray*}
+:::
+
+6.d **(Punti 2)** Cosa significa che il coefficiente di correlazione è invariante alle trasformazioni lineari?
+
+### Esercizio 6
+```{r 2022-14}
+
+set.seed(36)
+n <- 150
+x <- sort(abs(rnorm(n)))
+
+eps <- rnorm(n,0,3)
+y <- 900-200*x + rnorm(n,0,40)
+y <- y/1000
+
+RGX <- regr(x,y,semp = T)
+ls2e(RGX)
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito ($X$) e la percezione della perdita del potere d'acquisto espresso su una scala che va da zero a 1 ($Y$).
+Qui di seguito le statistiche bivariate
+
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-15}
+cat(calcolo_beta())
+cat(previsione(1.5))
+```
+:::
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2022-16}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare i parametri di regressione $\hat\beta_0$ e $\hat\beta_1$.
+
+6.d **(Punti 2)** Se $W=-10\times Y$, quanto varrà $r_{XW}$, coefficiente di correlazione tra $X$ e $W$?
+
+:::{.sol data-latex=""}
+$$r_{WX}=-r_{XY}=`r -r`$$
+:::
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2022-23}
+set.seed(34)
+n <- 150
+x <- sort(abs(rnorm(n)))
+
+eps <- rnorm(n,0,3)
+y <- 900-200*x + rnorm(n,0,40)
+y <- y/1000
+
+RGX <- regr(x,y)
+ls2e(RGX)
+
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito ($X$) e la percezione della perdita del potere d'acquisto espresso su una scala che va da zero a 1.
+Qui di seguito le statistiche bivariate
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.0$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-24}
+cat(calcolo_beta())
+cat(previsione(1.0))
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2022-25}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Cosa sono i _punti di leva_ e cosa gli _outliers_?
+
+6.d **(Punti 2)** Se $W=10\times Y$, posto
+$$w_i=\beta_0'+\beta_1'x_ì +\epsilon_i'$$
+il modello in cui $W$ viene spiegata da $X$, quanto varranno $\beta_0'$ e $\beta_1'$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \bar w &=& 10\times \bar y\\
+  &=& `r 10*mean(y)`\\
+  \sum x_iw_i&=&\sum x_i\cdot 10\cdot y_i\\
+  &=& 10\sum x_i y_i\\
+  &=& `r 10*sum(x*y)`\\
+  cov(x,w)&=&\sum x_iw_i-\bar w\cdot\bar x\\
+  &=&10\sum x_i y_i - 10 \cdot\bar y\cdot\bar x\\
+  &=&10 cov(x,y)\\
+  &=& `r 10*(mean(x*y)-mean(x)*mean(y))`\\
+  \hat\beta'_1&=&\frac{10\cdot cov(x,y)}{\hat\sigma_X^2}\\
+  &=&`r 10*b1`\\
+  \hat\beta_0'&=& \bar w -\hat\beta'_1\bar x\\
+  &=&10\bar y - 10 \hat \beta_1\bar x\\
+  &=&`r 10*b0`
+\end{eqnarray*}
+:::  
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2022-34}
+set.seed(38)
+n <- 150
+x <- sort(abs(rnorm(n)))
+
+eps <- rnorm(n,0,3)
+y <- 900-200*x + rnorm(n,0,40)
+y <- y/1000
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito ($X$) e la percezione della perdita del potere d'acquisto espresso su una scala che va da zero a 1.
+Qui di seguito le statistiche bivariate
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.4$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-35}
+cat(calcolo_beta())
+cat(previsione(1.0))
+```
+:::
+
+6.b **(Punti 3)** Calcolare e discutere $R^2$.
+
+:::{.sol data-latex=""}
+```{r 2022-36}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Cos'è un _punto influente_?
+
+6.d **(Punti 2)** Se $W=10+ Y$, posto
+$$w_i=\beta_0'+\beta_1'x_ì +\epsilon_i'$$
+il modello in cui $W$ viene spiegata da $X$, 
+quanto varranno $\beta_0'$ e $\beta_1'$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \bar w &=& 10+ \bar y\\
+  &=& `r 10+mean(y)`\\
+  \sum x_iw_i&=&\sum x_i\cdot (10+y_i)\\
+  &=& 10\sum x_i +\sum x_i y_i\\
+  &=& 10n\bar x +\sum x_i y_i\\
+  cov(x,w)&=&\frac 1n\sum x_iw_i-\bar w\cdot\bar x\\
+  &=&10\bar x +\frac 1n\sum x_i y_i-\bar x(10+\bar y)\\
+  &=&10 \bar x - 10 \bar x +cov(x,y) \\
+  &=& `r (mean(x*y)-mean(x)*mean(y))`\\
+  \hat\beta'_1&=&\hat\beta_1\\
+  &=&`r b1`\\
+  \hat\beta_0'&=& \bar w -\hat\beta'_1\bar x\\
+  &=& 10+\bar y-\hat\beta_1\bar x\\
+  &=&10+\hat\beta_0\\
+  &=&`r 10+b0`
+\end{eqnarray*}
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2022-37}
+
+
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2022-48}
+
+set.seed(36)
+n <- 5
+x <- sort(sample(seq(10,20,by=.1),n))
+
+eps <- rnorm(n,0,3)
+y <- -5+x + eps
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Modena e su ogni comune è stato rilevato
+il numero di abitanti $X$, espresso in migliaia di persone, e il numero di esercizi commerciali $Y$.
+
+Qui di seguito i dati
+
+```{r 2022-49}
+ kable(t(prn[1:n,2:3]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+
+6.a **(Punti 14)** Calcolare il residuo del quarto dato nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-50}
+ kable((prn[,]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+cat(calcolo_beta())
+cat(residuo(x[4],y[4]))
+```
+:::
+
+6.b **(Punti 3)** Scrivere la scomposizione della varianza del modello di regressione 
+e calcolare la Total Sum of Squares (TSS), la Explained Sum of Squares (ESS) e la Residual Sum of Squares (RSS) dei dati analizzati sopra.
+
+:::{.sol data-latex=""}
+```{r 2022-51}
+cat(R2())
+```
+:::
+
+6.c **(Punti 3)** Il parametro di regressione $\hat\beta_0$, in questo caso, è interpretabile?
+
+6.d **(Punti 2)** Una previsione per $x=40$ è attendibile? Perché?
+
+6.e **(Punti 2)** Se $W=5+ Y$, posto $w_i=\beta_0'+\beta_1'x_ì +\epsilon_i'$
+il modello in cui $W$ viene spiegata da $X$, quanto varranno $\beta_0'$ e $\beta_1'$?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2022-52}
+
+
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2022-62}
+
+set.seed(36)
+n <- 50
+x <- sort(sample(seq(10,20,by=.1),n))
+
+eps <- rnorm(n,0,3)
+y <- -5+x + eps
+
+RGX <-regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Modena e su ogni comune è stato rilevato
+il numero di abitanti $X$, espresso in migliaia di persone, e il numero di esercizi commerciali $Y$.
+
+Qui di seguito le statistiche bivariate
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=16$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-63}
+cat(calcolo_beta())
+cat(previsione(16))
+```
+:::
+
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+$$r^2=`r r^2`$$
+
+6.c **(Punti 2)** Cosa sono i _punti influenti_?
+
+6.d **(Punti 2)** Se $W=2\times Y$ e $V=X+3$, posto $w_i=\beta_0'+\beta_1'v_ì +\epsilon_i'$
+il modello in cui $W$ viene spiegata da $V$, quanto varranno $\beta_0'$ e $\beta_1'$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+   \hat\beta_1' &=&  r_{VW}\frac{\sigma_W}{\sigma_V} \\
+            &=&  r_{XY}\frac{2\sigma_Y}{\sigma_X} \\
+            &=& 2\hat\beta_1\\
+            &=& `r b1*22`\\
+  \hat\beta_0' &=& \bar w - \hat\beta_1'\bar v\\
+            &=& 2\bar y-2\hat\beta_1(\bar x + 3)\\
+            &=& `r 2*mean(y)-b1*2*(mean(x)+3)`
+\end{eqnarray*}
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2022-64}
+
+
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2022-73}
+
+set.seed(35)
+n <- 50
+x <- sort(sample(seq(10,20,by=.1),n))
+
+eps <- rnorm(n,0,3)
+y <- -5+x + eps
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Modena e su ogni comune è stato rilevato
+il numero di abitanti $X$, espresso in migliaia di persone, e il numero di esercizi commerciali $Y$.
+
+Qui di seguito le statistiche bivariate
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Questi sono alcuni dei dati osservati
+
+```{r 2022-74}
+kable(t(prn[srr <-sample(1:n,4),2:3]),col.names = c("","","",""),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+
+Calcolare il residuo per $x=`r x[srr[3]]`$ nel modello di regressione dove $Y$ è spiegato da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-75}
+cat(calcolo_beta())
+cat(residuo(x[srr[3]],y[srr[3]]))
+```
+:::
+
+6.b **(Punti 3)** Ricavare numericamente la scomposizione della varianza del modello di regressione sopra stimato.
+
+:::{.sol data-latex=""}
+```{r 2022-76}
+cat(TSS())
+```
+:::
+
+  
+6.c **(Punti 2)** Che differenza c'è tra _interpolazione_ e _estrapolazione_?
+
+6.d **(Punti 2)** Cosa significa che $r$ è un numero puro?
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2022-88}
+
+set.seed(666)
+n <- 5
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(5+x + eps,1)
+
+RGX <-regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito i dati
+
+```{r 2022-89}
+ tabl(t(prn[1:n,2:3]),col.names = LETTERS[1:n]) 
+```
+
+
+6.a **(Punti 14)** Calcolare il residuo del comune B nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+
+:::{.sol data-latex=""}
+```{r 2022-90}
+ tabl((prn[,]))
+cat(calcolo_beta())
+cat(residuo(x[2],y[2]))
+```
+:::
+
+6.b **(Punti 3)** Scrivere la scomposizione della varianza del modello di regressione 
+e calcolare la Total Sum of Squares (TSS), la Explained Sum of Squares (ESS) e la Residual Sum of Squares (RSS) dei dati analizzati sopra.
+
+
+:::{.sol data-latex=""}
+```{r 2022-91}
+cat(TSS())
+```
+:::
+  
+
+6.c **(Punti 3)** Interpretare il parametro di regressione $\hat\beta_1$.
+
+6.d **(Punti 2)** Descrivere la differenza tra punti di leva e punti influenti.
+
+6.e **(Punti 2)** Gli stimatori $\hat\beta_0$ e $\hat\beta_1$ dei minimi 
+quadrati per $\beta_0$ e $\beta_1$ sono corretti?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+
+`r `
+
+### Esercizio 6
+```{r 2022-100}
+
+set.seed(666)
+n <- 15
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(5+x + eps,1)
+
+RGX <-regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito le statistiche bivariate
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.6$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-101}
+cat(calcolo_beta())
+cat(previsione(1.6))
+```
+:::
+
+6.b **(Punti 3)** Calcolare numericamente $RSS$:
+$$
+RSS=\sum_{i=1}^n \hat\epsilon_i^2
+$$
+
+:::{.sol data-latex=""}
+$$RSS=n(1-r^2)\hat\sigma_Y^2=`r n*(1-r^2)*vy`$$
+:::
+
+6.c **(Punti 3)** Gli stimatori $\hat\beta_0$ e $\hat\beta_1$ sono consistenti? 
+Perché?
+
+6.d **(Punti 2)** Se in un modello di regressione con 11 dati, 
+il residuo studentizzato del dato $i$ è $\tilde \epsilon_i=1.23$, cosa possiamo concludere?
+
+6.e **(Punti 2)** Sia $\hat\beta_1$ lo stimatore dei minimi quadrati per $\beta_1$.
+Scrivere il suo Standard Error teorico.
+
+
+
+
+<div class="button-container"></div>
+
+
+
+`r `
+
+### Esercizio 6
+```{r 2022-109}
+
+set.seed(777)
+n <- 15
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(6+1.1*x + eps,1)
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito le statistiche bivariate
+
+\begin{align}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align}
+
+
+6.a **(Punti 14)** Questi sono alcuni dei dati osservati
+
+```{r 2022-110}
+tabl(t(prn[sample(1:n,4),2:3]),col.names = c("","","","")) 
+```
+
+Calcolare il residuo per $x=2.1$ nel modello di regressione dove $Y$ è spiegato da $X$.
+
+:::{.sol data-latex=""}
+```{r 2022-111}
+cat(calcolo_beta())
+cat(residuo(2.1,9.3))
+```
+:::
+
+6.b **(Punti 3)** Calcolare la percentuale di varianza di $Y$ spiegata dal modello.
+
+:::{.sol data-latex=""}
+```{r 2022-112}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Se in un modello di regressione con 15 dati, 
+il residuo studentizzato del dato $i$ è $\tilde \epsilon_i=12.3$, cosa possiamo concludere?
+
+
+6.d **(Punti 2)** Sia $\hat\beta_0$ lo stimatore dei minimi quadrati per $\beta_0$.
+Scrivere il suo Standard Error stimato.
+
+### Esercizio 6
+```{r rg1}
+
+set.seed(5)
+set.seed(36)
+n <- 150
+x <- runif(n,1,60)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,.25)
+y <- 1+log(x)+eps
+
+x <- x/60
+y <- y/10
+
+RGX <- regr(x,y,semp = T)
+ls2e(RGX)
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito annuo ($X$ espressa in scala di comodo) e la spesa annua in generi alimentari ($Y$ espressa in scala di comodo). Qui di seguito le statistiche bivariate
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$. 
+
+:::{.sol data-latex=""}
+```{r 2023-112}
+cat(calcolo_beta())
+cat(previsione(1.5))
+```
+:::
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello? 
+
+:::{.sol data-latex=""}
+$$r^2\times 100=`r r^2*100`$$
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui. 
+```{r 2023-4,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,ml$res,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-5,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+6.d **(Punti 2)** Se $W=- Y$, quanto varrà $r_{XW}$, coefficiente di correlazione tra $X$ e $W$?
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-113}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-121}
+
+set.seed(5)
+set.seed(36)
+n <- 150
+x <- runif(n,1,60)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,.25)
+y <- 10-log(x)+eps
+
+x <- x/60
+y <- y/10
+
+RGX <- regr(x,y,semp = T)
+ls2e(RGX)
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito annuo ($X$  espressa in scala di comodo) e gli aumenti dei prezzi percepiti ($Y$ espressa in opportuna scala). Qui di seguito le statistiche bivariate
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+ 
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$. 
+
+:::{.sol data-latex=""}
+```{r 2023-8,,results='asis'}
+cat(calcolo_beta())
+cat(previsione(1.5))
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati? 
+
+:::{.sol data-latex=""}
+```{r 2023-9,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui. 
+```{r 2023-122}
+par(cex=.35)
+plot(x,ml$res,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-10,,results='asis'}
+
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es,df1=5,df2=5,a = 2 )
+axis(1)
+axis(2)
+```
+:::
+
+6.d **(Punti 2)** Se $W= 1 - Y$, quanto varrà $r_{XW}$, coefficiente di correlazione tra $X$ e $W$?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-123}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-130}
+
+set.seed(5)
+set.seed(4)
+n <- 150
+x <- sort(runif(n,0,10))
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- c(rnorm(90,0,.25),rnorm(60,0,.9))
+y <- 1+x+eps
+x <- x/10
+y <- y/10
+
+RGX <- regr(x,y,semp = T,ax=1)
+ls2e(RGX)
+```
+
+In uno studio sul potere d'acquisto delle famiglie è stato selezionato un campione di 150 nuclei familiari 
+a cui è stato chiesto il reddito annuo ($X$ espressa in scala di comodo) e la spesa annua in generi alimentari ($Y$ espressa in scala di comodo). Qui di seguito le statistiche bivariate
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$. 
+
+:::{.sol data-latex=""}
+```{r 2023-131}
+cat(calcolo_beta())
+cat(previsione(1.5))
+```
+:::
+
+6.b **(Punti 3)** Calcolare e interpretare $R^2$. 
+
+:::{.sol data-latex=""}
+```{r 2023-132}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui. 
+```{r 2023-14,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,ml$res,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-15,,results='asis'}
+
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+axis(1)
+axis(2)
+
+res_squared <- abs(es)^(1.3)
+
+fun <- function(x) x^2
+xx <- fun(x)
+fit <- lm(res_squared ~ x + xx)
+
+coefficients <- coef(fit)
+a <- coefficients[1]
+b <- coefficients[2]
+c <- coefficients[3]
+
+confidence_interval <- function(x) {
+  sigma2 <- a + b * x + c * fun(x)
+  sigma <- sqrt(sigma2)
+  return(sigma)
+}
+
+sigma <- confidence_interval(x)
+upper_bound <- 0 + sigma/1
+lower_bound <- 0 - sigma/1
+
+
+lines(sort(x), upper_bound[order(x)], col = "blue", lwd = 2, lty = 2)
+lines(sort(x), lower_bound[order(x)], col = "blue", lwd = 2, lty = 2)
+
+```
+:::
+
+6.d **(Punti 2)** Se $W=1+ Y$, quanto varrà $r_{XW}$, coefficiente di correlazione tra $X$ e $W$?
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-133}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-140}
+
+set.seed(6)
+n <- 150
+x <- runif(n,1,6)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,.1*x/6+.01)
+y <- 10-log(x*15)+eps
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+In uno studio sull'adeguamento alle direttive europee sul green si sono analizzate `r n` aziende, sono stati analizzati l'investimento in green ($X$ espresso in decine migliaia di euro/anno) e l'impatto l'abbattimento di CO2 (misurata in opportuna scala). Qui di seguito le statistiche:
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=3.5$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-141}
+cat(calcolo_beta())
+cat(previsione(3.5))
+```
+:::
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2023-142}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui.
+
+
+```{r 2023-18,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,ml$res,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-19,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+
+6.d **(Punti 2)** Se $W=- Y$, quanto varrà $r_{XW}$, coefficiente di correlazione tra $X$ e $W$?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-143}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-151}
+
+set.seed(6)
+n <- 150
+x <- runif(n,1,6)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,.25*(6-x)/6)
+y <- 10+exp(x)/100+eps
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+In uno studio sull'adeguamento alle direttive europee sul green si sono analizzate `r n` aziende, sono stati analizzati l'investimento in green ($X$ espresso in decine migliaia di euro/anno) e i risparmi globali $Y$ (espresso in decine migliaia di euro/anno). Qui di seguito le statistiche:
+
+\begin{align*}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-23,,results='asis'}
+cat(calcolo_beta())
+cat(previsione(1.5))
+```
+:::
+
+
+
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2023-24,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2023-25,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,ml$res,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-26,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+6.d **(Punti 2)** Se $V= 1 - Y$ e $W= 1 - X$ quanto varrà $r_{VW}$, coefficiente di correlazione tra $V$ e $W$?
+
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-152}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-160}
+
+set.seed(456)
+n <- 150
+x <- runif(n,1,6)
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rnorm(n,0,.25*(6-x)/6)
+y <- 10+exp(x)/100+eps
+
+RGX <- regr(x,y)
+ls2e(RGX)
+```
+
+In uno studio sull'adeguamento alle direttive europee sul green si sono analizzate `r n` aziende, sono stati analizzati l'investimento in green ($X$ espresso in decine migliaia di euro/anno) e le agevolazioni fiscali $Y$ (espressa in decine migliaia di euro/anno). Qui di seguito le statistiche:
+
+\begin{align*}
+\sum_{i=1}^n x_i &= `r sumx`,   &\sum_{i=1}^n x_i^2 &= `r sumx2` \\
+\sum_{i=1}^n y_i &= `r sumy`,   &\sum_{i=1}^n y_i^2 &= `r sumy2` \\
+\sum_{i=1}^n x_iy_i &= `r sumxy`.    \\
+\end{align*}
+
+6.a **(Punti 14)** Stimare la previsione per $x=1.5$ nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+
+:::{.sol data-latex=""}
+```{r 2023-30,,results='asis'}
+cat(calcolo_beta())
+cat(previsione(x = 1.5))
+```
+:::
+
+6.b **(Punti 3)** Calcolare e interpretare $R^2$.
+
+:::{.sol data-latex=""}
+```{r 2023-31,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il qq-plot dei residui.
+```{r 2023-32,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+qqnorm(ml$residuals,asp=1,axes=F)
+abline(0,1)
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+abline(v=0,lty=2)
+par(cex=cex)
+```
+
+6.d **(Punti 2)** Se $V=1+ Y$ e $W=1-X$, quanto varrà $r_{VW}$, il coefficiente di correlazione tra $V$ e $W$?
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-161}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-173}
+set.seed(12)
+n <- 50
+x <- runif(n,0,30)
+y <- abs(.5*x + rnorm(n,0,2+(x-15)^4*.0005))
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia dell'investimento pubblicitario sono stati rilevati, per $n=50$ aziende si sono rilevati l'incremento di spesa in
+pubblicità ($X$) e l'incremento di utile ($Y$) nell'ultimo quinquennio. Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-45,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2023-46,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2023-47,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-48,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+6.d **(Punti 2)** Posto $W=-2\cdot Y$ calcolare $\beta_0'$ e $\beta_1'$ i coefficienti di regressione del modello
+\[
+w_i = \beta_0'+\beta_1'x_i+\epsilon_i'
+\]
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \bar w &=&  -2\bar y\\
+  &=& -2\cdot`r my`\\
+  &=& `r -2*my`\\
+  \hat\sigma_W&=&2\hat\sigma_Y\\
+  &=& 2\cdot`r sy`\\
+  &=& `r 2*sy`\\
+  \hat\beta_1' &=& -\frac{\sigma_W}{\sigma_X}r\\
+  &=& -\frac{`r 2*sy`}{`r sx`}`r r`\\
+  &=& `r -2*sx/sx*r`\\
+  \hat\beta_0'&=& \bar w - \hat\beta_1'\bar x\\
+  &=& `r -2*my + 2*sx/sx*r*mx`
+\end{eqnarray*}
+:::
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-174}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-181}
+set.seed(12)
+n <- 50
+x <- runif(n,0,30)
+y <- abs(.5*x + rnorm(n,0,2+(15^2-(x-15)^2)*.005))
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia dell'investimento pubblicitario sono stati rilevati, per $n=50$ aziende si sono rilevati l'incremento di spesa in
+pubblicità ($X$) e l'incremento di utile ($Y$) nell'ultimo quinquennio. Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-54,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2023-55,,results='asis'}
+cat(R2())
+```
+:::
+
+
+6.c **(Punti 2)** Interpretare il qq-plot dei residui.
+
+```{r 2023-56,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+qqnorm(es,asp=1)
+abline(0,1)
+par(cex=cex)
+```
+
+6.d **(Punti 2)** Posto $W=-2\cdot X$ calcolare $\beta_0'$ e $\beta_1'$ i coefficienti di regressione del modello
+\[
+y_i = \beta_0'+\beta_1'w_i+\epsilon_i'
+\]
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \bar w &=&  -2\bar x\\
+  &=& -2\cdot`r mx`\\
+  &=& `r -2*mx`\\
+  \hat\sigma_W&=&2\hat\sigma_X\\
+  &=& 2\cdot`r sx`\\
+  &=& `r 2*sx`\\
+  \hat\beta_1' &=& -\frac{\sigma_Y}{\sigma_W}r\\
+  &=& -\frac{`r 2*sy`}{`r sx`}`r r`\\
+  &=& `r -2*sy/sx*r`\\
+  \hat\beta_0'&=& \bar y - \hat\beta_1'\bar w\\
+  &=& `r my - 2*sy/sx*r*mx`
+\end{eqnarray*}
+:::
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-182}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-188}
+set.seed(16)
+n <- 50
+x <- runif(n,0,1.5)
+y <- log(x)+rnorm(n,0,.25)
+y <- y-min(y)
+#plot(x,y)
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale medio di utile ($Y$). Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+i coefficienti $\hat\beta_0$ e $\hat\beta_1$
+
+:::{.sol data-latex=""}
+```{r 2023-62,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+6.b **(Punti 3)** Scrivere la scomposizione della varianza e 
+calcolarla per questo caso.
+
+:::{.sol data-latex=""}
+```{r 2023-63,,results='asis'}
+cat(TSS())
+```
+:::
+
+6.c **(Punti 2)** Perché una previsione per $x=0.15$ è più affidabile di una per $x=50$?
+
+6.d **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2023-64,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+:::{.sol data-latex=""}
+```{r 2023-65,,results='asis'}
+
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+6.e **(Punti 2)** Cosa significa dire che $r$ è un numero puro?
+
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-189}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-194}
+set.seed(111)
+n <- 50
+x <- runif(n,0,1.5)
+y <- -log(x)+rnorm(n,0,.25)
+y <- y-min(y)
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale in altre campagne di marketing ($Y$). Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+i coefficienti $\hat\beta_0$ e $\hat\beta_1$
+
+:::{.sol data-latex=""}
+```{r 2023-72,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2023-73,,results='asis'}
+cat(TSS())
+```
+:::
+
+6.c **(Punti 2)** Perché una previsione per $x=0.8$ è più affidabile di una per $x=0$?
+
+6.d **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2023-74,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+:::{.sol data-latex=""}
+```{r 2023-75,,results='asis'}
+
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+
+6.e **(Punti 2)** Cosa significa dire che $r$ è invariante ai cambiamenti di scala?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-195}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 6
+```{r 2023-199}
+set.seed(16)
+n <- 4
+x <- sort(runif(n,0,1.5))
+y <- -log(x)+rnorm(n,0,.25)
+y <- round(y-min(y),2)
+x <- round(x,2)
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale in altre campagne di marketing ($Y$). 
+
+Qui di seguito i dati
+
+```{r 2023-200}
+kable(prn[1:5,1:3], booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = T) %>%
+    row_spec(5, bold = T, color = "white", background = "gray")
+```
+
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+e calcolare il residuo per $x=`r x[2]`$.
+
+:::{.sol data-latex=""}
+```{r 2023-82,,results='asis'}
+kable(prn, digits = 4,booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = T) %>%
+  row_spec(5, bold = T, color = "white", background = "gray")
+
+cat(calcolo_beta())
+cat(residuo(x[2],y[2]))
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2023-83,,results='asis'}
+cat(R2())
+```
+:::
+:::
+
+6.c **(Punti 2)** Che differenza c'è tra interpolazione ed estrapolazione?
+
+6.d **(Punti 2)** Definire il diagramma dei residui.
+
+6.e **(Punti 2)** Cosa significa che $\hat\beta_0$ e $\hat\beta_1$ sono BLUE?
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2023-208}
+set.seed(789)
+n <- 50
+x <- abs(rnorm(n, 0, 6)) + 6 # Anni di studio
+y <- abs(2*x + rnorm(n, 0, 5)) + 15 # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di $n=`r n`$ individui, sono state analizzati il livello di istruzione (in anni di studio, $X$) e il reddito annuale (in migliaia di euro, $Y$).
+
+ Si osservano le seguenti statistiche, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+ $\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+6.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e prevedere il reddito per un individuo con 12 anni di studio.
+
+:::{.sol data-latex=""}
+```{r 2023-89,,results='asis'}
+cat(calcolo_beta())
+cat(previsione(12))
+```
+:::
+
+6.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2023-90,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Stimare lo Standard Error di $\hat\beta_1$.
+
+
+:::{.sol data-latex=""}
+```{r 2023-91,,results='asis'}
+cat(se_beta1())
+```
+:::
+
+6.d **(Punti 2)** Definire i punti di leva.
+
+6.e **(Punti 2)** Se in un modello di regressione sappiamo che $\hat\sigma_X=0.5$, $\hat\sigma_Y=1.2$ e $r=0.8$, quanto varrà $\hat\beta_1$, il coefficiente angolare del modello di regressione dove $Y$ viene spiegata da $X$?
+
+
+
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2023-217}
+set.seed(7)
+n <- 50
+x <- round(abs(rnorm(n, 0, 6)) + 6) # Anni di studio
+y <- round(abs(1.5*x + rnorm(n, 0, 5)) + 15,2) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di $n=`r n`$ individui, sono state analizzati il livello di istruzione (in anni di studio, $X$) e il reddito annuale (in migliaia di euro, $Y$).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)** Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2023-96,,results='asis'}
+cat(calcolo_beta())
+cat(residuo(x = x[3],y = y[3]))
+```
+:::
+
+6.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2023-97,,results='asis'}
+cat(R2())
+```
+:::
+
+6.c **(Punti 2)** Stimare lo Standard Error di $\hat\beta_0$.
+
+:::{.sol data-latex=""}
+```{r 2023-98,,results='asis'}
+cat(se_beta0())
+```
+:::
+
+6.d **(Punti 2)** Definire il qq-plot.
+
+6.e **(Punti 2)** Se in un modello di regressione $r=0.35$, $\hat\sigma_X=1.2$ e $\hat\sigma_X=0.5$, quanto varrà
+$\hat\beta_1$, il coefficiente angolare della retta di regressione in cui $Y$ è spiegata da  $X$?
+
+
+
+
+
+<div class="button-container"></div>
+
+### Esercizio 6
+```{r 2023-225}
+set.seed(9)
+n <- 50
+x <- round(abs(rnorm(n, 0, 6)) + 6) # Anni di studio
+y <- round(abs(2.1*x + rnorm(n, 0, 5)) + 12) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di $n=`r n`$ individui, sono state analizzati il livello di istruzione (in anni di studio, $X$) e il reddito annuale (in migliaia di euro, $Y$).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)** Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2023-103,,results='asis'}
+cat(calcolo_beta())
+cat(residuo(x = x[3],y = y[3]))
+```
+:::
+
+6.b **(Punti 3)** Scrivere la scomposizione della varianza e calcolarla per i dati in esame.
+
+:::{.sol data-latex=""}
+```{r 2023-104,,results='asis'}
+cat(TSS())
+```
+:::
+
+6.c **(Punti 2)** Stimare $\sigma^2_\varepsilon$.
+
+:::{.sol data-latex=""}
+
+\begin{eqnarray*}
+\hat{\sigma_\varepsilon}^2&=&(1-r^2)\hat\sigma_Y^2\\
+&=& (1-`r r^2`)\times`r vy`\\
+    &=& `r sh2`\\
+    S_\varepsilon^2 &=& \frac{n} {n-2} \hat{\sigma_\varepsilon}^2\\
+    &=&  \frac{`r n`} {`r n`-2} \hat{\sigma_\varepsilon}^2 \\
+ &=&  \frac{`r n`} {`r n`-2} \times `r sh2` = `r se2` 
+\end{eqnarray*}
+:::
+
+6.d **(Punti 2)** Definire i punti influenti.
+
+6.e **(Punti 2)** Se in un modello di regressione $r=0.35$, $\hat\sigma_X=1.2$ e $\hat\beta_1=0.5$, quanto varrà
+$\hat\sigma_Y$, la standard deviation di $Y$?
+
+### Esercizio 6
+```{r 2024-69}
+set.seed(12)
+n <- 50
+x <- round(runif(n = n,min = 8,20),0) # Anni di studio
+y <- round(abs(1.1*x + rnorm(n, 0, 2.25)) + 0) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di \(n=`r n`\) individui, sono stati analizzati il livello di istruzione (in anni di studio, \(X\)) e il numero di libri letti l'anno (\(Y\)).
+Si osservano le seguenti statistiche:
+, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-10,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+
+6.b **(Punti 3)** Dare un'interpretazione dei parametri di regressione stimati.
+
+6.c **(Punti 2)** Definire gli outliers.
+
+6.d **(Punti 2)** Se in un modello di regressione $r=0$ cosa significa?
+
+6.e **(Punti 2)** Se in un modello di regressione $r=0.55$, $\hat\sigma_Y=0.9$ e $\hat\beta_1=1.5$, quanto varrà
+$\hat\sigma_X$, la standard deviation di $X$?
+
+### Esercizio 6
+```{r 2024-103}
+set.seed(9)
+n <- 50
+x <- round(runif(n = n,min = 0,8),2) # Anni di studio
+y <- round(10 -.2*x^2 + rnorm(n, 0, 1.5),2) # Reddito annuo in migliaia di euro
+y <- (y - min(y))/(max(y)-min(y))*10
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sull'uso delle nuove tecnologie, in un campione di \(n=`r n`\) individui, sono stati analizzati il tempo passato sui social (in ore al giorno, \(X\)) e il numero di libri letti in un anno  \(Y\). 
+Si osservano le seguenti statistiche: 
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-23,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+
+6.b **(Punti 3)** Dare un'interpretazione dei parametri di regressione stimati.
+
+6.c **(Punti 2)** Definire i punti di leva e indicare una misura per misurarli.
+
+6.d **(Punti 2)** Se in un modello di regressione $r^2=0$ cosa significa?
+
+6.e **(Punti 2)** Se in un modello di regressione $r=0.55$, $\hat\sigma_Y=0.9$ e $\hat\beta_1=1.5$,  calcolare
+$\hat\alpha_1$, la stima del coefficiente angolare del modello
+
+$$
+X_i = \alpha_0+\alpha_1 Y_i + \delta_i, \qquad E(\delta_i)=0; V(\delta_i)=\sigma_\delta^2
+$$
+
+dove la $X$ è spiegata dalla $Y$.
+
+
+
+```{r include=FALSE}
+punti <- list(
+  e1 = c(a1,a2,a3,a3),
+  e2 = c(a1,a2,a3,a3),
+  e3 = c(a1),
+  e4 = c(a4,a4,a4,a4),
+  e5 = c(a1-a4,a4),
+  e6 = c(a1,a2,a3,a3,a3)
+)
+
+par(bg="transparent")
+```
+
+### Esercizio 6
+```{r 2024-112}
+set.seed(42)
+n <- 30
+sig <- 1.5
+x <- round(runif(n = n, min = 10, max = 50), 2) # sales in thousands of units
+y <- round(1.2 + 0.5 * x + rnorm(n, 0, sig), 2) # annual profit in thousands of euros
+ls2e(regr(x, y, semp = TRUE, ax = 2))
+```
+
+
+In uno studio sulla formazione aziendale, in un campione di \(n=`r n`\) dipendenti, sono state analizzate le ore di formazione (in ore, \(X\)) e il punteggio di performance (in opportuna, \(Y\)).
+
+Si osservano le seguenti statistiche:
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)** Si è osservato $x_7=`r p(x[7])`$ e $y_7=`r p(y[7])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=7$.
+
+:::{.sol data-latex=""}
+```{r 2024-28,,results='asis'}
+calcolo_beta()
+residuo(x = x[7],y = y[7])
+```
+:::
+
+6.b **(Punti 3)** Dare un'interpretazione dei parametri di regressione stimati.
+
+6.c **(Punti 2)** Perché la previsione per $x=`r round(mx)`$ è più affidabile di quella per $x=`r round(10*mx)`$?
+
+6.d **(Punti 2)** Cosa significa che $r$ è un numero puro?
+
+6.e **(Punti 2)** Se in un modello di regressione \(r=0.65\), \(\hat\sigma_X=1.1\) e \(\hat\sigma_Y=0.9\), calcolare \(\hat\beta_1\).
+
+:::{.sol data-latex=""}
+Per calcolare \(\hat\beta_1\) in un modello di regressione, si usa la formula:
+
+\[
+\hat\beta_1 = r \frac{\hat\sigma_Y}{\hat\sigma_X}
+\]
+
+Dati:
+- \(r = 0.65\)
+- \(\hat\sigma_X = 1.1\)
+- \(\hat\sigma_Y = 0.9\)
+
+Calcolo:
+
+\[
+\hat\beta_1 = 0.65 \times \frac{0.9}{1.1} = 0.65 \times 0.8182 = 0.532
+\]
+:::
+
+<!-- 6.f **(Punti 14)** Testare l'ipotesi che $\beta_1$ sia uguale a zero, contro l'alternativa che sia diverso per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.). -->
+
+<!-- :::{.sol data-latex=""} -->
+<!-- ```{r 2024-113} -->
+<!-- ttest_beta(1,0,SE = T) -->
+<!-- ``` -->
+<!-- ::: -->
+
+<div style="page-break-before: always;" />
+
+### Esercizio 6
+```{r 2024-121}
+set.seed(42)
+n <- 40
+sig <- .25
+x <- round(runif(n = n, min = 0, max = 10), 2) 
+y <- round(10 - (0.7 * x )^2 + rnorm(n, 0, sig), 2) 
+ls2e(regr(x, y, semp = TRUE, ax = 2))
+```
+
+In uno studio sulla relazione tra tempo libero e stress, in un campione di \(n=`r n`\) individui, sono state analizzate le ore settimanali dedicate al tempo libero (in ore, \(X\)) e i livelli di stress misurati (su una scala da 1 a 10, \(Y\)).
+
+Si osservano le seguenti statistiche:
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+6.a **(Punti 14)** Si è osservato $x_4=`r x[4]`$ e $y_4=`r round(y[4],2)`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=4$.
+
+:::{.sol data-latex=""}
+```{r 2024-31,,results='asis'}
+calcolo_beta()
+residuo(x = x[4],y = y[4])
+```
+:::
+
+6.b **(Punti 3)** Scomporre la Total Sum of Squares.
+
+:::{.sol data-latex=""}
+```{r 2024-32,,results='asis'}
+TSS()
+```
+:::
+
+6.c **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2024-33,, fig.width=5, fig.height=3.5}
+par(mar=c(4,4,0,2),cex=.8)
+plot(x, es, ylab=expression(hat(epsilon)), pch=16, cex=.5, axes=F)
+axis(1, cex=1)
+axis(2, cex=1)
+abline(h=0, lty=2)
+```
+
+:::{.sol data-latex=""}
+```{r 2024-34,,results='asis'}
+plot(x, es, ylab=expression(hat(epsilon)), pch=16, cex=.5, axes=F)
+axis(1, cex=1)
+axis(2, cex=1)
+abline(h=0, lty=2)
+spline_pat(x,es,df1 = 5,df2 = 5)
+```
+:::
+
+6.d **(Punti 2)** Cosa significa che $r$ è invariante ai cambiamenti di scala?
+
+6.e **(Punti 2)** Se in un modello di regressione $r^2=0$ significa che non c'è relazione tra $X$ ed $Y$?
+
+<!-- 6.f **(Punti 14)** Testare l'ipotesi che $\beta_0$ sia uguale a 12, contro l'alternativa che sia maggiore per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.). -->
+
+<!-- :::{.sol data-latex=""} -->
+<!-- ```{r 2024-122} -->
+<!-- ttest_beta(0,12.5,h1 = ">",SE = T) -->
+<!-- ``` -->
+<!-- ::: -->
+
+<div style="page-break-before: always;" />
+
+### Esercizio 6
+```{r 2024-131}
+set.seed(9)
+n <- 50
+x <- round(runif(n = n,min = 0,8),2) # Anni di studio
+y <- round(10 -.2*x^2 + rnorm(n, 0, 1.5),2) # Reddito annuo in migliaia di euro
+y <- (y - min(y))/(max(y)-min(y))*10
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sull'uso delle nuove tecnologie, in un campione di \(n=`r n`\) individui, sono stati analizzati il tempo passato sui social (in ore al giorno, \(X\)) e il numero di libri letti in un anno  \(Y\). 
+
+6.a **(Punti 2)** Si è osservato $x_5=`r p(x[5])`$ e $y_5=`r p(y[5])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=5$.
+
+:::{.sol data-latex=""}
+```{r 2024-37,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+
+6.b **(Punti 2)** Dare un'interpretazione dei parametri di regressione stimati.
+
+6.c **(Punti 2)** Definire i punti di leva e indicare una misura per misurarli.
+
+6.d **(Punti NA)** Se in un modello di regressione $r=-1$, cosa significa?
+
+6.e **(Punti NA)** Se in un modello di regressione $r=0.55$, $\hat\sigma_Y=0.9$ e $\hat\sigma_X=1.9$, calcolare $\hat\beta_1$ e
+$\hat\alpha_1$, gli stimatori stima del coefficiente angolare dei modelli:
+
+\begin{eqnarray*}
+Y_i &=& \beta_0+\beta_1 Y_i + \varepsilon_i, \qquad E(\varepsilon_i)=0; V(\varepsilon_i)=\sigma_\varepsilon^2\\
+X_i &=& \alpha_0+\alpha_1 Y_i + \delta_i, \qquad E(\delta_i)=0; V(\delta_i)=\sigma_\delta^2.
+\end{eqnarray*}
+

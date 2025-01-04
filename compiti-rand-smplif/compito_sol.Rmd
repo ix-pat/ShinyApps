@@ -1,0 +1,321 @@
+---
+title: Compito (con soluzioni)
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'sol.css' 
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("intro.R")
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r 2021-45}
+set.seed(120)   # per ottenere sempre la stessa simulazione
+n <- 300      # ampiezza campionaria
+nomex <- "Temperature"
+
+brk  <- c(-15,-5,0,5, 15)
+nnn  <- c( 5,10,10, 5)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+ls2e(stat_base(samp,brk))
+```
+
+Sono state registrate le temperature del comune $C$ per $n=200$ giorni. Qui di seguito l'istogramma di densità percentuale.
+
+```{r 2021-46}
+histp(axes = T)
+
+kbl((dat3[1:(k),c(1:2,6)]),booktabs=T,escape = F,linesep="") %>%
+   kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+1.a **(Punti 14 su 104 (4.04 su 30))** Calcolare il valore approssimato del 25-esimo percentile.
+
+::: {.sol data-latex=""}
+Per individuare il 25-esimo percentile dobbiamo:
+$$
+b_j=x_{j+1}-x_{j}
+$$
+le frequenze relative,
+$$
+f_j=h_j\cdot b_j,
+$$
+le cumulate
+$$
+F_j=f_1+...+f_j
+$$
+ricostruire la tabella 
+
+```{r 2021-8,, results='asis'}
+options(digits=4,nsmall=4)
+kable(dat3[,c(1,2,6,5,4,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+cat(percentile(p = 0.25))
+```
+:::
+ 
+1.b **(Punti 3 su 104 (0.87 su 30))** Analizzando l'istogramma, individuare il valore della media aritmetica e della mediana.
+
+
+::: {.sol data-latex=""}
+L'istogramma è perfettamente simmetrico
+$$
+\bar x\approx x_{0.5}\approx 0
+$$
+:::
+
+
+1.c **(Punti 2 su 104 (0.58 su 30))** Qual è la percentuale di dati compresa tra il 25-esimo e il 75-esimo percentile?
+
+::: {.sol data-latex=""}
+Per definizione
+\begin{eqnarray*}
+\%(X\le x_{0.25})&=&25\%\\
+\%(X\le x_{0.75})&=&75\%, \qquad\text{e quindi}\\
+\%(x_{0.25}< X\le x_{0.75})&=&50\%
+\end{eqnarray*}
+:::
+
+
+### Esercizio 2
+Il numero di automobili in fila al semaforo $A$ in orario di punta è distribuito come una
+Poisson di parametro $\lambda_A=2.2$ ($X_A\sim \text{Pois}(2.2)$). 
+Mentre il numero di automobili in fila al semaforo $B$ in orario di punta è distribuito come una
+Poisson di parametro $\lambda_B=1.5$ ($X_B\sim \text{Pois}(1.5)$). $X_A$ e $X_B$ indipendenti. 
+
+2.a **(Punti 14 su 104 (4.04 su 30))** Calcolare la probabilità che in almeno uno dei due semafori ci siano 2 o più automobili in coda (suggerimento: _almeno uno_ si rappresenta con l'unione).
+
+:::{.sol data-latex=""}
+Diretta
+```{r 2023-85,,results='asis'}
+cat(pois_dis(x1 = 2,ll = 2.2,vnam = "X_A",verso = "\\geq"))
+cat(pois_dis(x1 = 2,ll = 1.5,vnam = "X_B",verso = "\\geq"))
+pa <- 1-ppois(1,2.2)
+pb <- 1-ppois(1,1.5)
+```
+\begin{eqnarray*}
+  A =\{X_A\ge 2\} && B =\{X_B\ge 2\}\\
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+Indiretta
+\begin{eqnarray*}
+  \overline{\text{almeno uno}} &=&  \text{nessuno}\\
+  \overline{A\cup B} &=& \bar A\cap \bar B\\
+  P(\overline{A\cup B}) &=& P(\bar A)P(\bar B)\\
+  P(A\cup B) &=& 1- P(X_A<2)(X_B<2)\\
+  &=& 1-(1-`r pa` )\times(1-`r pb`)\\
+  &=& `r 1-(1-pa)*(1-pb)`
+\end{eqnarray*}
+  
+:::
+
+2.b **(Punti 3 su 104 (0.87 su 30))** Per andare al lavoro Michele prende la strada che 
+lo porta al semaforo $A$, ($X_A\sim \text{Pois}(2.2)$) se la tangenziale è libera, altrimenti
+prende la strada che lo porta al semaforo $B$ ($X_B\sim \text{Pois}(1.5)$).
+La probabilità di trovare la tangenziale sia libera è pari a
+$P(\text{Libera})=0.65$. Qual è la probabilità che Michele incontri più di due auto in fila?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+E &=& \{X\ge 2\}\\
+P(E) &=& P(\text{Libera})P(E|\text{Libera})+P\left(\overline{\text{Libera}}\right)P\left(E|\overline{\text{Libera}}\right)\\
+   &=&  0.65\times`r pa`+(1-0.65)\times `r pb`\\
+  &=& `r .65*pa+(1-.65)*pb`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2 su 104 (0.58 su 30))** Sia $Z\sim N(0,1)$ e $Y\sim \chi^2_2$, $Z$ e $Y$ indipendenti.
+Come si distribuisce
+\[
+\frac{Z}{\sqrt{Y/2}} ~~~?
+\]
+
+2.d **(Punti 2 su 104 (0.58 su 30))** Se $P(A)=0.3$, $P(B|A)=0.6$, e $P(B|\bar A)=0.4$, quanto valgono $P(B)$ e $P(A|B)$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+P(B) &=& P(A)P(B|A)+P(\bar A)P(B|\bar A)\\
+     &=& 0.3\times0.6+0.7\times 0.4\\
+     &=& `r .3*.6+.7*.4`\\
+P(A|B) &=& \frac {P(A)P(B|A)}{P(B)}\\
+       &=& \frac {`r .3*.6`}{`r .3*.6+.7*.4`}\\
+       &=& `r .3*.6/(.3*.6+.7*.4)`
+\end{eqnarray*}
+:::
+
+
+### Esercizio 3
+3.a **(Punti 14 su 104 (4.04 su 30))** Un'urna 3 premi da $\mbox{0}$ euro, un premio da $\mbox{1}$ euro.
+Si estrae 100 volte con reintroduzione. 
+
+Qual è la probabilità che la la vincita totale sia maggiore di 30?
+
+:::{.sol data-latex=""}
+
+```{r 2024-98}
+n <- 100
+mx <- 1/4
+
+tlc("somma",30,verso = ">",mu = mx,n = n)
+```
+:::
+
+
+### Esercizio 4
+4.a **(Punti 3 su 104 (0.87 su 30))** Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le consistenza di $\hat\lambda$ in almeno tre passaggi.
+
+
+4.b **(Punti 3 su 104 (0.87 su 30))** Siano $h$ uno stimatore per $\theta$, cosa significa dire che $h$ è asintoticamente corretto?
+
+4.c **(Punti 3 su 104 (0.87 su 30))** Definire la probabilità di significatività.
+
+4.d **(Punti 3 su 104 (0.87 su 30))** Se in un test statistico $0.01 < p_\text{value} <0.05$ cosa possiamo concludere?
+
+
+### Esercizio 5
+```{r 2023-207}
+n1 <- 10
+muh <- 1200
+sdh <- 300
+mu0 <- 1100
+```
+5.a **(Punti 3 su 104 (0.87 su 30))**  In uno studio sulle spese mensili dei dipendenti di un'azienda, è stato selezionato un campione di `r n1` individui. I dati campionari hanno mostrato una media di spese mensili pari a $\hat\mu = `r muh`€$ con una deviazione standard osservata pari a $\hat\sigma = `r sdh`€$. Costruire un intervallo di confidenza al 95% per la media delle spese mensili $\mu$.
+
+:::{.sol data-latex=""}
+```{r 2023-87,,results='asis'}
+idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t")
+```
+:::
+
+5.b **(Punti 11 su 104 (3.17 su 30))**  L'azienda afferma che la media delle spese mensili dei dipendenti è pari a $1100€$. Effettuare un test di ipotesi per verificare se la media delle spese mensili sia superiore a $1100€$.
+
+:::{.sol data-latex=""}
+```{r 2023-88,,results='asis'}
+ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = ">",um = "€")
+```
+:::
+
+
+### Esercizio 6
+```{r 2022-88}
+
+set.seed(666)
+n <- 5
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(5+x + eps,1)
+
+RGX <-regr(x,y)
+ls2e(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito i dati
+
+```{r 2022-89}
+ tabl(t(prn[1:n,2:3]),col.names = LETTERS[1:n]) 
+```
+
+
+6.a **(Punti 14 su 104 (4.04 su 30))** Calcolare il residuo del comune B nel modello di regressione dove $Y$ viene spiegata da $X$.
+
+
+:::{.sol data-latex=""}
+```{r 2022-90}
+ tabl((prn[,]))
+cat(calcolo_beta())
+cat(residuo(x[2],y[2]))
+```
+:::
+
+6.b **(Punti 3 su 104 (0.87 su 30))** Scrivere la scomposizione della varianza del modello di regressione 
+e calcolare la Total Sum of Squares (TSS), la Explained Sum of Squares (ESS) e la Residual Sum of Squares (RSS) dei dati analizzati sopra.
+
+
+:::{.sol data-latex=""}
+```{r 2022-91}
+cat(TSS())
+```
+:::
+  
+
+6.c **(Punti 3 su 104 (0.87 su 30))** Interpretare il parametro di regressione $\hat\beta_1$.
+
+6.d **(Punti 2 su 104 (0.58 su 30))** Descrivere la differenza tra punti di leva e punti influenti.
+
+6.e **(Punti 2 su 104 (0.58 su 30))** Gli stimatori $\hat\beta_0$ e $\hat\beta_1$ dei minimi 
+quadrati per $\beta_0$ e $\beta_1$ sono corretti?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+
+`r `

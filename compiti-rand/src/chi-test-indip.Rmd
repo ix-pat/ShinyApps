@@ -1,0 +1,81 @@
+```{r,echo=FALSE}
+n <- dim(dat)[1]
+m <- dim(dat)[2]
+gdl <- (n-1)*(m-1)
+chi_th <- round(qchisq(1-alpha,gdl),4)
+thr <- t(outer(colSums(dat),rowSums(dat))/sum(dat))
+# colnames(thr) <- nome_x
+# row.names(thr) <- nome_y
+chi_ob <- sum((thr-dat)^2/thr)
+segno <- ifelse(chi_ob>chi_th,">","<")
+decis <- ifelse(chi_ob>chi_th,"rifiuto","non rifiuto")
+```
+
+$\fbox{A}$ FORMULAZIONE DELLE IPOTESI
+$$
+\Big\{H_0:\pi_{ij}=\pi_{i\bullet}\pi_{\bullet j}
+$$
+
+$\fbox{B}$ SCELTA E CALCOLO STATISTICA-TEST, $\chi^2$
+
+Si usa il test $\chi^2$, si crea la tabella delle frequenze teoriche
+$$
+n_{ij}^*=\frac{n_{i\bullet}n_{\bullet j}}{n}
+$$
+
+```{r}
+tabl(thr,digits = 3,row.names = T)  %>%
+  column_spec(column = 1,bold = T)
+```
+
+La tabella delle distanze
+$$
+\frac{(n_{ij}-n_{ij}^*)^2}{n_{ij}^*}
+$$
+
+```{r,echo=FALSE}
+tabl((thr-dat)^2/thr,digits = 3,row.names = T) %>%
+  column_spec(column = 1,bold = T)
+```
+
+
+$\fbox{C}$ DECISIONE
+
+$$
+\chi^2_{obs}=`r chi_ob`
+$$
+
+i $gdl$
+
+$$
+(`r n`-1)\times(`r m`-1)=`r gdl`
+$$
+
+$\alpha=`r alpha`$ e quindi $\chi_{1,`r alpha`}^2=`r chi_th`$
+
+
+Essendo 
+$$
+\chi^2_{obs}=`r chi_ob` `r segno`\chi_{1,`r alpha`}^2=`r chi_th`
+$$
+
+allora `r decis` $H_0$ al lds dell'`r alpha*100` percento. 
+
+**Graficamente**
+
+```{r, echo=FALSE}
+
+R <- c(chi_th,100); A <- c(0,chi_th)
+b <- qchisq(.9999,gdl)
+curve(dchisq(x,gdl),0,b,axes=F,xlab="T",ylab="")
+lines(c(0,chi_th),c(0,0),col=4,lwd=2)
+lines(c(chi_th,b),c(0,0),col=2,lwd=2)
+points(chi_ob,0,pch=4,cex=2)
+text(chi_ob,.05,expression(chi[obs]^2))
+axis(1,c(0,chi_th,round(b,0)))
+```
+
+Il $p_{\text{value}}$ è
+\[
+P(\chi^2_{`r gdl`}> \chi^2_{\text{obs}})=`r format((1-pchisq(chi_ob,gdl)),digits = 4,scientific = 8)`
+\]

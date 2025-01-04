@@ -1,0 +1,23 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE}
+
+# mu<x1<x2
+
+# mm <-  10
+# sd <- 2
+# ss <- 2^2
+# x1 <- 7
+# x2 <- 11
+# vnam <- "X"
+
+```
+\begin{eqnarray*}
+P(`r x1`<`r vnam`\leq `r x2`) &=& P\left( \frac {`r x1` - `r mm`}{\sqrt{`r ss`}} < \frac {`r vnam` - \mu}\sigma \leq \frac {`r x2` - `r mm`}{\sqrt{`r ss`}}\right)  \\
+              &=& P\left( `r (x1 - mm)/sqrt(ss)` < Z \leq `r (x2 - mm)/sqrt(ss)`\right) \\
+              &=& \Phi(`r (x2 - mm)/sqrt(ss)`)-\Phi(`r (x1 - mm)/sqrt(ss)`)\\
+              &=& `r pnorm((x2 - mm)/sqrt(ss))`-`r pnorm((x1 - mm)/sqrt(ss))`\\
+              &=& `r pnorm((x2 - mm)/sqrt(ss))-pnorm((x1 - mm)/sqrt(ss))`
+\end{eqnarray*}

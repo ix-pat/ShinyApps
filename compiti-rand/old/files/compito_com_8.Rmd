@@ -1,0 +1,316 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r 2022-12}
+i1 <- 1
+i2 <- 0
+# Basic settings
+set.seed(12)   # per ottenere sempre la stessa simulazione
+n <- 250      # ampiezza campionaria
+nomex <- "Spesa"
+
+brk  <- c(0,3, 5,10,20)
+nnn  <- c( 20,110,100, 50)
+nnn  <- round(nnn/sum(nnn)*n)
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Ferrara è stato rilevata la spesa in generi alimentari (espresso in migliaia di euro). Qui di seguito i dati raccolti in classe e le densità di frequenza percentuali
+
+```{r}
+kable(dat3[,c(1,2,6)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Calcolare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,c(1:2,12,3:7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+cat(percentile())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Quante famiglie hanno una spesa inferiore al 25-esimo percentile?
+
+:::{.sol data-latex=""}
+$$
+`r n`\times 0.25=`r n*.25`
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) La spesa media è pari a $\bar x=`r mean(samp)`$, che forma ci dobbiamo aspettare dell'istogramma di densità?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) La varianza della spesa è pari a $Var=`r var(samp)`$.
+Se ogni famiglia aumentasse la sua spesa del 5%, quanto varrebbe varianza dei dati così trasformati?
+
+:::{.sol data-latex=""}
+$$`r 1.05^2*var(samp)`$$
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+Supponiamo di avere due urne, urna A e urna B, contenenti palline di due colori: rosse e blu.
+Nell'urna A, ci sono 10 palline di cui 4 rosse e 6 blu. Nell'urna B, ci sono 20 palline di cui 8 rosse e 12 blu.
+Estraiamo con reintroduzione 5 palline da ciascuna urna in modo indipendente.
+Definiamo gli eventi: 
+
+- $A=$ "l'estrazione dall'urna A dà al massimo una pallina rossa (1 pallina rossa o meno)".
+- $B=$ "L'estrazione dall'urna B dà come risultato almeno 4 palline blu (4 o più palline blu)".
+
+`r i2 <- i2+1;item()` **(Punti 14 su 104 (4.04 su 30))** Calcola la probabilità che almeno uno dei due eventi sia vero, ovvero la probabilità di $A \cup B$.
+
+:::{.sol}
+```{r,results='asis'}
+cat(bin_dis(1,5,1/3))
+cat(bin_dis(4,5,2/3,verso = "\\geq",comp = F,vnam = "Y"))
+pa <- pbinom(1,5,1/3)
+pb <- sum(dbinom(4:5,5,2/3))
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Qual è la probabilità di avere **esattamente** uno solo due eventi sia vera?
+
+:::{.sol}
+\begin{eqnarray*}
+  P(A) &=&  `r pa`\\
+  P(B) &=& `r pb`\\
+  P(\text{Solo uno dei due vero}) &=& P(A\cap\bar B)+P(\bar A\cap B)\\
+  &=& `r pa`\times (1 - `r pb`)+(1-`r pa`)\times  `r pb`\\
+  &=& `r pa*(1-pb)+pb*(1-pa)`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Siano $X_1\sim N(5,1)$ e $X_2\sim N(5,1)$, $X_1$ e $X_2$ indipendenti. Come si distribuisce
+\[
+\bar X = \frac 12 (X_1+X_2) ~~~?
+\]
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Siano $A$ e $B$ due eventi tali che $P(A)=0.3$ e $P(B)=0.3$. $A$ e $B$ possono essere incompatibili? (scegliere tra _sempre, mai, dipende_ e motivare la risposta)
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+
+### Esercizio 3
+(**Punti 14 su 104 (4.04 su 30)**) Un'urna contiene $4$ bussolotti Rossi, $3$ bussolotti Blu e $5$ bussolotti Gialli. Si estrae 60 volte con reintroduzione; qual è la probabilità che il numero di rossi in 60 estrazioni sia maggiore di 21?
+
+
+::: {.sol data-latex=""}
+\[\pi=\frac 4{12}=\frac 13\]
+```{r,results='asis'}
+cat(tlc(tipo = "somma",x1 = 21,verso = ">",mu = 1/3,n = 60))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sia $\hat \lambda$ lo stimatore di massima verosimiglianza di $\lambda$ del modello di Poisson.
+\begin{eqnarray*}
+  \hat\lambda &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le correttezza di $\hat\lambda$ in almeno tre passaggi.
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Definire lo _Standard Error_ di uno stimatore.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Definire gli errori di primo e di secondo tipo di un test statistico.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) In un test statistico, per quali valori di $p_\text{value}$ si tende a rifiutare $H_0$?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+```{r}
+n1 <- 35
+muh <- 68
+sdh <- 5
+mu0 <- 71
+```
+
+`r i2 <- i2+1;item()` (**Punti 7 su 104 (2.02 su 30)**) In uno studio sui redditi, nel comune $A$ si è rilevato il reddito di $n=`r n1`$ individui e si è osservata una media pari $`r muh`$ mila euro con una standard deviation pari a $`r sdh`$ mila euro.
+Costruire un intervallo di confidenza al 95% per il reddito medio $\mu$.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+options(digits = 4)
+res <- idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t",mus = mu0,ss = "S")
+cat(res)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 7 su 104 (2.02 su 30)**) Un'indagine analoga, svolta sull'intera regione, ha mostrato un reddito medio pari a $\mu_0=`r mu0`$. Testare al livello di __significatività del 5%__ l'ipotesi che nel comune $A$ il reddito medio sia uguale a quello regionale contro l'alternativa che sia __diverso__.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+res <- ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = "\\neq",alpha = .05)
+cat(res)
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+set.seed(16)
+n <- 4
+x <- sort(runif(n,0,1.5))
+y <- -log(x)+rnorm(n,0,.25)
+y <- round(y-min(y),2)
+x <- round(x,2)
+# plot(x,y)
+RGX <- regr(x,y); attach(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale in altre campagne di marketing ($Y$). 
+
+Qui di seguito i dati
+
+```{r}
+kable(prn[1:5,1:3], booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = T) %>%
+    row_spec(5, bold = T, color = "white", background = "gray")
+```
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+e calcolare il residuo per $x=`r x[2]`$.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+kable(prn, digits = 4,booktabs=T,escape = F,linesep="")%>%
+  kable_styling(full_width = T) %>%
+  row_spec(5, bold = T, color = "white", background = "gray")
+
+cat(calcolo_beta())
+cat(residuo(x[2],y[2]))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(R2())
+```
+:::
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Che differenza c'è tra interpolazione ed estrapolazione?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Definire il diagramma dei residui.
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Cosa significa che $\hat\beta_0$ e $\hat\beta_1$ sono BLUE?

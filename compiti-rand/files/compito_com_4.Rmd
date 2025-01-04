@@ -1,0 +1,392 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+
+# Basic settings
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 200      # ampiezza campionaria
+
+brk  <- c(-2,-1,1,5,15)
+nnn  <- c( 20,100,110, 10)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ imprese della provincia di Modena è stato rilevato l'utile dell'ultimo trimestre (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r}
+kable(dat3[,c(1,2,3)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,1:7],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+histp(T)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Quale è il numero di imprese che hanno un utile maggiore di zero?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \%(X>0) &=&  100\%-\%(X\le 0)\\
+  &=& 100 - (0.09\times 100 + 20.8\times(0-(-1)))\%\\
+  &=& `r (1-F.int(0))*100`\%
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) L'utile medio è pari a $\bar x=`r mean(samp)`$ che forma avrà l'istogramma?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Qual è la proprietà di associatività della media aritmetica?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+Siano $X\sim N(5,1/2)$ e sia $Y\sim N(5,1/2)$, $X$ e $Y$ indipendenti. Posto $A=\{X>6\}$, $B=\{Y<4\}$.
+
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r}
+x1 <- 6
+verso <- ">"
+ss <- .5
+mm <- 5
+vnam <- "X"
+mu <- "\\mu_X"
+sigma <- "\\sigma_X"
+
+pa <- 1-pnorm(6,5,sqrt(.5))
+pb <- pnorm(4,5,sqrt(.5))
+cat(norm_int(x1 = x1,verso = verso,mm = mm,ss = ss))
+```
+
+```{r}
+x1 <- 4
+verso <- "<"
+ss <- .5
+mm <- 5
+vnam <- "Y"
+mu <- "\\mu_Y"
+sigma <- "\\sigma_Y"
+cat(norm_int(x1 = x1,verso = verso,mm = mm,ss = ss,vnam = vnam,mu =mu,sigma = sigma))
+
+pa <- 1-pnorm(6,5,sqrt(.5))
+pb <- pnorm(4,5,sqrt(.5))
+```
+
+
+e quindi
+
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa`\times`r pb`\\
+  &=& `r pa+pb-pa*pb` 
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Posto $Z=X-Y$, Calcolare la probabilità che $P(Z>1|Z\le 2)$. 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  Z &=&  X-Y\\
+  &\sim& N(5-5,1/2+1/2)\\
+  &\sim& N(0,1)\\
+P(Z>1|Z\le 2) &=&\frac{P(\{Z>1\}\cap\{Z\le 2\})}{P(Z\le 2)}  \\
+&=& \frac{P(1<Z\le 2)}{P(Z\le 2)}  \\
+&=&\frac{\Phi(2)-\Phi(1)}{\Phi(2)}\\
+&=&\frac{`r pnorm(2)`-`r pnorm(1)`}{`r pnorm(2)`}\\
+&=&`r (pnorm(2)-pnorm(1))/pnorm(2)`
+\end{eqnarray*}
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Siano $A$ e $B$ due eventi diversi dal vuoto.
+Sono noti $P(A|B)=0.3$, $P(A|\bar B)=0.15$. $A$ e $B$ sono indipendenti? Perché?
+
+:::{.sol data-latex=""}
+No, perché se lo fossero
+$$
+P(A|B)=P(A|\bar B)=P(A)
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Sia $X\sim\text{Pois}(\lambda=1)$, disegnare la
+funzione di ripartizione $F(x)$ di $X$, per $x$ compreso tra $-1$ e $2.5$.
+
+:::{.sol data-latex=""}
+```{r}
+curve(ppois(x,1),-1,2.5,type = "s")
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+(**Punti 14 su 100 (4.2 su 30)**) Una catena di montaggio a ciclo continuo produce un pezzo al giorno e la proporzione di pezzi fallati è pari
+a $\pi=0.15$.
+
+Calcolare la probabilità che il numero totale di pezzi fallati in un anno ($n=365$) sia maggiore di 60
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(tlc(tipo = "somma",x1 = 60,verso = ">",mu = .15,n = 365))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Sia $h$ uno stimatore per $\theta$, tale che
+\begin{eqnarray*}
+E(h)&=&\theta+\frac\theta {n^2},\\
+V(h)&=&\frac{\sqrt\theta}{ n}.
+\end{eqnarray*}
+Ricavare $MSE(h)$, il Mean Squared Error di $h$. 
+
+::: {.sol data-latex=""}
+\begin{eqnarray*}
+MSE(h)&=&V(h)+B^2(h)\\
+&=&V(h)+|E(h)-\theta|^2\\
+&=&\frac{\sqrt\theta}{ n}+\left|\theta+\frac\theta {n^2}-\theta\right|^2\\
+&=&\frac{\sqrt\theta}{ n}+\frac{\theta^2} { n^4}\\
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Scrivere la funzione di verosimiglianza di una Poisson.
+
+::: {.sol data-latex=""}
+Siano $X_1,...,X_n$, $n$ VC IID, tali che, $X_i\sim\text{Pois}(\lambda)$
+La verosimiglianza è
+\begin{eqnarray*}
+  L(\lambda) &=& \prod_{i=1}^n\frac{\lambda^{x_i}}{x_i!}e^{-\lambda}\\
+             &\propto& \lambda^{s_n} e^{-n\lambda},\qquad s_n=\sum_{i=1}^n x_i
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Definire il $p_{\text{value}}$, la probabilità di significatività osservata.
+
+::: {.sol data-latex=""}
+La probabilità di significatività $p_{\text{value}}$ è
+
+$$p_{\text{value}}=P(|T|>|t_{\text{obs}}|;H_0)$$
+
+La probabilità di significatività osservata $p_\text{value}$ esprime la probabilità, _se fosse vera_ $H_0$, 
+di trovare un campione ancora più in favore di $H_1$ di quello disponile
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+(**Punti 14 su 100 (4.2 su 30)**) In uno studio sull'efficacia degli integratori alimentari, su un gruppo di 238 atleti è stato misurato il rendimento atletico (ottimo, buono e scarso) e l'assunzione di integratori (alto, medio e basso). Qui di seguito i dati:
+
+```{r}
+x <- matrix(c(21,20,18,35,26,38),2)
+rx <- rowSums(x)
+cx <- colSums(x)
+n <- sum(x)
+
+dimnames(x)<-list(redimento=c("buono","scarso"),integratori=c("alto","medio","basso"))
+xp <- cbind(x,rx)
+xp <- rbind(xp,colSums(xp))
+dimnames(xp)<-list(redimento=c("buono","scarso","Totale"),integratori=c("alto","medio","basso","Totale"))
+kable(xp,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 4))
+```
+
+Testare al livello di significatività del 5% se c'è indipendenza tra integratori e rendimento.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+rx <- rowSums(x)
+cx <- colSums(x)
+
+thx <- outer(rx,cx)/n
+
+kable(thx,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 2) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+
+chi <- (thx-x)^2/thx
+kable(chi,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 2) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+
+chioss <- sum((thx-x)^2/thx)
+cat(cat("Il chi oss è ",chioss,", il chi-teorico,",qchisq(.95,2)," rifiuto:",ifelse(sum((thx-x)^2/thx) > qchisq(.95,2),"sì","no")))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+
+set.seed(777)
+n <- 15
+x <- sort(sample(seq(0,4,by=.1),n))
+
+eps <- rnorm(n,0,1)
+y <- round(6+1.1*x + eps,1)
+
+RGX <- regr(x,y)
+attach(RGX)
+```
+
+Sono stati analizzati `r n` comuni della provincia di Bologna e su ogni comune è stato rilevato
+il PIL pro capite del comune $X$, espresso in decine di migliaia di euro e un valore di percezione di
+qualità della vita $Y$ (espresso su opportuna scala).
+
+Qui di seguito le statistiche bivariate
+
+\begin{align}
+  \sum_{i=1}^n x_i &= `r sum(x)` &\sum_{i=1}^n x_i^2 &= `r sum(x^2)` &\sum_{i=1}^n x_i y_i &= `r sum(x*y)`\\
+  \sum_{i=1}^n y_i &= `r sum(y)` & \sum_{i=1}^n y_i^2 &= `r sum(y^2)` &
+\end{align}
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 100 (4.2 su 30)**) Questi sono alcuni dei dati osservati
+
+```{r}
+tabl(t(prn[sample(1:n,4),2:3]),col.names = c("","","","")) 
+```
+
+Calcolare il residuo per $x=2.1$ nel modello di regressione dove $Y$ è spiegato da $X$.
+
+:::{.sol data-latex=""}
+```{r}
+cat(calcolo_beta())
+cat(residuo(2.1,9.3))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 100 (0.9 su 30)**) Calcolare la percentuale di varianza di $Y$ spiegata dal modello.
+
+:::{.sol data-latex=""}
+```{r}
+cat(R2())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Se in un modello di regressione con 15 dati, 
+il residuo studentizzato del dato $i$ è $\tilde \epsilon_i=12.3$, cosa possiamo concludere?
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 100 (0.6 su 30)**) Sia $\hat\beta_0$ lo stimatore dei minimi quadrati per $\beta_0$.
+Scrivere il suo Standard Error stimato.

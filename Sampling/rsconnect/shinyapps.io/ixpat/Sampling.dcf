@@ -1,0 +1,13 @@
+name: Sampling
+title: Sampling
+username: ixpat
+account: ixpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11097886
+bundleId: 8250481
+url: https://ixpat.shinyapps.io/Sampling/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData

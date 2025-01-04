@@ -1,0 +1,384 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+i1 <- 1; 
+i2 <- 0
+set.seed(1)                      # per ottenere sempre la stessa simulazione
+n <- 180                         # ampiezza campionaria
+
+brk  <- c(-10,-5,0,1,5)          # intervalli (breaks)
+hhh  <- c( 2,4,10, .5)       # aspetto presunto istogramma
+
+nomex <- "Bilancio"
+samp <- genera_dati(brk = brk,hhh = hhh,n = n)
+
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ di piccole e medie  aziende  della provincia di Modena è stato rilevato l'utile netto (espresso in centinaia di migliaia di euro) durante il periodo del covid. Qui di seguito la distribuzione delle frequenze assolute:
+
+```{r}
+tabl(dat3[,c(1,2,3)])
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Individuare la classe modale
+
+:::{.sol}
+```{r}
+tabl(dat3[,1:7])
+histp(axes = T)
+h.int(-10,3,density=20)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Qual è la percentuale di imprese con bilancio inferiore a 3 (centomila) euro?
+
+:::{.sol}
+```{r,results='asis'}
+cat(F_print(3,verso="<"))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) la media aritmetica è pari a `r mean(samp)`, in base al punto 1a che relazione dobbiamo attenderci tra media, mediana e moda?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Si considerino i seguenti dati
+
+\[
+\{x_1=1.2,x_2=2.3,x_3=6.7\}
+\]
+
+Per quale valore di $x$
+\[
+f(x)=(x_1-x)^2+(x_2-x)^2+(x_3-x)^2
+\]
+$f$ è minima?
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+Si consideri un'urna così formata,
+$$
+\left\{\fbox{1},\fbox{2},\fbox{3},\fbox{4},\fbox{5},\fbox{6},\fbox{7},\fbox{8}\right\}.
+$$
+Si vince se si estrae un numero maggiore o uguale a 6. 
+
+Si estrae _con_ reintroduzione.
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Qual è la probabilità di vincere almeno 5 volte su 6 estrazioni?
+
+::: {.sol data-latex=""}
+Sia $X$ la VC che conta il numero di di vittorie in 6 giocate,
+quindi $n=6$ replicazioni di una Bernoulli $X_i\sim\mbox{Ber}(\pi=3/8)$ e quindi
+
+$$
+X=X_1+...+X_n\sim\mbox{Binom}(n=6,\pi=`r 3/8`)
+$$
+
+la probabilità di avere almeno 5 bussolotti rossi su 6 estrazioni è
+
+
+```{r,results='asis'}
+pp <- .38
+cat(bin_dis(5,6,pp = 3/8,verso = ">"))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Calcolare la probabilità di vincere la prima volta alla quarta estrazione.
+
+::: {.sol data-latex=""}
+Ogni singola giocata $X_i$ è una Bernoulli $X_i\sim\mbox{Ber}(\pi=3/8)$ e quindi 
+\begin{eqnarray*}
+E&=&\text{Vincere la prima volta alla quarta estrazione}\\
+ &=& X_1=0~\cap~X_2=0~\cap~X_3=0~\cap~X_4=1\\
+P(E)&=&P(X_1=0~\cap~X_2=0~\cap~X_3=0~\cap~X_4=1)\\
+&=&P(X_1=0)P(X_2=0)P(X_3=0)P(X_4=1)\\
+&=&\left(1-\frac 38\right)\left(1-\frac 38\right)\left(1-\frac 38\right)\frac 38\\
+&=&\left(\frac 58\right)^3\frac 38\\
+&=&`r (5/8)^3*3/8 `
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Se $A$ e $B$ sono due eventi tali che, $P(A)>0$, $P(B)>0$, $P(A\cap B)=0$. 
+$A$ e $B$ possono essere indipendenti?
+
+::: {.sol data-latex=""}
+No, in quanto, se $A$ e $B$ sono indipendenti
+$$P(A\cap B)=P(A)P(B)\neq0$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Sia $X\sim N(3.2,(1.1)^2)$ e sia $Y\sim\chi_{n-1}^2$, posto
+$$
+T=\frac{\left(\frac{X-3.2}{1.1}\right)}{\sqrt{\frac{Y}{n-1}}},
+$$
+come si distribuisce $T$?
+
+::: {.sol data-latex=""}
+Si noti che
+$$
+Z=\left(\frac{X-3.2}{1.1}\right)\sim N(0,1)
+$$
+e che
+$$
+T=\frac{Z}{\sqrt{\frac{Y}{n-1}}}\sim t_{n-1}
+$$
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+```{r}
+n <- 365
+ex <- 0.08
+vx <- 0.034
+es <- mm <- n*ex
+vs <- ss <- n*vx
+#ss <- sqrt(vs)
+# 
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Un'urna contiene 4 palline numerate: $\fbox{0}$, $\fbox{1}$, $\fbox{4}$ e $\fbox{6}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la media delle 100 estrazioni sia maggiore di 2.8?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+urn <- c(0,1,4,6)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+
+cat(stat_(urn))
+cat(tlc("media",2.8,NUll,verso = ">",mu = mm,s2 = ss,n = n))
+```
+:::
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sono stati estratti $n=10$ valori da una Bernoulli di parametro $\pi$ incognito e si è ottenuti 4 successi in 10 estrazioni. Ricavare, $\widehat{SE(\hat\pi)}$ lo Standard Error stimato di $\hat\pi$ di massima verosimiglianza.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sia $h$ uno stimatore per $\theta$. Cosa significa dire che $h$ è corretto asintoticamente?
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Definire gli errori di primo e di secondo tipo e le relative probabilità.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Un dado viene lanciato 60 volte e si ottiene 
+```{r}
+set.seed(1)
+dad <- sample(1:6,size = 60,replace = T,prob=c(1,1,3,4,1,2)/sum(c(1,1,3,4,1,2)))
+kable(t(table(dad)),booktabs=T,escape = F,linesep="") %>%            # Stampa la tabella
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+chis <- sum((table(dad)-10)^2/10)
+pval <- 1-pchisq(chis,5)
+```
+Ci si chiede se il dado sia truccato. Posto a test
+\[
+\begin{cases}
+H_0:\pi_j=\frac 16, j = 1,...,6
+\end{cases}
+\]
+si ottiene un $p_{\text{value}}=`r pval`$. Il dado si può ritenere truccato? Perché?
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+(**Punti 14 su 104 (4.04 su 30)**) In uno studio sui consumi sono stati intervistati $n=25$ individui 
+sui quali è stato rilevato il reddito mensile $X$ (in migliaia di euro), e il consumo $Y$ (in migliaia di euro). Il modello di regressione
+$$
+Y_i=\beta_0+\beta_1 x_i+\varepsilon_i
+$$
+ha fornito i seguenti risultati
+
+\begin{align*}
+\hat\beta_0&=0.60, &\hat\beta_1&=0.75, &r&=0.87\\
+\bar x&=1.61 &\hat \sigma_X&=0.90\\
+\bar y&=1.81 &\hat \sigma_Y&=0.78\\
+\end{align*}
+
+
+Testare al 5% l'ipotesi che il consumo di sussistenza $\beta_0$ sia uguale 0.5 contro l'alternativa 
+che sia maggiore.
+
+::: {.sol data-latex=""}
+```{r,results='asis'}
+b00 <- 0.5
+mx <- 1.61
+vy <- 0.78^2
+r <- 0.87
+vx <- 0.90^2
+b0 <- 0.6
+n <- 25
+sh2 <- vy*(1-r^2)
+se2 <- (n/(n-2))*sh2 
+vb1 <- se2 / (n*vx) 
+vb0 <- se2*(1/n+mx^2/(n*vx))
+h1 <- ">"
+cat(se_beta0())
+cat(ttest_beta(0,bj0 = .5,h1 = h1,alpha = 0.05))
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+
+set.seed(5)
+set.seed(34)
+n <- 15
+x <- sort(runif(n,0,10))
+#curve(dgamma(x,1,1/100),0,691)
+#qgamma(.999,1,1/100)
+
+eps <- rchisq(n,df = 1)
+y <- (x/10)^2*.7 +eps*.05
+#y[y<0] <- -y[y<0]
+
+x <- round(x,2)
+y <- round(y,2)
+
+RGX <- regr(x,y,ax = 0,semp = T)
+attach(RGX)
+```
+
+Si esaminano $n=15$ aziende e si rileva, per ognuna di esse, il
+fatturato ($X$) e il profitto ($Y$) (in unità convenzionali).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{15}x_i=`r sum(x)`$, $\sum_{i=1}^{15}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{15}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{15}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{15}x_iy_i=`r sum(x*y)`$.
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Stimare il modello di regressione dove $Y$ viene spiegata da $X$
+
+::: {.sol data-latex=""}
+```{r}
+cat(calcolo_beta())
+```
+:::
+
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Qual è la percentuale di varianza spiegata dal modello?
+
+::: {.sol data-latex=""}
+```{r}
+cat(R2())
+```
+:::
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Se in un modello di regressione si conoscono $\hat\beta_1$, $r^2$ e $\hat\sigma_X$ è possibile ricavare $\hat\sigma_Y$? In che modo?
+
+::: {.sol data-latex=""}
+\begin{eqnarray*}
+   \hat\beta_1 &=& \frac{\text{cov}(x,y)}{\hat\sigma_X^2}\\
+   \text{cov}(x,y)&=&\hat\beta_1\hat\sigma_X^2\\
+   r&=&\frac{\text{cov}(x,y)}{\hat\sigma_X\hat\sigma_Y}\\
+   \hat\sigma_Y&=&\frac{\text{cov}(x,y)}{r\hat\sigma_X}\\
+   &=&\frac{\hat\beta_1\hat\sigma_X^2}{r\hat\sigma_X}\\
+   &=&\frac{\hat\beta_1}{r}\hat\sigma_X
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Cosa significa che il coefficiente di correlazione è invariante alle trasformazioni lineari?

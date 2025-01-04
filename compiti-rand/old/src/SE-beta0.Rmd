@@ -1,0 +1,58 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, echo=FALSE}
+
+# x <- c(0:3)
+# y <- c(2,3.5,2.5,4)
+# n <- 4
+
+# mx <- mean(x)
+# vx <- mean(x^2)-mean(x)^2
+# sx <- sqrt(vx)
+# 
+# my <- mean(y)
+# vy <- mean(y^2)-mean(y)^2
+# sy <- sqrt(vy)
+# 
+# co <- mean(x*y) - mx*my
+# r  <- co/sqrt(vy*vx)
+# b1 <- co/vx
+# b0 <- my - b1*mx
+# 
+# ys <- b0 + b1 * x
+# es <- y - ys
+# rg <- ys - my
+# 
+# sh2 <- vy*(1-r^2)
+# se2 <- (n/(n-2))*sh2 
+# vb0 <- se2 * (1/n+mx^2/(n*vx)) 
+# vb1 <- se2 / (n*vx) 
+# 
+# seh <- sqrt((1-r^2)*vy)
+# s <- sqrt(n/(n-2))*seh
+# se <- s/sqrt(n)
+
+```
+
+
+\begin{eqnarray*}
+\hat{\sigma_\varepsilon}^2&=&(1-r^2)\hat\sigma_Y^2\\
+&=& (1-`r r^2`)\times`r vy`\\
+    &=& `r sh2`\\
+    S_\varepsilon^2 &=& \frac{n} {n-2} \hat{\sigma_\varepsilon}^2\\
+    &=&  \frac{`r n`} {`r n`-2} \hat{\sigma_\varepsilon}^2 \\
+ &=&  \frac{`r n`} {`r n`-2} \times `r sh2` = `r se2` 
+\end{eqnarray*}
+
+E quindi
+
+\begin{eqnarray*}
+V(\hat\beta_{0}) &=& \sigma_{\varepsilon}^{2} \left( \frac{1} {n}  +  \frac{\bar{x}^{2}} {n \hat{\sigma}^{2}_{X}} \right)\\
+\widehat{V(\hat\beta_{0})} &=& S_{\varepsilon}^{2}\left( \frac{1} {n}  +  \frac{\bar{x}^{2}} {n \hat{\sigma}^{2}_{X}} \right)\ \\
+ &=& `r se2`\times\left( \frac{1} {`r n`}  +  \frac{`r mx`^{2}} {`r n`\times `r vx`} \right)\\
+ \widehat{SE(\hat\beta_{0})}           &=&  \sqrt{`r vb0`}\\
+ &=& `r sqrt(vb0)`
+\end{eqnarray*}

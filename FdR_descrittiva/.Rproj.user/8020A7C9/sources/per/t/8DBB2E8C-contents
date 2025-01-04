@@ -1,0 +1,292 @@
+---
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+#   css: "/home/pat/Dropbox/Stat/Compiti/sol.css"
+   css: "/home/pat/Dropbox/Stat/Compiti/comp.css"
+   toc: false
+   toc_depth: 6
+   toc_float:
+    collapsed: false
+    smooth_scroll: false
+    df_print: paged
+header-includes:
+- \usepackage{amsmath}
+- \usepackage{amssymb}
+- \usepackage{xfrac}
+- \usepackage{stackrel}
+- \usepackage{cancel}
+- \usepackage{xcolor}
+- \DeclareMathOperator*{\das}{\sim}
+- \definecolor{mygray}{gray}{0.6}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+#knitr::opts_chunk$set(echo = FALSE,fig.height = 7/2, fig.width = 11/2)
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("/home/pat/Dropbox/Stat/src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}
+
+par(bg="transparent")
+```
+
+
+## Prova di Statistica (CLEA, CLEAM, CLEF E CLEMI)
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+
+### Esercizio 1
+```{r}
+# Basic settings
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,1.5,3,8,12)
+nnn  <- c( 20,100,100, 20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti finanziari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+`r i2 <- i2+1;item()` (**Punti 14**) Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3**) Quante famiglie investono meno di 4 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+```{r}
+F_print(x = 4,verso = "<")
+```
+:::  
+
+
+`r i2 <- i2+1;item()` (**Punti 2**) Che relazione dobbiamo aspettarci tra media,  mediana e moda? 
+
+`r i2 <- i2+1;item()` (**Punti 2**) La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia diminuisse il proprio investimento del 2%, quanto varrebbero la media e la SD dei dati così trasformati?
+
+### Esercizio 2 `r i2 <- 0; i1 <- i1+1`
+
+`r i2 <- i2+1;item()` (**Punti 14**) Si lancia una moneta perfetta 8 volte. Qual è la probabilità di avere un numero di volte Testa minore o uguale a 2 su 8 lanci?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(bin_dis(x1 = 2,n = 8,pp = .5))
+```
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 3**) Sia $Z\sim N(0,1)$ e siano $A=\{Z<-1\}$ e $B=\{Z<1\}$. Calcolare $P(A|B)$
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(B) &=&  \Phi(1)\\
+  &=& `r pnorm(1)`\\
+  P(A\cap B) &=& P(Z<-1)\\
+  &=& \Phi(-1)\\
+  &=& `r pnorm(-1)`\\
+  P(A|B) &=& \frac{P(A\cap B)}{P(B)}\\
+  &=& \frac{`r pnorm(-1)`}{`r pnorm(1)`}\\
+  &=& `r pnorm(-1)/pnorm(1)`
+\end{eqnarray*}
+:::  
+
+`r i2 <- i2+1;item()` (**Punti 2**) Se $X\sim\text{Binom} (\pi,n)$, a cosa tende $X$ se $n$ diverge e $\pi=\lambda/n$, dove $\lambda$ è un numero fissato maggiore di zero?
+
+:::{.sol data-latex=""}
+Se $n$ diverge allora $X$ tende ad un Poisson di parametro $\lambda$
+\[
+X\sim\text{Pois} (\lambda)
+\]
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2**) Sia $X\sim N(5,1)$  e sia $F$ la sua funzione di ripartizione. Disegnare approssimativamente $F(x)$ per $x$ che varia tra 1 e 9.
+
+### Esercizio 3 `r i2 <- 0; i1 <- i1+1`
+
+```{r}
+n <- 50
+ex <- 3/10
+vx <- ex*(1-ex)
+es <- mm <- ex*n
+vs <- ss <- n*vx
+x1 <- 20
+verso <- ">"
+```
+
+(**Punti 14**) Un'urna contiene 10 palline numerate da 1 a 10. 
+Si vince se il numero estratto è minore o uguale a 4, altrimenti si perde.
+Si estrae 50 volte con reintroduzione. 
+
+Qual è la probabilità di vincere almeno 25 volte su 50 giocate?
+
+:::{.sol}
+$$
+\pi=\frac 4{10}
+$$
+
+```{r}
+tlc("somma",25,verso = ">",mu = 4/10,n = 50)
+```
+:::
+
+### Esercizio 4 `r i2 <- 0; i1 <- i1+1`
+  
+`r i2 <- i2+1;item()` (**Punti 3**) Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che
+
+$$
+  MSE(h_1) =  \frac{\theta}{n^2}, \qquad  MSE(h_2) =  \frac{\theta}{n}
+$$
+
+Quale dei due stimatori è più efficiente?
+
+`r i2 <- i2+1;item()` (**Punti 3**) Siano $T_1$ e $T_2$ due test statistici per la stessa $H_0$ e con la stessa significatività $\alpha$. Cosa significa dire che $T_1$ e più potente di $T_2$?
+
+`r i2 <- i2+1;item()` (**Punti 3**) Definire la probabilità di significatività osservata.
+
+```{r}
+tabella <- matrix(c(31, 43, 59, 41, 30, 11, 42, 51, 53), nrow = 3, ncol = 3, byrow = TRUE)
+n <- sum(tabella)
+pval <- format(chisq.test(tabella)$p.value,digits = 4,nsmall = 4)
+```
+
+`r i2 <- i2+1;item()` (**Punti 3**) Un sociologo sta conducendo uno studio sull'associazione tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico. Ha somministrato un questionario a `r n` partecipanti, chiedendo loro di indicare il proprio orientamento politico (Conservatore, Progressista, Indipendente) e l'atteggiamento nei confronti del cambiamento climatico (Molto, poco, per nulla) preoccupato. L'obiettivo è determinare se c'è un'associazione significativa tra l'orientamento politico e l'atteggiamento nei confronti del cambiamento climatico.
+
+```{r}
+
+# Assegnazione dei nomi alle righe e alle colonne
+rownames(tabella) <- c("Conservatore", "Progressista", "Indipendente")
+colnames(tabella) <- c("Molto", "Poco", "Per nulla")
+
+
+ tabl(tabella)  %>%
+   kable_styling(full_width = F)  %>%
+   kable_paper(full_width = F)  %>%
+   pack_rows("Orientamento politico", 1, 3) %>%
+   add_header_above(c(" " = 1, "Preoccupato per i cambiamenti climatici" = 3))
+```
+Eseguito il test del $\chi^2$ per verificare l'indipendenza tra l'orientamento politico e la preoccupazione
+sui cambiamenti climatici il sociologo ottiene un $p_\text{value}=`r pval`$. Quali conclusioni può trarne?
+
+### Esercizio 5 `r i2 <- 0; i1 <- i1+1`
+
+(**Punti 14**) In uno studio comparato sui livelli di occupazione femminile, nel comune $A$ sono state intervistate 50 donne e 20 hanno dichiarato di avere un lavoro stabile; nel comune $B$ sono state intervistate 60 donne e 30 hanno dichiarato di avere un lavoro stabile.
+
+Testare all'1% l'ipotesi che la proporzione di donne che hanno un lavoro stabile nel comune $A$ sia uguale a quelle del come $B$, contro l'alternativa che siano **diverse**.
+
+:::{.sol}
+```{r, results='asis'}
+s1 <- 15
+n1 <- 50
+s2 <- 30
+n2 <- 60
+h1 <- "\\neq"
+alpha <- 0.01
+
+a <- "A"
+b <- "B"
+
+cat(ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = h1,alpha = alpha,a = a,b = b))
+```
+:::
+
+### Esercizio 6 `r i2 <- 0; i1 <- i1+1`
+```{r}
+set.seed(9)
+n <- 50
+x <- round(abs(rnorm(n, 0, 6)) + 6) # Anni di studio
+y <- round(abs(2.1*x + rnorm(n, 0, 5)) + 12) # Reddito annuo in migliaia di euro
+attach(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di $n=`r n`$ individui, sono state analizzati il livello di istruzione (in anni di studio, $X$) e il reddito annuale (in migliaia di euro, $Y$).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+`r i2 <- i2+1;item()` (**Punti 14**) Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol}
+```{r,results='asis'}
+cat(calcolo_beta())
+cat(residuo(x = x[3],y = y[3]))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3**) Scrivere la scomposizione della varianza e calcolarla per i dati in esame.
+
+:::{.sol}
+```{r,results='asis'}
+cat(TSS())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2**) Stimare $\sigma^2_\varepsilon$.
+
+:::{.sol}
+
+\begin{eqnarray*}
+\hat{\sigma_\varepsilon}^2&=&(1-r^2)\hat\sigma_Y^2\\
+&=& (1-`r r^2`)\times`r vy`\\
+    &=& `r sh2`\\
+    S_\varepsilon^2 &=& \frac{n} {n-2} \hat{\sigma_\varepsilon}^2\\
+    &=&  \frac{`r n`} {`r n`-2} \hat{\sigma_\varepsilon}^2 \\
+ &=&  \frac{`r n`} {`r n`-2} \times `r sh2` = `r se2` 
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2**) Definire i punti influenti.
+
+`r i2 <- i2+1;item()` (**Punti 2**) Se in un modello di regressione $r=0.35$, $\hat\sigma_X=1.2$ e $\hat\beta_1=0.5$, quanto varrà
+$\hat\sigma_Y$, la standard deviation di $Y$?
+

@@ -1,0 +1,12 @@
+name: FdR_descrittiva
+title: FdR_descrittiva
+username: ixpat
+account: ixpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11386772
+bundleId: 8322387
+url: https://ixpat.shinyapps.io/FdR_descrittiva/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

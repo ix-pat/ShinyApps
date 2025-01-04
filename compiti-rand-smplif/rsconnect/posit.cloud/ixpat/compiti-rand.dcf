@@ -1,0 +1,12 @@
+name: compiti-rand
+title: compiti-rand
+username: ixpat
+account: ixpat
+server: posit.cloud
+hostUrl: https://api.posit.cloud/v1
+appId: 7516445
+bundleId:
+url: https://posit.cloud/content/7516445
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

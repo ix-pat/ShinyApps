@@ -1,0 +1,741 @@
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene $4$ bussolotti Rossi, $3$ bussolotti Blu e $5$ bussolotti Gialli. Si estrae 60 volte con reintroduzione; qual è la probabilità che il numero di rossi in 60 estrazioni sia maggiore di 21?
+
+
+::: {.sol data-latex=""}
+\[\pi=\frac 4{12}=\frac 13\]
+```{r 2021-3,,results='asis'}
+cat(tlc(tipo = "somma",x1 = 21,verso = ">",mu = 1/3,n = 60))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene $4$ bussolotti numerati con $\fbox{−1}$, $3$ numerati con $\fbox{0}$ e $4$ numerati con $\fbox{+1}$. Si estrae 60 volte con reintroduzione; qual è la probabilità che la media delle 60 estrazioni sia minore di 0.1?
+
+::: {.sol data-latex=""}
+```{r 2021-10,,results='asis'}
+urn <- rep(c(-1,0,1),times=c(4,3,4))
+cat(stat_(x = urn,semp = T))
+cat(tlc(tipo = "media",x1 = .1,verso = "<",mu = mean(urn),s2 = s2c(urn),n = 60))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Si lancia un dado perfetto, si vince se esce un numero maggiore o uguale a 5.
+Si gioca $n=64$ volte, qual è la probabilità di vincere più di 23 volte su 64 giocate?
+
+
+::: {.sol data-latex=""}
+$$
+\pi=\frac 2 6=\frac 13
+$$
+la probabilità di vincere all'estrazione $i$, e quindi $X_i\sim\text{Ber}(\pi)$
+
+\begin{eqnarray*}
+E(X_i)&=&\pi\\
+V(X_i)&=&\pi(1-\pi)
+\end{eqnarray*}
+
+In virtù del TCL della somma di n VC IID
+
+```{r 2021-15,,results='asis'}
+vnam<-"S_n"
+mm <- 1/3*64
+ss <- 1/3*2/3*64
+x0 <- 23
+options(digits = 4)
+cat(tlc("somma",x1 = 23,verso = ">",mu = 1/3,n = 64))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene un numero imprecisato di palline numerate. Si conoscono solo
+la media $\mu=12.3$ e la standard deviation $\sigma=1.1$ dei numeri delle sfere.
+
+Si estrae $n=81$ volte con reintroduzione, qual è la probabilità che la media delle 81 estrazioni sia compresa tra
+12.06 e 12.54?
+
+::: {.sol data-latex=""}
+Il valore atteso di della $i$-esima estrazione è
+$$
+E(X_i)=12.3
+$$
+e la varianza
+$$
+V(X_i)=1.1^2
+$$
+
+In virtù del TCL per la media: la media di  $n$ VC IID, tali che
+$E(X_i)=\mu$, $V(X_i)=\sigma^2$
+
+```{r 2021-20,,results='asis'}
+vnam<-"\\bar X"
+mm <- 12.3
+ss <- 1.1^2/81
+x1 <- 12.06
+x2 <- 12.54
+options(digits = 4)
+cat(tlc(tipo = "media",x1 = x1,x2 = x2,verso = NULL,n = 81,mu = mm,s2 = 1.1^2))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate
+$$\fbox{-1},\fbox{0},\fbox{2},\fbox{3}$$
+Si estrae $n=64$ volte con reintroduzione.
+
+Calcolare la probabilità che la media delle 64 estrazioni sia compresa tra
+0.92 e 4.08.
+
+::: {.sol data-latex=""}
+```{r 2021-26,,results='asis'}
+urn <- c(-1,0,2,3)
+mu <- mean(c(-1,0,2,3))
+s2 <- s2c(c(-1,0,2,3))
+cat(stat_(urn,semp = T))
+```
+
+In virtù del TLC per la media otteniamo
+
+```{r 2021-27,,results='asis'}
+mm <-  mu
+ss <- s2/64
+sd <- sqrt(ss)
+x1 <- 0.92
+x2 <- 4.08
+cat(tlc(tipo = "media",x1 = x1,x2 = x2,verso = NULL,mu = mu,s2 = s2,n = 64))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 150 di palline numerate. 
+
+- 40 palline numerate con -1
+- 70 palline numerate con  0
+- 40 palline numerate con +1
+
+Si estrae $n=81$ volte con reintroduzione, qual è la probabilità che la somma delle 81 estrazioni sia compresa tra
+$-6.6$ e $+6.6$?
+
+::: {.sol data-latex=""}
+```{r 2021-32,,results='asis'}
+urn <- rep(-1:1,times = c(40,70,40))
+mm <-  0
+ss <- s2c(urn)
+sd <- sqrt(ss)
+x1 <- -6.6
+x2 <-  6.6
+vnam <- "S_n"
+cat(stat_(urn,semp = T))
+cat(tlc(tipo = "somma",x1 = x1,x2 = x2,verso = NULL,mu = 0,s2 = ss,n = 81))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 2)** Enunciare il teorema centrale del limite per la somma. 
+
+3.b **(Punti 14)** Il numero di incidenti giornalieri sul lavoro del comparto $A$ è distribuito come una
+Poisson di parametro $\lambda = 0.1$. In un anno $n=365$ quale è la probabilità che il numero totale di
+incidenti sia minore di 40?
+
+::: {.sol data-latex=""}
+$E(X_i)=0.1$, $V(X_i)=0.1$ e quindi
+```{r 2021-88}
+x0 <- 40
+x2 <- 40
+mm <- 36.5
+ss <- 36.5
+vnam <- "S_n"
+cat(tlc(tipo = "somma",x1 = x0,mu = mm,s2 = ss,n = 365,verso = "<"))
+```
+:::
+
+### Esercizio 3
+```{r 2022-10}
+n <- 300
+ex <- 10
+vx <- 0.3^2
+es <- mm <- n*ex
+vs <- ss <- n*vx
+```
+
+3.a **(Punti 14)** Ogni giorno un impianto di produzione confeziona 1000 lotti. In media il 10 di questi lotti sono fallati, con una deviazione standard pari a 0.3. Dopo 300 giorni di produzione qual è la probabilità che il numero di lotti fallati sia maggiore di 3100?
+
+:::{.sol data-latex=""}
+$E(X_i)=`r ex`$, $V(X_i)=`r vx`$ e quindi
+
+```{r 2022-11}
+x1 <- 3100
+verso <- ">"
+mm <- 10
+ss <- (0.3)^2
+vnam <- "S_n"
+mu <- "E(S_n)"
+sigma <- "SD(S_n)"
+cat(tlc("somma",x1 = 3100,verso = verso,mu = mm,s2 = ss,n = 300))
+```
+:::
+
+### Esercizio 3
+```{r 2022-20}
+n <- 100
+ex <- 1/6
+vx <- 1/6*5/6
+es <- mm <- ex
+vs <- ss <- vx/n
+```
+
+3.a **(Punti 14)** Si lancia un dado perfetto 100 volte. Qual è la probabilità che la proporzione di volte che si osserva la faccia sei (⚅) sia maggiore di 0.2?
+
+__Soluzione__
+
+$E(X_i)=`r ex`$, $V(X_i)=`r vx`$ e quindi
+```{r 2022-21}
+tlc("prop",x1 = 0.2,verso = ">",mu = 1/6,n = 100)
+```
+
+### Esercizio 3
+```{r 2022-31}
+n <- 200
+ex <- 0.2
+vx <- 0.2*0.8
+es <- mm <- n*ex
+vs <- ss <- n*vx
+```
+
+3.a **(Punti 14)** Un'urna contiene 3 palline bianche, 2 nere e 5 blu. Si estrae 200 volte con reimmissione.
+Calcolare la probabilità che il numero di palline nere sia maggiore di 50.
+
+$E(X_i)=`r ex`$, $V(X_i)=`r vx`$ e quindi
+
+```{r 2022-32}
+cat(tlc("somma",x1 = 50,verso = ">",mu = .2,n = 200))
+```
+
+### Esercizio 3
+```{r 2022-44}
+n <- 365
+ex <- 26.34
+vx <- 1.3^2
+x1 <- 9550
+x2 <- 9600
+```
+
+3.a **(Punti 14)** Ogni giorno il centralino di un servizio di assistenza riceve in media 26.34 telefonate con una deviazione standard pari a 1.3 telefonate.
+
+Dopo un anno ($n=365$), qual è la probabilità che il numero totale di telefonate sia compresa tra 9550 e 9600?
+
+:::{.sol data-latex=""}
+```{r 2022-45}
+cat(tlc("somma",x1 = x1,x2 = x2,verso = NULL,mu = ex,s2 = vx,n = n))
+```
+:::
+
+### Esercizio 3
+```{r 2022-58}
+n <- 50
+ex <- 3/10
+vx <- ex*(1-ex)
+es <- mm <- ex*n
+vs <- ss <- n*vx
+x1 <- 20
+verso <- ">"
+```
+
+3.a **(Punti 14)** Un'urna contiene 10 palline numerate da 1 a 10. 
+Si vince se il numero estratto è divisibile per tre, altrimenti si perde.
+Si estrae 50 volte con reintroduzione. 
+
+Qual è la probabilità di vincere almeno 20 volte su 50 giocate?
+
+:::{.sol data-latex=""}
+$$
+\pi=\frac 3{10}
+$$
+
+```{r 2022-59}
+cat(tlc("somma",x1,verso = verso,mu = 3/10,n = n))
+```
+:::
+
+### Esercizio 3
+```{r 2022-69}
+n <- 60
+ex <- 102.3
+vx <- 10.2^2
+es <- mm <- ex*n
+vs <- ss <- vx*n
+x1 <- 6700
+verso <- ">"
+```
+
+3.a **(Punti 14)** Il supermercato _S_ vende, in media ogni giorno, 102.3 kg di pasta, con una deviazione standard di 10.2. Dopo 60 giorni di apertura, qual è la probabilità che il totale di pasta venduta sia maggiore di 6700 kg?
+
+
+```{r 2022-70}
+cat(tlc("somma",x1 = x1,verso = verso,mu = ex,s2 = vx,n = n))
+```
+
+### Esercizio 3
+```{r 2022-84}
+n <- 12^2
+ex <- 1/3
+vx <- 1/3*2/3
+es <- mm <- ex
+vs <- ss <- vx/n
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+vnam<- "\\hat\\pi"
+mu <- "\\pi"
+sigma <- "\\sqrt{\\frac{\\pi(1-\\pi)}{n}}"
+x1 <- 0.35
+x2 <- 9600
+verso <- ">"
+```
+
+3.a **(Punti 14)** Un'urna contiene tre palline, una Rossa, una Blue e una Nera. Si vince
+se esce Rossa. Si ripete il gioco per $`r n`$ volte. Qual è la probabilità che la
+**proporzione** di vincite sia maggiore di 0.35?
+
+:::{.sol data-latex=""}
+```{r 2022-85}
+cat(tlc(tipo = "prop",x1 = x1,verso = verso,mu = 1/3,n = n))
+```
+:::
+
+### Esercizio 3
+```{r 2022-96}
+n <- 100
+ex <- mean(1:4)
+vx <- s2c(1:4)
+es <- mm <- ex
+vs <- ss <- vx/n
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+vnam<- "\\bar X"
+mu <- "\\mu"
+sigma <- "\\sigma/\\sqrt{n}"
+x1 <- 2.5
+x2 <- 2.6
+
+```
+
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate da 1 a 4. 
+Si estrae 100 volte con reinserimento e si fa la media dei 100 numeri
+estratti. Qual è la probabilità che la media sia compresa tra 2.5 e 2.6?
+
+:::{.sol data-latex=""}
+```{r 2022-97}
+cat(stat_(1:4,semp = T))
+tlc(tipo = "media",x1 = 2.5,x2 = 2.6,verso = NULL,mu = mean(1:4),s2 = s2c(1:4),n = 100)
+```
+:::
+
+### Esercizio 3
+```{r 2022-106}
+n <- 60
+ex <- 3.242
+vx <- 0.5^2
+es <- mm <- ex*n
+vs <- ss <- vx*n
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+vnam<- "S_n"
+mu <- "E(S_n)"
+sigma <- "SD(S_n)"
+x1 <- 225
+verso <- ">"
+```
+
+3.a **(Punti 14)** Il supermercato _S_ accoglie, in media ogni giorno, 3.242 mila persone, con una
+deviazione standard di 0.5 mila persone. Dopo 60 giorni di apertura, qual è la probabilità che il 
+totale dei visitatori sia maggiore di 225 mila persone?
+
+```{r 2022-107}
+tlc("somma",225,verso = ">",mu = ex,s2 = vx,n = n)
+```
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate: $\fbox{0}$, $\fbox{0}$, $\fbox{0}$ e $\fbox{1}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la proporzione di palline timbrate con 1 nelle 100 estrazioni sia maggiore di 0.27?
+
+
+  
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \pi &=&  \frac 14\\
+  E(\hat\pi) &=& \frac 14\\
+  V(\hat\pi) &=& \frac {1/4(1-1/4)}{100}\\
+  &=& `r 1/4*3/4/100`
+\end{eqnarray*}
+
+```{r 2023-2,,results='asis'}
+urn <- c(0,0,0,1)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+cat(tlc("prop",.27,verso = ">",mu = mm,s2 = ss,n=n))
+```
+:::
+
+### Esercizio 3
+```{r 2023-119}
+n <- 365
+ex <- 0.08
+vx <- 0.034
+es <- mm <- n*ex
+vs <- ss <- n*vx
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+```
+
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate con $\fbox{0}$, $\fbox{3}$, $\fbox{4}$ e $\fbox{6}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la somme delle 100 estrazioni sia maggiore di 310?
+
+:::{.sol data-latex=""}
+```{r 2023-6,,results='asis'}
+urn <- c(0,3,4,6)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+cat(stat_(x = urn))
+cat(tlc(tipo = "somma",x1 = 310,verso = ">",mu = mm,s2 = ss,n = n))
+```
+:::
+
+### Esercizio 3
+```{r 2023-128}
+n <- 365
+ex <- 0.08
+vx <- 0.034
+es <- mm <- n*ex
+vs <- ss <- n*vx
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+```
+
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate: $\fbox{0}$, $\fbox{1}$, $\fbox{4}$ e $\fbox{6}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la media delle 100 estrazioni sia maggiore di 2.8?
+
+:::{.sol data-latex=""}
+```{r 2023-11,,results='asis'}
+urn <- c(0,1,4,6)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+
+cat(stat_(urn,semp=T))
+cat(tlc("media",2.8,NUll,verso = ">",mu = mm,s2 = ss,n = n))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 4 palline numerate: $\fbox{0}$, $\fbox{1}$, $\fbox{2}$ e $\fbox{3}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la media delle 100 estrazioni sia maggiore di 1.6?
+
+:::{.sol data-latex=""}
+```{r 2023-17,,results='asis'}
+urn <- 0:3
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+cat(stat_(urn,semp=T))
+cat(tlc("media",x1 = 1.6,NULL,">",mu = mm,s2 = ss,n = n))
+``` 
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 2 palline numerate con $\fbox{0}$, 3 numerate con $\fbox{1}$ e 2 numerate con $\fbox{2}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la somma delle 100 estrazioni sia compresa tra 80 e 120?
+
+:::{.sol data-latex=""}
+```{r 2023-21,,results='asis'}
+urn <- c(0,0,1,1,1,2,2)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+stat_(urn,semp = T)
+tlc(tipo = "somma",80,120,NULL,mu = mm,ss,n = n)
+```
+:::
+
+### Esercizio 3
+```{r 2023-158}
+n <- 365
+ex <- 0.08
+vx <- 0.034
+es <- mm <- n*ex
+vs <- ss <- n*vx
+#ss <- sqrt(vs)
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+```
+
+3.a **(Punti 14)** Un'urna conteni tre palline rosse, due bianche e una nera. Si estrae $n=100$ volte con reintroduzione. Qual è la probabilità che la proporzione di palline rosse sia minore di 0.45?
+
+:::{.sol data-latex=""}
+```{r 2023-27,,results='asis'}
+mm <- .5
+ss <- .25
+n <- 100
+cat(tlc(tipo = "prop",x1 = .45,x2 = NULL,verso = "<",mu = .5,n = n))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 3 palline Rosse, 3 Bianche e 4 Blu. Si estrae senza reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la proporzione di palline Blu sia maggiore di 0.3.
+
+:::{.sol data-latex=""}
+```{r 2023-35,,results='asis'}
+cat(tlc(tipo = "prop",x1 = 0.3,verso = ">",mu = .4,n = 81))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 3 palline col numero $\fbox{0}$, 3 col numero $\fbox{1}$ e 4 col numero $\fbox{2}$. Si estrae senza reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la somma dei risultati sia maggiore di 80.
+
+:::{.sol data-latex=""}
+```{r 2023-43,,results='asis'}
+cat(media_(0:2,p=c(.3,.3,.4)))
+cat(var_(0:2,p=c(.3,.3,.4)))
+cat(tlc(tipo = "somma",x1 = 80,verso = ">",mu = 1.1,n = 81,s2 = .69))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 3 palline col numero $\fbox{0}$, 4 col numero $\fbox{1}$ e 3 col numero $\fbox{2}$. Si estrae senza reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la media dei risultati sia minore di 0.9.
+
+:::{.sol data-latex=""}
+```{r 2023-51,,results='asis'}
+cat(media_(0:2,p=c(.3,.4,.3)))
+cat(var_(0:2,p=c(.3,.4,.3)))
+cat(tlc(tipo = "media",x1 = 0.9,verso = "<",mu = 1,n = 81,s2 = .6))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Una catena di montaggio a ciclo continuo produce ogni giorno un numero di pezzi variabile, con una media pari a
+$\mu=1.2$ mila pezzi al giorno e una varianza di $\sigma^2=9.1$.
+
+Calcolare la probabilità che il numero totale di pezzi prodotti dopo un anno ($n=365$) sia inferiore a ai 400 (mila) pezzi prodotti.
+
+:::{.sol data-latex=""}
+```{r 2023-59,,results='asis'}
+cat(tlc(tipo = "somma",x1 = 400,verso = "<",mu = 1.2,s2 = 9.1,n = 365))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Una catena di montaggio a ciclo continuo produce ogni giorno un numero di pezzi variabile, con una media pari a
+$\mu=1.3$ mila pezzi al giorno e una varianza di $\sigma^2=8.1$.
+
+Calcolare la probabilità che la media annuale ($n=365$) sia inferiore a 1.2 (mila) pezzi prodotti.
+
+:::{.sol data-latex=""}
+```{r 2023-69,,results='asis'}
+cat(tlc(tipo = "media",x1 = 1.2,verso = "<",mu = 1.3,s2 = 8.1,n = 365))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Una catena di montaggio a ciclo continuo produce un pezzo al giorno e la proporzione di pezzi fallati è pari
+a $\pi=0.15$.
+
+Calcolare la probabilità che il numero totale di pezzi fallati in un anno ($n=365$) sia maggiore di 60
+
+:::{.sol data-latex=""}
+```{r 2023-79,,results='asis'}
+cat(tlc(tipo = "somma",x1 = 60,verso = ">",mu = .15,n = 365))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene le seguenti palline numerate {3,5,7,11}. Si estrae con reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la media delle palline estratte sia inferiore a 6.
+
+:::{.sol data-latex=""}
+```{r 2023-86,,results='asis'}
+cat(stat_(urn<-c(3,5,7,11),semp = T))
+cat(tlc(tipo = "media",x1 = 6,verso = "<",mu = mean(urn),s2 = s2c(urn),n = 81))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene le seguenti palline numerate {3,4,5,6,7,11}. Si vine se esce un numero pari. Si estrae con reintroduzione per $n=81$ volte.
+Calcolare la probabilità di vincere più di 30 volte.
+
+:::{.sol data-latex=""}
+\[\pi=\frac 13\]
+```{r 2023-94,,results='asis'}
+cat(tlc(tipo = "somma",x1 = 30,verso = ">",mu = 1/3,n = 81))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene le seguenti palline numerate {3,4,5,6,7,12}. Si vine se esce un numero pari. Si estrae con reintroduzione per $n=81$ volte.
+Calcolare la probabilità che la **proporzione** di vincite sia minore più di 0.55.
+
+:::{.sol data-latex=""}
+\[\pi=\frac 12\]
+```{r 2023-101,,results='asis'}
+cat(tlc(tipo = "prop",x1 = 0.55,verso = "<",mu = 1/2,n = 81))
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna 3 premi da $\mbox{0}$ euro, 2 premi da $\mbox{1}$ euro e un premio da $\mbox{2}$ euro.
+Si estrae 100 volte con reintroduzione. 
+Qual è la probabilità di vincere più di 60 euro?
+
+:::{.sol data-latex=""}
+
+```{r 2024-45}
+n <- 100
+mx <- sum(0:2*c(3,2,1)/6)
+vx <- sum((0:2)^2*c(3,2,1)/6)-mx^2
+stat_(rep(0:2,times=c(3,2,1)),semp = T)
+tlc("somma",60,verso = ">",mu = mx,s2 = vx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna 4 premi da $\mbox{0}$ euro, 3 premi da $\mbox{1}$ euro e 2 premi da $\mbox{2}$ euro.
+Si estrae 50 volte con reintroduzione. 
+Qual è la probabilità che la media delle vincite ottenute sia minore di 0.6 euro?
+
+:::{.sol data-latex=""}
+```{r 2024-55}
+n <- 50
+mx <- sum(0:2*4:2/9)
+vx <- sum((0:2)^2*4:2/9)-mx^2
+urn <- c(0,0,0,0,1,1,1,2,2)
+stat_(urn,semp = T)
+tlc("media",0.6,verso = "<",mu = mx,s2 = vx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna 4 premi da $\mbox{0}$ euro, 2 premi da $\mbox{1}$ euro.
+Si estrae 50 volte con reintroduzione. 
+
+Qual è la probabilità che la la vincita totale sia maggiore di 50?
+
+:::{.sol data-latex=""}
+
+```{r 2024-65}
+n <- 50
+mx <- 2/6
+
+tlc("somma",50,verso = ">",mu = mx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 6 premi da $\mbox{0}$ euro, 3 premi da $\mbox{1}$ euro e un premio da $\mbox{2}$ euro.
+Si estrae 100 volte con reintroduzione. 
+Qual è la probabilità di vincere più di 55 euro?
+
+:::{.sol data-latex=""}
+
+```{r 2024-75}
+n <- 100
+mx <- sum(0:2*c(6,3,1)/10)
+vx <- sum((0:2)^2*c(6,3,1)/10)-mx^2
+stat_(rep(0:2,times=c(6,3,1)),semp = T)
+tlc("somma",55,verso = ">",mu = mx,s2 = vx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna 4 premi da $\mbox{0}$ euro, 1 premio da $\mbox{2}$ euro.
+Si estrae 50 volte con reintroduzione. 
+Qual è la probabilità che la proporzione di premi da 2 euro sia compresa tra 0.20 e 0.23.
+
+:::{.sol data-latex=""}
+```{r 2024-89}
+n <- 50
+mx <- sum(0:2*4:2/9)
+vx <- sum((0:2)^2*4:2/9)-mx^2
+urn <- c(0,0,0,0,1,1,1,2,2)
+stat_(urn,semp = T)
+tlc("prop",1/5,x2 = .23,verso = NULL,mu = 1/5,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna 3 premi da $\mbox{0}$ euro, un premio da $\mbox{1}$ euro.
+Si estrae 100 volte con reintroduzione. 
+
+Qual è la probabilità che la la vincita totale sia maggiore di 30?
+
+:::{.sol data-latex=""}
+
+```{r 2024-98}
+n <- 100
+mx <- 1/4
+
+tlc("somma",30,verso = ">",mu = mx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 14)** Un'urna contiene 4 palline col numero $\mbox{-1}$ e 6 col $\mbox{1}$.
+Si estrae 100 volte con reintroduzione. 
+Qual è la probabilità che la somma sia maggiore di 25?
+
+:::{.sol data-latex=""}
+
+```{r 2024-109}
+n <- 100
+mx <- sum(-1*.4+1*.6)
+vx <- sum(.4+.6)-mx^2
+stat_(rep(c(-1,1),times=c(4,6)),semp = T)
+tlc("somma",25,verso = ">",mu = mx,s2 = vx,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 3)** Un'urna contiene 2 palline col numero $\mbox{-2}$, e 2 palline col numero $\mbox{-1}$ e 6 palline col numero $\mbox{+2}$.
+Si estrae 50 volte con reintroduzione. 
+Qual è la probabilità che la proporzione di palline maggiori di zero sia compresa tra 0.65 e 0.70?
+
+:::{.sol data-latex=""}
+```{r 2024-120}
+n <- 50
+mx <- sum(0:2*4:2/9)
+vx <- sum((0:2)^2*4:2/9)-mx^2
+urn <- c(0,0,0,0,1,1,1,2,2)
+
+tlc("prop",x1 = .65,x2 = .70,verso = NULL,mu = .6,n = n)
+```
+:::
+
+### Esercizio 3
+3.a **(Punti 3)** Un'urna contiene 2 palline col numero $\mbox{-2}$, e 2 palline col numero $\mbox{-1}$ e 6 palline col numero $\mbox{+2}$.
+Si estrae 150 volte con reintroduzione. 
+Qual è la probabilità che la somma sia minore di 80?
+
+:::{.sol data-latex=""}
+```{r 2024-127}
+n <- 150
+xx <- rep(c(-2,-1,2),times=c(2,2,6))
+mx <- mean(xx)
+vx <- s2c(xx)
+stat_(xx,semp = T)
+tlc("somma",x1 = 80,verso = "<",mu = mx,n = n,s2 = vx)
+```
+:::
+

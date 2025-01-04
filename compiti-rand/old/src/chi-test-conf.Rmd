@@ -1,0 +1,65 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r,echo=FALSE}
+n <- sum(Freq_c)
+S <- c(Freq_c,sum(Freq_c))
+N <- c(Freq_0/100,1)
+
+ns <- c(Freq_0/100*n,n)
+k  <- length(Freq_0)
+ch <- round((Freq_c-ns[1:k])^2/ns[1:k],4)
+ch <- c(ch,sum(ch))
+D1 <- data.frame(rbind(S,N,ns,ch),row.names = c(Y,"$n_j^*$","$\\chi^2$"))
+names(D1) <- c(X,"Tot")
+
+gdl <- (k-1)
+chi_th <- round(qchisq(1-alpha,gdl),4)
+# colnames(thr) <- nome_x
+# row.names(thr) <- nome_y
+chi_ob <- ch[k+1]
+segno <- ifelse(chi_ob>chi_th,"maggiore","minore")
+decis <- ifelse(chi_ob>chi_th,"rifiuto","non rifiuto")
+```
+
+$\fbox{A}$ Formulazione delle ipotesi
+\[
+\{H_0:\pi_\text{`r Y[1]`}= \pi_\text{`r Y[2]`},~~\forall j
+\]
+$\fbox{B}$ Scelta e calcolo della statistica test.
+
+Si tratta di un test  chi quadro di conformità.
+\[
+n^*_j = n\cdot \pi^*_{\text{`r Y[2]`},j} 
+\]
+```{r}
+tabl(D1)
+
+chi <- qchisq(c(.95,.99),4)
+```
+
+$\fbox{C}$ Decisione
+
+Il chi quadro osservato è `r ch[k+1]` è `r segno` di $\chi^2_{`r k-1`;`r alpha`}=`r chi_th`$, e quindi **`r decis`** $H_0$, al livello di significatività del `r alpha*100`$\%$. 
+
+**Graficamente**
+
+```{r, echo=FALSE}
+
+R <- c(chi_th,100); A <- c(0,chi_th)
+b <- qchisq(.9999,gdl)
+curve(dchisq(x,gdl),0,b,axes=F,xlab="T",ylab="")
+lines(c(0,chi_th),c(0,0),col=4,lwd=2)
+lines(c(chi_th,b),c(0,0),col=2,lwd=2)
+points(chi_ob,0,pch=4,cex=2)
+text(chi_ob,.05,expression(chi[obs]^2))
+axis(1,c(0,chi_th,round(b,0)))
+```
+
+Il $p_{\text{value}}$ è
+\[
+P(\chi^2_{`r gdl`}> \chi^2_{\text{obs}})=`r format((1-pchisq(chi_ob,gdl)),digits = 4,scientific = 8)`
+\]
+

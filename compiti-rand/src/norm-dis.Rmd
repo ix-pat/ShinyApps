@@ -1,0 +1,42 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE}
+### Calcola la probabilità di una Normale qualunque su un intervallo
+##  Input
+##  x1 limite inferiore
+##  verso (">" o "<")
+##  mm media
+##  ss varianza
+##  vnam nome X
+##  mu nome media
+##  sigma noem varianza
+
+f2 <- 0
+
+z1 <- round((x1 - mm)/sqrt(ss),2)
+f1 <- round(pnorm(z1,lower.tail = (verso == "<")),4)
+
+if (verso == "<") {
+  p1 <- ifelse(x1 >=mm, 
+               paste("\\Phi(", z1,") \\\\","&=& ",f1),
+               paste("1-\\Phi(", -z1,") \\\\","&=& ",f1))
+  p0 <- ""
+   }
+if (verso == ">") {
+  p1 <- ifelse(x1 >=mm, 
+               paste("1-\\Phi(", z1,") \\\\", "&=& ",f1),
+               paste("1-(1-\\Phi(", -z1,")) \\\\", "&=& ",f1))
+  p0 <- paste(" &=& 1-P(Z<",z1,")\\\\")
+    }
+
+mm <- ifelse(mm>=0,mm,paste("(",mm,")"))
+res <- f1
+```
+\begin{eqnarray*}
+P(`r vnam` `r verso` `r x1`) 
+  &=& P\left(  \frac {`r vnam` - `r mu`}{`r sigma`} `r verso` \frac {`r x1` - `r mm`}{\sqrt{`r ss`}} \right)  \\
+              &=& P\left(  Z  `r verso` `r z1`\right) \\  `r p0`
+              &=& `r p1`
+\end{eqnarray*}

@@ -1,0 +1,10 @@
+```{r, echo=FALSE}
+# Calcolo beta0 e beta1 se sono note le statistiche somma x, y, xy
+```
+
+\begin{eqnarray*}
+\hat\beta_1 &=& \frac{\text{cov}(X,Y)}{\hat\sigma_X^2} \\
+            &=& \frac{`r co`}{`r vx`}  = `r b1`\\
+\hat\beta_0 &=& \bar y - \hat\beta_1 \bar x\\
+            &=& `r my`-`r p(b1)`\times `r p(mx)`=`r b0`
+\end{eqnarray*}

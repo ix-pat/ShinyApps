@@ -1,0 +1,15 @@
+```{r, echo=FALSE}
+# Stampa le statistiche di regressione
+```
+
+\begin{eqnarray*}
+\bar x &=&\frac 1 n\sum_{i=1}^n x_i = \frac 1n `r sumx`= `r mx`\\
+\bar y &=&\frac 1 n\sum_{i=1}^n y_i = \frac 1n `r sumy`= `r my`\\
+\hat\sigma_X^2&=&\frac 1 n\sum_{i=1}^n x_i^2-\bar x^2=\frac 1n `r sumx2` -`r mx`^2=`r vx`\\
+\hat\sigma_Y^2&=&\frac 1 n\sum_{i=1}^n y_i^2-\bar y^2=\frac 1n `r sumy2` -`r my`^2=`r vy`\\
+\text{cov}(X,Y)&=&\frac 1 n\sum_{i=1}^n x_i~y_i-\bar x\bar y=\frac 1n `r sumxy`-`r mx`\cdot`r my`=`r co`\\
+\hat\beta_1 &=& \frac{\text{cov}(X,Y)}{\hat\sigma_X^2} \\
+            &=& \frac{`r co`}{`r vx`}  = `r b1`\\
+\hat\beta_0 &=& \bar y - \hat\beta_1 \bar x\\
+            &=& `r my`-`r b1`\times `r mx`=`r b0`
+\end{eqnarray*}

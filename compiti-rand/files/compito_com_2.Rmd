@@ -1,0 +1,333 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+# Basic settings
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+a <- 5
+b <- 1
+
+brk  <- c(-10,-5,0,2,4,6)
+# nnn  <- rev(c( 20,110,120, 50,10))
+nnn <- c(10,40,120,40,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le densità di frequenza percentuale.
+
+
+```{r}
+tabl(dat3[,c(1,2,6)]) 
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Calcolare il valore approssimato della mediana.
+
+:::{.sol data-latex=""}
+```{r}
+tabl(dat3[,1:7])
+cat(percentile())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Quante aziende hanno un bilancio compreso tra $-1$ e il 75-esimo 
+percentile?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  F(x_{0.75}) &=&  0.75\\
+  F(-1) &=& f_1+4h_2/100\\
+  &=& `r dat2$fj[1]`+4\times `r dat2$hj[2]`/100\\
+  &=& `r dat2$fj[1]+4*dat2$hj[2]/100`\\
+  \%(-1<X<x_{0.75}) &=& (F(x_{0.75})-F(x_{-1}))\times 100\\
+  &=& (`r .75-F.int(-1)`)\times 100 \%\\
+  \#(-1<X<x_{0.75}) &=& n\%(-1<X<x_{0.75})/100 \\
+  &=& `r n*(.75-F.int(-1))`
+\end{eqnarray*}
+  
+$$
+\#(-1<X<x_{0.75})=n\%(-1<X<x_{0.75})/100=n/100(75-F(-1))
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Che relazione dobbiamo attenderci tra media, mediana e moda?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Sapendo che $\sigma_X=`r sc (samp)`$ la Standard Deviation di $X$
+ e posto $y_i=-x_i, \forall i$, quanto varrà $\sigma_Y$, la standard deviation dei dati così
+ trasformati?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+Siano $X$ e $Y$ due variabili casuali che rappresentano rispettivamente il tempo di manutenzione per due tipi di macchinari diversi in un'azienda manifatturiera. Si sa che $X\sim N(15,1.5)$ e $Y\sim N(12,1.5)$. L'azienda ha definito due eventi $A=\{X< 14\}$ e $B=\{Y<13\}$
+Si suppone inoltre che i tempi di manutenzione dei due macchinari siano indipendenti tra loro.
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**)  Calcola la probabilità che almeno uno dei due eventi sia vero ($A \cup B$).
+
+
+:::{.sol}
+```{r,results='asis'}
+cat(norm_int(x1 = 14,verso = "<",mm = 15,ss = 1.5,mu = "\\mu_X",sigma = "\\sigma_X",vnam = "X"))
+cat(norm_int(x1 = 13,verso = "<",mm = 12,ss = 1.5,mu = "\\mu_Y",sigma = "\\sigma_Y",vnam = "Y"))
+pa <- pnorm(14,15,sqrt(1.5))
+pb <- pnorm(13,12,sqrt(1.5))
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Quando il tempo di manutenzione del macchinario $X$ è inferiore a 14 ore ($A=\{X< 14\}$), la perdita economica dell'azienda è di €100. Mentre quando è superiore a 14 la perdita è di 500€.
+
+Quando il tempo di manutenzione del macchinario $Y$ è inferiore a 12 ore ($B=\{Y< 12\}$), l'azienda subisce una perdita economica di €70, mentre quando è superiore a 12 il danno economico è di 600€.
+
+Calcolare la probabilità che l'azienda abbia una perdita economica totale superiore ai 600€.
+
+:::{.sol}
+```{r}
+two_way2(c(100,500),c(70,600),c(pa,1-pa),c(pb,1-pb),EV = F)
+0.0429 + 0.1642
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**)  Siano $Z_1\sim N(0,1)$, $Z_2\sim N(0,1)$, $Z_3\sim N(0,1)$, tre VC normali standard indipendenti.
+Come si distribuisce
+\[
+Y=Z_1^2+Z_2^2+Z_3^3~~~?
+\]
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Se $A$ e $B$ sono due eventi tali che $A\cap B\ne\emptyset$, $A$ e $B$ sono indipendenti? (scegliere tra _sempre, mai, dipende_ e motivare la risposta)
+
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+```{r}
+n <- 365
+ex <- 0.08
+vx <- 0.034
+es <- mm <- n*ex
+vs <- ss <- n*vx
+#ss <- sqrt(vs)
+# 
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Un'urna contiene 4 palline numerate con $\fbox{0}$, $\fbox{3}$, $\fbox{4}$ e $\fbox{6}$. Si estrae 100 volte con reinserimento. Qual è la probabilità che la somme delle 100 estrazioni sia maggiore di 310?
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+urn <- c(0,3,4,6)
+mm <- mean(urn)
+ss <- s2c(urn)
+n <- 100
+cat(stat_(x = urn))
+cat(tlc(tipo = "somma",x1 = 310,verso = ">",mu = mm,s2 = ss,n = n))
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Sia $\hat \mu$ lo stimatore di massima verosimiglianza di $\mu$ del modello Normale.
+\begin{eqnarray*}
+  \hat\mu &=&  \frac 1n\sum_{i=1}^nx_i\\
+\end{eqnarray*}
+Dimostrare le consistenza di $\hat\mu$ in almeno tre passaggi.
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Siano $h_1$ e $h_2$ due stimatori per $\theta$, cosa significa dire che $h_1$ è più efficiente di $h_2$?
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Definire la significatività e la potenza di un test statistico.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Se in un test statistico il $p_\text{value}>0.1$ possiamo rifiutare $H_0$?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+```{r}
+mu1 <- 27
+s1  <- 4.2
+n1  <- 12
+mu2 <- 24
+s2  <- 3.1
+n2  <- 25
+```
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) In uno studio comparativo tra i redditi, nel comune $A$ si è rilevato il reddito di `r n1` individui e si è osservata una media pari `r mu1` mila euro con una standard deviation pari a `r s1` mila euro , mentre nel comune $B$ si è rilevato il reddito di `r n2` individui e si è osservata una media pari `r mu2` mila euro con una standard deviation pari a `r s2` mila euro.
+Sotto ipotesi di eterogeneità, testare al livello di __significatività del'5% e dell'1%__ l'ipotesi che il reddito medio sia uguale nei due comuni, contro l'alternativa che sia maggiore nel comune $A$.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+res <- ttest_2c_et(mu1 = mu1,mu2 = mu2,s1h = s1,s2h = s2,n1 = n1,n2 = n2,h1 = ">",alpha = .01)
+cat(res)
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+set.seed(16)
+n <- 50
+x <- runif(n,0,1.5)
+y <- log(x)+rnorm(n,0,.25)
+y <- y-min(y)
+#plot(x,y)
+RGX <- regr(x,y); attach(RGX)
+```
+
+In uno studio sull'efficacia del marketing sul web si sono analizzate `r n` aziende
+sulle quali è stato misurata l'incremento percentuale annuo medio di investimento in marketing 
+web ($X$) la l'incremento percentuale medio di utile ($Y$). Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 104 (4.04 su 30)**) Stimare il modello di regressione dove $Y$ viene spiegata da $X$ e interpretare 
+i coefficienti $\hat\beta_0$ e $\hat\beta_1$
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 104 (0.87 su 30)**) Scrivere la scomposizione della varianza e 
+calcolarla per questo caso.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(TSS())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Perché una previsione per $x=0.15$ è più affidabile di una per $x=50$?
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Interpretare il diagramma dei residui.
+
+```{r,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+```
+
+`r i2 <- i2+1;item()` (**Punti 2 su 104 (0.58 su 30)**) Cosa significa dire che $r$ è un numero puro?

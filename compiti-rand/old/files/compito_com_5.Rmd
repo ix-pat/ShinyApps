@@ -1,0 +1,362 @@
+---
+title: Compito di Statistica
+
+html_document: null
+editor_options:
+  chunk_output_type: console
+date: ""
+output:
+  html_document:
+    css: 'comp.css'
+    toc: false
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+header-includes:
+- \usepackage{{amsmath}}
+- \usepackage{{amssymb}}
+- \usepackage{{xfrac}}
+- \usepackage{{stackrel}}
+- \usepackage{{cancel}}
+- \usepackage{{xcolor}}
+- \DeclareMathOperator*{{\das}}{{\sim}}
+- \definecolor{{mygray}}{{gray}}{{0.6}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,fig.height = 7*5/7, fig.width = 11*5/7,warning = F, message = F,results='asis')
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(plotrix)
+library(xaringan)
+
+source("src/main-functions.R")
+
+i1 <- 1
+i2 <- 0
+item <- function(){{
+it <- (paste(i1,".",letters[i2],sep = ""))
+return(it)}}
+
+par(bg="transparent")
+```
+
+
+:::{.tit}
+Scrivere in stampatello
+```{r}
+bx <- "$\\LARGE\\square$"
+#bx <- "□"
+k <- 20
+tab <- matrix(bx,nrow = 2,ncol = k)
+tab <- cbind(c("COGNOME","NOME"),tab)
+tab2<- matrix(bx,nrow = 2,ncol = k)
+tab2 <- cbind(c("CDL","Matricola"),tab2)
+tab2[1,7:(k+1)] <- NA
+tab <- rbind(tab,tab2[2:1,])
+kable((tab))%>%
+  column_spec(2:(k+1),width = "1mm",color = "lightgrey")%>%
+  kable_styling(full_width = T)
+```
+:::
+
+
+### Esercizio 1
+```{r}
+# Basic settings
+set.seed(1)   # per ottenere sempre la stessa simulazione
+n <- 160      # ampiezza campionaria
+
+brk  <- c(0,3.5,5,6.5,10)
+nnn  <- c( 20,100,100, 20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Investimento"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+  
+source(src_("stat-base.R"))        # crea il data set e la tabella dat3
+```
+
+Su un campione di $`r n`$ famiglie della provincia di Modena è stato rilevato l'investimento annuo in prodotti finanziari (espresso in migliaia di euro). Qui di seguito la distribuzione delle frequenze cumulate:
+
+```{r}
+kable(dat3[,c(1,2,7)],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+```
+
+`r i2 <- i2+1;item()` (**Punti 14 su 103 (4.08 su 30)**) Disegnare l'istogramma di densità percentuale. 
+
+:::{.sol data-latex=""}
+```{r}
+kable(dat3[,1:6],booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")
+
+histp(T)
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Quante famiglie investono meno di 4.5 mila euro all'anno? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \#(X<4.5) &=&  `r n`(\frac1{100}(4.5-3.5)\times`r dat2$hj[2]`+`r dat2$fj[1]`)\\
+  &=& `r n*(F.int(4.5))`
+\end{eqnarray*}
+:::  
+
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) Che relazione dobbiamo aspettarci tra media e mediana? 
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) La spesa media è pari a $\bar x=`r mean(samp)`$, mentre la SD è pari a $SD=`r sd(samp)`$.
+Se ogni famiglia diminuisse il proprio investimento del 2%, quanto varrebbero la media e la SD dei dati così trasformati?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 2
+L'urna $A$ contiene 4 palline numerate: $\fbox{-1},\fbox{0},\fbox{0},\fbox{+1}$. 
+
+L'urna $B$ contiene 3 palline numerate: $\fbox{0},\fbox{1},\fbox{2}$. 
+
+Si estrae dall'urna $A$ e dall'urna $B$ e si *sommano* i due numeri
+
+`r i2 <- i2+1;item()` (**Punti 14 su 103 (4.08 su 30)**) Calcolare la probabilità che la somma dei numeri sia maggiore uguale a 2.
+
+::: {.sol data-latex=""}
+```{r,results='asis'}
+a <- (two_way(S_1 = c(-1,0,1),S_2 = 1:2,num1 = c(1,2,1),num2 = c(1,1,1)))
+```
+$$
+P(S\ge 2)=3/12+1/12=4/12=1/3
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Calcolare la probabilità che la somma sia maggiore uguale a 1 dato che dall'urna $A$ è uscito $\fbox{0}$.
+
+::: {.sol data-latex=""}
+Dalla definizione stessa di probabilità condizionata
+\begin{eqnarray*}
+P(X\geq 1|X_A=0)&=&\frac{P(\{X\geq 1\}\cap\{X_A=0\})}{P(\{X_A=0\})}\\
+                &=&\frac{2/12+2/12}{2/4}\\
+                &=&4/12\cdot4/2\\
+                &=&`r 4/12*4/2`
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Sia $X\sim \text{Pois}(10)$ e $Y\sim\text{Binom}(n,0.5)$.
+Sia
+$$
+W=X-Y
+$$
+Calcolare il valore atteso $E(W)$ e la varianza $V(W)$ di $W$.
+
+::: {.sol data-latex=""}
+Osserviamo
+\begin{align*}
+E(X)&=10 &E(Y)&=n\cdot 0.5\\
+V(X)&=10 &V(Y)&=n\cdot0.5(1-0.5)
+\end{align*}
+e quindi
+\begin{eqnarray*}
+E(W)&=&E(X)-E(Y)\\
+&=&10-n\cdot 0.5\\
+V(W)&=&V(X)+V(Y),\qquad\text{se e solo se $X$ e $Y$ sono indipendenti}\\
+&=&10+n\cdot 0.25
+\end{eqnarray*}
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) Siano $X_1,...,X_6$, $6$ variabili casuali IID,
+tali che
+$$
+X_i\sim N\left(2.5,3^2\right).
+$$
+Come si distribuisce
+$$
+Y=\sum_{i=1}^6\left(\frac{X_i-2.5}{3}\right)^2~~?
+$$
+
+::: {.sol data-latex=""}
+Si osserva
+$$
+Z_i=\frac{X_i-2.5}{3}\sim N(0,1)
+$$
+e quindi
+$$
+Y=(Z_1^2+...+Z_6^2)\sim\chi_6^2
+$$
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 3
+(**Punti 14 su 103 (4.08 su 30)**) Si lancia un dado perfetto, si vince se esce un numero maggiore o uguale a 5.
+Si gioca $n=64$ volte, qual è la probabilità di vincere più di 23 volte su 64 giocate?
+
+
+::: {.sol data-latex=""}
+$$
+\pi=\frac 2 6=\frac 13
+$$
+la probabilità di vincere all'estrazione $i$, e quindi $X_i\sim\text{Ber}(\pi)$
+
+\begin{eqnarray*}
+E(X_i)&=&\pi\\
+V(X_i)&=&\pi(1-\pi)
+\end{eqnarray*}
+
+In virtù del TCL della somma di n VC IID
+
+```{r,results='asis'}
+vnam<-"S_n"
+mm <- 1/3*64
+ss <- 1/3*2/3*64
+x0 <- 23
+options(digits = 4)
+cat(tlc("somma",x1 = 23,verso = ">",mu = 1/3,n = 64))
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 4
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Sia $\hat\sigma^2$ lo stimatore di massima verosimiglianza per il parametro $\sigma^2$ della normale. $\hat\sigma^2$ è corretto? Quanto vale la sua distorsione?
+
+::: {.sol data-latex=""}
+No, $\hat\sigma^2$ non è corretto
+$$
+E(\hat\sigma^2)=\frac{n-1}n\sigma^2
+$$
+e quindi
+$$
+B(\hat\sigma^2)=|E(\hat\sigma^2)-\sigma^2|=\frac {\sigma^2}n
+$$
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Descrivere la tavola della verità di un test.
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) In uno studio clinico si è osservato l'effeto sul numero di anticorpi su due gruppi trattati con un farmaco differente. Si è osservato $\hat\mu_1=10.2$, $\hat\sigma_1=1.12$ e $\hat\mu_2=15.6$, $\hat\sigma_2=3.72$. Posto a test
+$$
+\begin{cases}
+H_0:\sigma_1=\sigma_2\\
+H_1:\sigma_1\ne \sigma_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.21$. Quale test dovremmo usare per testare la differenza tra le medie?
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 5
+Nel comune $A$ si è condotta un'intervista per conoscere l'opinione
+dei cittadini sulla presenza di un inceneritore. Sono state intervistate
+25 persone a cui è stato chiesto di esprimete l'opinione in una scala da zero a 100.
+È risultato un punteggio medio pari a $\hat\mu_A=72.1$ con una standard deviation 
+$\hat\sigma_A=3.4$
+
+`r i2 <- i2+1;item()` (**Punti 7 su 103 (2.04 su 30)**) Costruire un intervallo di confidenza al 95%
+per la proporzione dei favorevoli in popolazione.
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(idc(xm = 72.1,sd = 3.4,n = 25,alpha = .05,dist_ = "t"))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 7 su 103 (2.04 su 30)**) Nel comune $B$ si è condotta un'intervista analoga. 
+Sono state intervistate 23 persone si è osservata una media pari $\mu_B=69.6$ e una deviazione standard $\hat\sigma_B=3.3$.
+Sotto ipotesi di omogeneità testare al 5% l'ipotesi che le medie dei due comuni siano uguali contro l'alternativa che siano diverse
+
+:::{.sol data-latex=""}
+```{r,results='asis'}
+cat(ttest_2c_om(mu1 = 72.1,mu2 = 69.6,s1h =3.4,s2h = 3.3,n1 = 25,n2 = 24,h1 = "\\neq",alpha = 0.05,a = "A",b = "B" ))
+```
+:::
+
+
+```{r}
+rm(list = setdiff(ls(),c("iii","i1","i2")))
+source("src/main-functions.R")
+source(src_("intro.R"))
+```
+
+`r i2 <- 0; i1 <- i1+1`
+
+
+### Esercizio 6
+```{r}
+set.seed(7)
+n <- 50
+x <- round(abs(rnorm(n, 0, 6)) + 6) # Anni di studio
+y <- round(abs(1.5*x + rnorm(n, 0, 5)) + 15,2) # Reddito annuo in migliaia di euro
+RGX <- regr(x, y,semp = T,ax = 0)
+attach(RGX)
+```
+
+In uno studio sul reddito, in un campione di $n=`r n`$ individui, sono state analizzati il livello di istruzione (in anni di studio, $X$) e il reddito annuale (in migliaia di euro, $Y$).
+Si osservano le seguenti statistiche, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+`r i2 <- i2+1;item()` (**Punti 14 su 103 (4.08 su 30)**) Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol}
+```{r,results='asis'}
+cat(calcolo_beta())
+cat(residuo(x = x[3],y = y[3]))
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 3 su 103 (0.87 su 30)**) Il modello si adatta bene ai dati?
+
+:::{.sol}
+```{r,results='asis'}
+cat(R2())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) Stimare lo Standard Error di $\hat\beta_0$.
+
+:::{.sol}
+```{r,results='asis'}
+cat(se_beta0())
+```
+:::
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) Definire il qq-plot.
+
+`r i2 <- i2+1;item()` (**Punti 2 su 103 (0.58 su 30)**) Se in un modello di regressione $r=0.35$, $\hat\sigma_X=1.2$ e $\hat\sigma_X=0.5$, quanto varrà
+$\hat\beta_1$, il coefficiente angolare della retta di regressione in cui $Y$ è spiegata da  $X$?

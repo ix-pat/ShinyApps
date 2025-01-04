@@ -1,0 +1,1264 @@
+### Esercizio 5
+5.a **(Punti 14)** In uno studio comparato sui livelli di occupazione femminile, nel comune $A$ sono state intervistate 50 donne e 30 hanno dichiarato di avere un lavoro stabile; nel comune $B$ sono state intervistate 60 donne e 40 hanno dichiarato di avere un lavoro stabile.
+
+Testare l'ipotesi che la proporzione di donne che hanno un lavoro stabile nel comune $A$ sia uguale a quelle del come $B$, contro l'alternativa che siano **diverse**.
+
+::: {.sol data-latex=""}
+```{r 2021-4,, results='asis'}
+s1 <- 30
+n1 <- 50
+s2 <- 40
+n2 <- 60
+h1 <- "\\neq"
+alpha <- 0.01
+
+a <- "A"
+b <- "B"
+
+cat(ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = h1,a = a,b = b))
+```
+:::
+
+### Esercizio 5
+```{r 2021-50}
+n1 <- 15
+n2 <- 18
+mu1 <- 23.2
+mu2 <- 20.1
+s1h <- 2.2
+s2h <- 1.8
+h1 <- "\\neq"
+a <-"A"
+b <- "B"
+alpha <- 0.01
+ac <- alpha*100
+```
+
+5.a **(Punti 14)** In uno studio comparato sul reddito femminile, nel comune $`r a`$ sono state intervistate 15 donne e si è osservato un reddito medio pari a $\bar x_`r a`=`r mu1`$ mila euro lordi annui con una standard deviation pari a $\hat\sigma_`r a`=`r s1h`$; nel comune $`r b`$ sono state intervistate 18 donne e si è osservato un reddito medio pari a $\bar x_`r b`=`r mu2`$ mila euro lordi annui con una standard deviation pari a $\hat\sigma_`r b`=`r s2h`$.
+
+Sotto ipotesi di omogeneità, testare l'ipotesi che il reddito medio femminile nel comune $`r a`$ sia uguale a quello del comune $`r b`$, contro l'alternativa che siano **diversi**.
+
+::: {.sol data-latex=""}
+```{r 2021-11,,results='asis'}
+cat(ttest_2c_om(mu1 = mu1,mu2 = mu2,s1h = s1h,s2h = s2h,n1 = n1,n2 = n2,h1 = h1,a = a,b = b))
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In uno studio sui consumi sono stati intervistati $n=25$ individui 
+sui quali è stato rilevato il reddito mensile $X$ (in migliaia di euro), e il consumo $Y$ (in migliaia di euro). Il modello di regressione
+$$
+Y_i=\beta_0+\beta_1 x_i+\varepsilon_i
+$$
+ha fornito i seguenti risultati
+
+\begin{align*}
+\hat\beta_0&=0.60, &\hat\beta_1&=0.75, &r&=0.87\\
+\bar x&=1.61 &\hat \sigma_X&=0.90\\
+\bar y&=1.81 &\hat \sigma_Y&=0.78\\
+\end{align*}
+
+
+Testare l'ipotesi che il consumo di sussistenza $\beta_0$ sia uguale 0.5 contro l'alternativa 
+che sia maggiore.
+
+::: {.sol data-latex=""}
+```{r 2021-16,,results='asis'}
+b00 <- 0.5
+mx <- 1.61
+my <- 1.81
+vy <- 0.78^2
+r <- 0.87
+vx <- 0.90^2
+b0 <- 0.6
+n <- 25
+sh2 <- vy*(1-r^2)
+se2 <- (n/(n-2))*sh2 
+vb1 <- se2 / (n*vx) 
+vb0 <- se2*(1/n+mx^2/(n*vx))
+h1 <- ">"
+stat2 <- list(n=n,mx=mx,vx=vx,my=my,vy=vy,co=r*sqrt(vx*vy))
+ls2e(regr(stat2=stat2))
+cat(se_beta0())
+cat(ttest_beta(0,bj0 = .5,h1 = h1))
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In uno studio sulle preferenze tra canali televisivi, vengono analizzati `r n<-92; n`
+individui, classificati canale preferito (RAI, Mediaset, La7) e per titolo di studio superiore (Laureato, Non Laureato)
+
+Qui di seguito i dati dello studio,
+$$
+\begin{array}{l|rrr|r}
+ & \text{Rai} &\text{Mediaset} &\text{La7}& \\ \hline
+ \text{Laureato}     &15 &5 &12  &32\\ 
+ \text{Non Laureato} &10 &35  &15 &60\\ \hline
+                     &25 &40  &27 &92 
+\end{array}
+$$
+
+Titolo di studio superiore e canale preferito sono indipendenti?
+
+::: {.sol data-latex=""}
+È un test sull'indipendenza tra due VC
+
+```{r 2021-21,,results='asis'}
+dat <- matrix(c(15,5,12,10,35,15),2,byrow = T)
+
+nome_x<- c("Rai","Mediaset","La7")
+nome_y <- c("Laureato","Non Laureato")
+
+dat_print <- chi_print(dat,nome_x = nome_x,nome_y = nome_y)[[1]]
+dat       <- chi_print(dat,nome_x = nome_x,nome_y = nome_y)[[2]]
+
+kable(dat,digits = 4,row.names = T,linesep="",booktabs=T,escape = F) %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position") %>%
+  column_spec(column = 1,bold = T)
+
+cat(chi_test(dat = dat))
+```
+:::
+
+### Esercizio 5
+Una casa farmaceutica sta sperimentando un farmaco che lenisce il mal di testa in modo rapido. Osservati $n=15$ individui, si è registrato che il farmaco agisce in media $\bar x=26.2$ minuti, con  una sd corretta pari a
+$S=0.9$. 
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza al 99% per il tempo medio di azione.
+
+::: {.sol data-latex=""}
+```{r 2021-28,,results='asis'}
+cat(idc(xm = 26.2,sd = 0.9,alpha = .01,n = 15,dist_ = "t"))
+```
+:::
+
+5.b **(Punti 11)** È ben noto, da studi pregressi, che quella tipologia di farmaci ha un tempo medio 
+di azione pari a 29.3. Testare che il farmaco in sperimentazione agisca in modo uguale agli altri contro l'alternativa che abbia tempi di azione inferiori.
+
+::: {.sol data-latex=""}
+```{r 2021-29,,results='asis'}
+n <- 15
+s <- 0.9
+muh <- 26.2
+mu0 <- 29.3
+h1 <- "<"
+alpha <- 0.01
+cat(ttest_mu(muh = muh,sh = s,n = n,mu0 = mu0,h1 = h1))
+```
+:::
+
+### Esercizio 5
+Un'azienda automobilistica sta sperimentando un nuovo tipo di motore per ridurre i consumi di carburante. Il motore montato su un'auto prototipo che è stata fatta guidare a $n=15$ giornalisti. Si è osservato un consumo medio pari $\bar x=24.5~\text{Km/litro}$ con una deviazione standard $\hat\sigma=2.25~\text{Km/litro}$. `r m <- 24.5; s<-15/14*2.25`
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza al 95% per il consumo medio.
+
+::: {.sol data-latex=""}
+```{r 2021-33,,results='asis'}
+cat(idc(xm = m,sd = 2.25,alpha = .05,n = 15,dist_ = "t"))
+```
+:::
+
+
+5.b **(Punti 11)** È noto che quella fascia di motori ha un consuo medio pari $23.9~\text{Km/litro}$. Testare che il nuovo motore consumi come gli altri contro l'alternativa che abbia consumi _diversi_.
+
+::: {.sol data-latex=""}
+$$
+\begin{cases}
+H_0:\mu=23.9\\
+H_1:\mu\ne23.9
+\end{cases}
+$$
+
+Siccome $23.9\notin IdC_{95\%}$ allora rifiuto $H_0$ al lds del $5\%$.
+:::
+
+### Esercizio 5
+Si sono intervistate 16 piccole imprese modenesi.
+L'analisi ha mostrato che sentono una forte necessità
+di investimenti nell'ambito della ricerca industriale;
+tuttavia, l'importo medio annuale speso per la ricerca industriale
+è risultato pari a 2750.00€ con una deviazione standard pari
+a 1300.00€.
+
+5.a **(Punti 3)** Determinare un intervallo di confidenza al 95%
+per l'importo medio annuale speso per la ricerca industriale. 
+
+```{r 2021-89}
+cat(idc(sd = 1300,xm = 2750,alpha = .05,n = 16,dist_ = "t"))
+```
+
+5.b **(Punti 11)** Una indagine più vasta dell'anno precedente
+ha fornito una spesa media per la ricerca industriale pari a
+3250.00€ con una deviazione standard pari a 1200.00€.
+Verificare l'ipotesi
+che l'importo medio nell'ultimo anno sia stato equivalente a
+quello dell'anno precedente contro l'alternativa di una
+diminuzione dell'investimento in ricerca industriale.
+
+::: {.sol data-latex=""}
+```{r 2021-90}
+s <- 1200
+n <- 16
+muh <- 2750
+mu0 <- 3250
+alpha <- 0.05
+h1 <- "<"
+cat(ztest_mu(muh = muh,s = s,n = n,mu0 = mu0,h1 = h1))
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** Il Supermercato $S$, della catena $C$, ha monitorato gli accessi al suo interno per una settimana.
+Qui di seguito il numero di accessi per giorno della settimana di $S$ e la percentuale di accessi nella catena $C$.
+
+
+```{r 2022-12}
+
+g <- c( "Lun" , "Mart" , "Merc" , "Giov" , "Ven")
+Y <- c("Supermercato S","Catena C")
+
+ntot <- 250
+ n <- c(25,10,10,10,45)
+s <- c(60 ,  20  , 31   , 25   , 120 )
+s <- round(s/sum(s)*ntot)
+ 
+chi_print_conf(Freq_c = s,Freq_0 = n,X = g,Y = Y)
+ 
+```
+
+Testare l'ipotesi che nel supermercato $S$ la distribuzione degli accessi nei giorni della settimana sia uguale a quella della catena.
+
+:::{.sol data-latex=""}
+```{r 2022-13}
+
+chi_conf(Freq_c = s,Freq_0 = n,X = g,Y = Y)
+
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In un'indagine sull'opinione sul reddito di cittadinanza sono stati intervistate 140 persone che vivono al nord e 170 che vivono al sud: 60 su 140 che vivono al nord sono favorevoli al reddito di cittadinanza mentre 95 su 170 che vivono al sud sono favorevoli. 
+
+Testare, usando il p-value, che la proporzione di persone favorevoli al reddito di cittadinanza che vivono al sud sia uguale a quelle di quelli che vivono al nord, contro l'alternativa che siano diverse.
+
+:::{.sol data-latex=""}
+```{r 2022-22}
+s1 <- 60
+n1 <- 140
+s2 <- 95
+n2 <- 170
+h1 <- "\\neq"
+alpha <- 0.01
+a <- "N"
+b<- "S"
+um <- ""
+ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = h1,a = a,b = b)
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In un'indagine sull'opinione sul reddito sono stati rilevati i redditi di 140 persone che vivono al nord e quelli di 170 che vivono al sud: il reddito medio di chi vive al nord è di 32.2 mila euro annui con una SD pari a 2.4 mila euro annui, mentre il
+reddito medio di chi vive al sud è di 27.5 con una SD pari a 1.7.
+
+Sotto ipotesi di eterogeneità testare l'ipotesi che il reddito medio sia uguale al nord come al sud, contro l'alternativa che sia diverso.
+
+:::{.sol data-latex=""}
+```{r 2022-33}
+s1h <- 2.4
+s2h <- 1.7
+n1 <- 140
+n2 <- 170
+mu1 <- 32.2
+mu2 <- 27.5
+h1 <-"\\neq"
+alpha <- 0.05
+um <- ""
+a <- "N"
+b <- "S"
+cat(ttest_2c_et(mu1 = mu1,mu2 = mu2,s1h = s1h,s2h=s2h,n1 = n1,n2 = n2,h1 = h1,a = a,b = b))
+```
+:::
+
+### Esercizio 5
+Su un campione di $n_M=34$ consumatori privati, scelti a caso tra i cittadini del comune di Mirandola, 
+si è chiesto quanto spenderebbero mensilmente per poter usufruire di una connessione ultra veloce.
+Il campione ha restituito una media pari a 19.4 €/mese, con una deviazione standard pari a 2.2 €/mese,
+
+5.a **(Punti 3)** Costruire un Intervallo di Confidenza al 95% per la media di popolazione $\mu$.
+
+:::{.sol data-latex=""}
+```{r 2022-46}
+cat(idc(xm = 19.4,sd = 2.2,alpha = .05,n = 34,dist_ = "t"))
+```
+:::
+
+5.b **(Punti 11)** La stessa domanda è stata posta ad un secondo campione di $n_S=38$ consumatori privati,scelti a caso tra i cittadini del comune di Sassuolo. 
+Il campione ha restituito una media pari a 20.2 €/mese, con una deviazione standard pari a 2.9 €/mese. Sotto ipotesi di omogeneità testare l'ipotesi che i due comuni abbiano uguale media, contro l'alternativa che sia diversa.
+
+:::{.sol data-latex=""}
+```{r 2022-47}
+n1 <- 34
+n2 <- 38
+s1h <- 2.2
+s2h <- 2.8
+mu1 <- 19.4
+mu2 <- 20.2
+h1 <- "\\neq"
+alpha <- 0.05
+a <- "M"
+b <- "S"
+et <- F
+um <- ""
+cat(ttest_2c_om(mu1 = mu1,mu2 = mu2,s1h = s1h,s2h = s2h,n1 = n1,n2 = n2,h1 = h1))
+```
+:::
+
+### Esercizio 5
+Su un campione di $n=75$ abitanti del quartiere _Q_ è stato chiesto se siano favorevoli o meno all'introduzione di corsie preferenziali per i mezzi pubblici. Lo studio ha riportato che 45 persone su 75 (il 60% del campione) è favorevole.
+
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza la 95% per $\pi$ la quota di persone del quartiere _Q_ favorevole alle corsie preferenziali
+
+:::{.sol data-latex=""}
+```{r 2022-60}
+cat(idc(xm = 45/75,alpha = .05,n = 75,dist_ = "z"))
+```
+:::
+
+
+5.b **(Punti 11)** Un'indagine molto più ampia condotta su tutta la città ha mostrato che
+la percentuale di favorevoli alle corsie preferenziali è del 55%. Testare l'ipotesi che nel quartiere _Q_ la quota di favorevoli sia uguale a quella cittadina contro l'alternativa che sia maggiore.
+
+:::{.sol data-latex=""}
+```{r 2022-61}
+sn <- 45
+n  <- 75
+p0 <- 0.55
+h1 <- ">"
+alpha <- 0.05
+cat(ztest_pi(sn = sn,n = n,p0 = p0,h1 = h1))
+```
+:::
+
+### Esercizio 5
+Su un campione di $n=15$ abitanti del quartiere _Q_ è stato chiesto di fornire un punteggio da 0 a 100 per esprimere quanto si sarebbe soddisfatti dall'introduzione di corsie preferenziali per i mezzi pubblici. Lo studio ha riportato una media pari a $76.3$ e una deviazione standard pari a $3.5$
+
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza la 99% per $\mu$ il punteggio medio che le persone del quartiere _Q_ esprimono riguardo alle corsie preferenziali.
+
+:::{.sol data-latex=""}
+```{r 2022-71}
+cat(idc(xm = 76.3,sd = 3.5,alpha = .01,n = 15,dist_ = "t"))
+```
+:::
+
+5.b **(Punti 11)** Un'indagine molto più ampia condotta su tutta la città ha mostrato che
+il punteggio medio è pari a 66.3 con un deviazione standard pari a 3.3 .
+
+Testare l'ipotesi che nel quartiere _Q_ il punteggio medio sia uguale a quello cittadino contro l'alternativa che sia maggiore.
+
+:::{.sol data-latex=""}
+```{r 2022-72}
+s <- 3.3
+n <- 15
+muh <- 76.3
+mu0 <- 66.3
+h1 <- ">"
+alpha <- 0.05
+um <- ""
+cat(ztest_mu(muh = muh,s = s,n = n,mu0 = mu0,h1 = h1))
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In uno studio sule preferenze di genere è stato chiesto ad un campione di 150 persone,
+divise 80 signori e 70 signore, di esprimere la propria preferenza tra tre profumazioni (A, B e C)
+di shampoo.
+Qui di seguita la tavola di contingenza
+
+```{r 2022-86}
+
+dat <- matrix(c(50,5,10,55,20,10),2)
+
+nome_y <- c("M","F")
+nome_x <- c("A","B","C")
+
+dat_print <- chi_print(dat,nome_x = nome_x,nome_y = nome_y)[[2]]
+dat       <- chi_print(dat,nome_x = nome_x,nome_y = nome_y)[[1]]
+
+tabl(dat_print,digits = 4) %>%
+  column_spec(column = 1,bold = T)
+
+```
+
+Testare l'ipotesi che vi sia indipendenza tra genere e preferenza tra le profumazioni.
+
+:::{.sol data-latex=""}
+```{r 2022-87}
+chi_test(dat = dat)
+```
+:::
+
+### Esercizio 5
+Su un campione di $n_M=35$ consumatori privati, scelti a caso tra i cittadini del comune di Modena, 
+si è chiesto quanto spendono mensilmente per le forniture elettriche.
+Il campione ha restituito una media pari a 12.4 €/mese, con una deviazione standard pari a 2.1 €/mese,
+
+5.a **(Punti 3)** Costruire un Intervallo di Confidenza al 95% per la media di popolazione $\mu$.
+
+
+:::{.sol data-latex=""}
+```{r 2022-98}
+idc(xm = 12.4,sd = 2.1,dist_ = "t",n = 35)
+```
+:::
+
+5.b **(Punti 11)** La stessa domanda è stata posta ad un secondo campione di $n_F=38$ consumatori privati,scelti a caso tra i cittadini del comune di Ferrara. 
+Il campione ha restituito una media pari a 19.2 €/mese, con una deviazione standard pari a 3.9 €/mese. Sotto ipotesi di eterogeneità testare l'ipotesi che i due comuni abbiano uguale media, contro l'alternativa che a Ferrara consumino di più.
+
+:::{.sol data-latex=""}
+```{r 2022-99}
+s1h <- 2.1
+s2h <- 3.9
+n1 <- 35
+n2 <- 38
+et <- T
+mu1 <- 12.4
+mu2 <- 19.2
+alpha <- 0.05
+a <- "$M$"
+b <- "$F$"
+h1 <- "<"
+um <- ""
+cat(ttest_2c_et(mu1 = mu1,mu2 = mu2,s1h = s1h,s2h = s2h,n1 = n1,n2 = n2,h1 = h1))
+```
+:::
+
+### Esercizio 5
+Su un campione di $n_R=75$ tassisti romani è stato chiesto se siano favorevoli o meno all'introduzione 
+del decreto di liberalizzazione del trasporto. Lo studio ha riportato che 15 persone su 75 (l'20% del campione) è favorevole.
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza la 95% per $\pi$ la quota di tassisti favorevoli al decreto liberalizzazione
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \left[~~0.2\pm z_{0.025}\sqrt{\frac{0.2\times 0.8}{75}}~~\right] &=&
+  \left[~~0.2\pm 1.96\times`r sqrt(.2*.8/75)`~~\right]\\
+  &=&\left[~~`r .2-1.96*sqrt(.2*.8/75)`; `r .2+1.96*sqrt(.2*.8/75)`~~\right]
+\end{eqnarray*}
+:::
+
+5.b **(Punti 11)** La stessa domanda è stata posta ad un secondo 
+campione di $n_M=95$ tassisti milanesi. Lo studio ha riportato che 32 persone su 95 (l'20% del campione) è favorevole.
+
+Testare l'ipotesi la quota di tassisti favorevoli sia uguale tra le due città contro
+l'alternativa che i tassisti milanesi siano maggiormente favorevoli.
+
+:::{.sol data-latex=""}
+```{r 2022-108}
+n1 <- 75
+n2 <- 95
+s1 <- 15
+s2 <- 32
+alpha <- 0.05
+a <- "$R$"
+b <- "$M$"
+h1 <- "<"
+um <- ""
+cat(ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = h1,a = a,b = b))
+```
+:::
+
+### Esercizio 5
+```{r 2023-111}
+n1 <- 35
+muh1 <- 68
+sdh1 <- 5.1
+n2 <- 35
+muh2 <- 71
+sdh2 <- 4.5
+```
+
+5.a **(Punti 14)** In uno studio sul gradimento dell'azione politica della regione, nel comune $A$ si è rilevata l'opinione su `r n1` intervistati misurata in una scala di gradimento che va da zero a 100. I dati campionari hanno evidenziato una media pari a $\hat\mu_A=`r muh1`$ e una deviazione standard osservata pari a $\hat\sigma_A=`r sdh1`$, mentre nel comune $A$ si è rilevata l'opinione su `r n1` intervistati misurata in una scala di gradimento che va da zero a 100. I dati campionari hanno evidenziato una media pari a $\hat\mu_B=`r muh2`$ e una deviazione standard osservata pari a $\hat\sigma_B=`r sdh2`$. Sotto ipotesi di omogeneità delle varianza testare l'ipotesi che il gradimento politico sia uguale nei due comuni contro l'alternativa che sia **diverso**.
+
+:::{.sol data-latex=""}
+```{r 2023-3,,results='asis'}
+ttest_2c_om(mu1 = muh1,mu2 = muh2,s1h = sdh1,s2h = sdh2,n1 = n1,n2 = n2,h1 = "\\neq",a = "A",b = "B")
+
+```
+:::
+
+### Esercizio 5
+```{r 2023-120}
+s1 <- 26
+n1 <- 35
+s2 <- 45
+n2 <- 50
+```
+
+
+5.a **(Punti 14)** In uno studio sul gradimento dell'azione politica della regione, nel comune $A$ si è rilevato che `r s1` persone su `r n1` intervistati è soddisfatto, mentre nel comune $B$, `r s2` su `r n2` sono soddisfatti.
+Testare usando il $p_\text{value}$ l'ipotesi che la proporzione di disoccupati sia uguale nei due comuni, contro l'alternativa che si **maggiore** nel comune $B$. 
+
+
+:::{.sol data-latex=""}
+```{r 2023-7,,results='asis'}
+ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = "<",a = "A",b = "B")
+```
+:::
+
+### Esercizio 5
+```{r 2023-129}
+n1 <- 35
+muh <- 68
+sdh <- 5
+mu0 <- 71
+```
+
+5.a **(Punti 3)** In uno studio sul gradimento dell'azione politica della regione, nel comune $A$ si è rilevata l'opinione su `r n1` intervistati misurata in una scala di gradimento che va da zero a 100. I dati campionari hanno evidenziato una media pari a $\hat\mu=`r muh`$ e una deviazione standard osservata pari a $\hat\sigma=`r sdh`$.
+Costruire un intervallo di confidenza al 95% per il gradimento medio $\mu$. 
+
+:::{.sol data-latex=""}
+```{r 2023-12,,results='asis'}
+options(digits = 4)
+res <- idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t",mus = mu0,ss = "S")
+cat(res)
+```
+:::
+
+5.b **(Punti 11)** Un'indagine analoga, svolta sull'intera regione, ha mostrato un gradimento medio pari a $\mu_0=`r mu0`$. Testare l'ipotesi che nel comune A il livello di gradimento sia uguale a quello regionale contro l'alternativa che sia __minore__.
+
+:::{.sol data-latex=""}
+```{r 2023-13,,results='asis'}
+res <- ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = "<")
+cat(res)
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** In uno studio sull'efficacia degli integratori alimentari, su un gruppo di 238 atleti è stato misurato il rendimento atletico (ottimo, buono e scarso) e l'assunzione di integratori (alto, medio e basso). Qui di seguito i dati:
+
+```{r 2023-138}
+
+x <- matrix(c(21,20,18,35,26,38,15,30,35),3)
+
+dat <- chi_print(x,c("ottimo","buono","scarso"),c("alto","medio","basso"))
+tabl(dat[[2]])
+
+```
+
+Al livello del 5% testare l'ipotesi che integratori e rendimento siano indipendenti.
+
+:::{.sol data-latex=""}
+```{r 2023-139}
+chi_test(dat[[1]])
+```
+:::
+
+### Esercizio 5
+```{r 2023-150}
+mu1 <- 27
+s1  <- 4.2
+n1  <- 12
+mu2 <- 24
+s2  <- 3.1
+n2  <- 25
+```
+
+
+5.a **(Punti 14)** In uno studio comparativo tra i redditi, nel comune $A$ si è rilevato il reddito di `r n1` individui e si è osservata una media pari `r mu1` mila euro con una standard deviation pari a `r s1` mila euro , mentre nel comune $B$ si è rilevato il reddito di `r n2` individui e si è osservata una media pari `r mu2` mila euro con una standard deviation pari a `r s2` mila euro.
+Sotto ipotesi di eterogeneità, testare l'ipotesi che il reddito medio sia uguale nei due comuni, contro l'alternativa che sia maggiore nel comune $A$.
+
+:::{.sol data-latex=""}
+```{r 2023-22,,results='asis'}
+res <- ttest_2c_et(mu1 = mu1,mu2 = mu2,s1h = s1,s2h = s2,n1 = n1,n2 = n2,h1 = ">")
+cat(res)
+```
+:::
+
+### Esercizio 5
+```{r 2023-159}
+n1 <- 35
+muh <- 68
+sdh <- 5
+mu0 <- 71
+```
+
+5.a **(Punti 3)** In uno studio sui redditi, nel comune $A$ si è rilevato il reddito di $n=`r n1`$ individui e si è osservata una media pari $`r muh`$ mila euro con una standard deviation pari a $`r sdh`$ mila euro.
+Costruire un intervallo di confidenza al 95% per il reddito medio $\mu$.
+
+:::{.sol data-latex=""}
+```{r 2023-28,,results='asis'}
+options(digits = 4)
+res <- idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t",mus = mu0,ss = "S")
+cat(res)
+```
+:::
+
+5.b **(Punti 11)** Un'indagine analoga, svolta sull'intera regione, ha mostrato un reddito medio pari a $\mu_0=`r mu0`$. Testare l'ipotesi che nel comune $A$ il reddito medio sia uguale a quello regionale contro l'alternativa che sia __diverso__.
+
+:::{.sol data-latex=""}
+```{r 2023-29,,results='asis'}
+res <- ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = "\\neq")
+cat(res)
+```
+:::
+
+### Esercizio 5
+```{r 2023-166}
+set.seed(12)
+n <- 50
+x <- runif(n,0,30)
+y <- abs(.5*x + rnorm(n,0,2+x*.1))
+RGX <- regr(x,y); ls2e(RGX)
+```
+
+In uno studio sull'efficacia dell'investimento pubblicitario sono stati rilevati, per $n=50$ aziende si sono rilevati l'incremento di spesa in
+pubblicità ($X$) e l'incremento di utile ($Y$) nell'ultimo quinquennio. Si osservano le seguenti statistiche, $\sum_{i=1}^{50}x_i=`r sum(x)`$, $\sum_{i=1}^{50}y_i=`r sum(y)`$,
+ $\sum_{i=1}^{50}x_i^2=`r sum(x^2)`$, $\sum_{i=1}^{50}y_i^2=`r sum(y^2)`$ e $\sum_{i=1}^{50}x_iy_i=`r sum(x*y)`$.
+
+5.a **(Punti 14)** Stimare il modello di regressione dove $Y$ viene spiegata da $X$.
+
+:::{.sol data-latex=""}
+```{r 2023-36,,results='asis'}
+cat(calcolo_beta())
+```
+:::
+
+5.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2023-37,,results='asis'}
+cat(R2())
+```
+:::
+
+5.c **(Punti 14)** Testare l'ipotesi che l'intercetta sia uguale a zero contro l'alternativa che sia diversa da zero.
+
+
+:::{.sol data-latex=""}
+```{r 2023-38,,results='asis'}
+cat(ttest_beta(0,0,h1 = "\\neq",alpha = 0.05))
+```
+:::
+
+
+5.d **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2023-39,,fig.height=2.5,fig.width=3.5}
+par(cex=.35)
+plot(x,es,axes=F,xlab="x",ylab="Residui")
+axis(1)
+axis(2)
+abline(h=0,lty=2)
+par(cex=cex)
+```
+
+
+:::{.sol data-latex=""}
+```{r 2023-40,,results='asis'}
+plot(x,es,axes=F,ylab=expression(hat(epsilon[i])),cex=.35)
+abline(h=0,lty=2,col="grey")
+spline_pat(x = x,y = es)
+axis(1)
+axis(2)
+```
+:::
+
+5.e **(Punti 2)** Perché una previsione per $x=15$ è più affidabile di una per $x=50$?
+
+
+
+
+
+<div class="button-container"></div>
+
+
+```{r 2023-167}
+
+source("intro.R")
+
+
+
+
+```
+
+### Esercizio 5
+5.a **(Punti 14)** In uno studio sull'efficacia degli integratori alimentari, su un gruppo di 238 atleti è stato misurato il rendimento atletico (ottimo, buono e scarso) e l'assunzione di integratori (alto, medio e basso). Qui di seguito i dati:
+
+```{r 2023-172}
+x <- matrix(c(21,20,18,35,26,38),2)
+rx <- rowSums(x)
+cx <- colSums(x)
+n <- sum(x)
+
+dimnames(x)<-list(redimento=c("buono","scarso"),integratori=c("alto","medio","basso"))
+xp <- cbind(x,rx)
+xp <- rbind(xp,colSums(xp))
+dimnames(xp)<-list(redimento=c("buono","scarso","Totale"),integratori=c("alto","medio","basso","Totale"))
+kable(xp,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 3) %>%
+  add_header_above(c(" " = 1, "Integratori" = 4))
+
+dat <- chi_print(dat = x,nome_y = c("buono","scarso"),nome_x = c("alto","medio","basso"))
+```
+
+Testare al livello di significatività del 5% se c'è indipendenza tra integratori e rendimento.
+
+:::{.sol data-latex=""}
+```{r 2023-44,,results='asis'}
+rx <- rowSums(x)
+cx <- colSums(x)
+
+thx <- outer(rx,cx)/n
+
+kable(thx,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 2) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+
+chi <- (thx-x)^2/thx
+kable(chi,booktabs=T,escape = F,linesep="") %>%
+  kable_styling(full_width = F, latex_options = "HOLD_position")%>%
+  kable_paper(full_width = F) %>%
+  pack_rows("rendimento", 1, 2) %>%
+  add_header_above(c(" " = 1, "Integratori" = 3))
+
+chioss <- sum((thx-x)^2/thx)
+cat(cat("Il chi oss è ",chioss,", il chi-teorico,",qchisq(.95,2)," rifiuto:",ifelse(sum((thx-x)^2/thx) > qchisq(.95,2),"sì","no")))
+```
+:::
+
+### Esercizio 5
+```{r 2023-180}
+n1 <- 35
+muh <- 0.5
+sdh <- 0.25
+mu0 <- 0.6
+```
+
+5.a **(Punti 3)** In uno studio sui consumi per generi di igiene personale su un campione di `r n1` famiglie della provincia di Reggio è stata chiesta la loro spesa annuale in questo genere di beni. I dati campionari hanno evidenziato una media pari a $\hat\mu=`r muh`$ e una deviazione standard osservata pari a $\hat\sigma=`r sdh`$.
+Costruire un intervallo di confidenza al 95% per il gradimento medio $\mu$.
+
+:::{.sol data-latex=""}
+```{r 2023-52,,results='asis'}
+cat(idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t",mus = "\\mu",ss = "S"))
+```
+:::
+
+5.b **(Punti 11)** Un'indagine analoga, svolta sull'intera regione, ha mostrato un gradimento medio pari a $\mu_0=`r mu0`$. Testare l'ipotesi che nel comune A il livello di gradimento sia uguale a quello regionale contro l'alternativa che sia minore.
+
+
+:::{.sol data-latex=""}
+```{r 2023-53,,results='asis'}
+ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = "<")
+```
+:::
+
+### Esercizio 5
+Nel comune $A$ si è condotta un'intervista per conoscere l'opinione
+dei cittadini sulla presenza di un inceneritore. Sono state intervistate
+250 persone e 70 di loro sono favorevoli.
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza al 99%
+per la proporzione dei favorevoli in popolazione.
+
+:::{.sol data-latex=""}
+```{r 2023-60,,results='asis'}
+cat(idc(xm = 70,n = 250,alpha = .01,dist_ = "z"))
+```
+:::
+
+5.b **(Punti 11)** Nel comune $B$ si è condotta un'intervista analoga. 
+Sono state intervistate 230 persone e 75 di loro sono favorevoli. Testare 
+l'ipotesi che la proporzione nei due comuni sia uguale contro l'alternativa che nel
+comune $B$ sia maggiore.
+
+:::{.sol data-latex=""}
+```{r 2023-61,,results='asis'}
+cat(ztest_2c_pi(s1 = 75,s2 = 70,n1 = 230,n2 = 250,h1 = ">",a = "B",b = "A"))
+```
+:::
+
+### Esercizio 5
+Nel comune $A$ si è condotta un'intervista per conoscere l'opinione
+dei cittadini sulla presenza di un inceneritore. Sono state intervistate
+25 persone a cui è stato chiesto di esprimete l'opinione in una scala da zero a 100.
+È risultato un punteggio medio pari a $\hat\mu_A=72.1$ con una standard deviation 
+$\hat\sigma_A=3.4$
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza al 95%
+per la proporzione dei favorevoli in popolazione.
+
+:::{.sol data-latex=""}
+```{r 2023-70,,results='asis'}
+cat(idc(xm = 72.1,sd = 3.4,n = 25,alpha = .05,dist_ = "t"))
+```
+:::
+
+5.b **(Punti 11)** Nel comune $B$ si è condotta un'intervista analoga. 
+Sono state intervistate 23 persone si è osservata una media pari $\mu_B=69.6$ e una deviazione standard $\hat\sigma_B=3.3$.
+Sotto ipotesi di omogeneità testare l'ipotesi che le medie dei due comuni siano uguali contro l'alternativa che siano diverse
+
+:::{.sol data-latex=""}
+```{r 2023-71,,results='asis'}
+cat(ttest_2c_om(mu1 = 72.1,mu2 = 69.6,s1h =3.4,s2h = 3.3,n1 = 25,n2 = 24,h1 = "\\neq",a = "A",b = "B" ))
+```
+:::
+
+### Esercizio 5
+Nel comune $C$ si è condotta un'intervista per conoscere l'opinione
+dei cittadini sulla presenza di un inceneritore. Sono state intervistate
+25 persone a cui è stato chiesto di esprimete l'opinione in una scala da zero a 100.
+È risultato un punteggio medio pari a $\hat\mu_C=77.25$ con una standard deviation 
+$\hat\sigma_C=3.41$.
+
+5.a **(Punti 3)** Costruire un intervallo di confidenza al 95%
+per la proporzione dei favorevoli in popolazione.
+
+:::{.sol data-latex=""}
+```{r 2023-80,,results='asis'}
+cat(idc(xm = 77.25,sd = 3.41,n = 25,alpha = .05,dist_ = "t"))
+```
+:::
+
+5.b **(Punti 11)** Nella regione è stata condotta un'indagine analoga
+di larga scala che ha evidenziato un gradimento medio pari a $\mu_0=76$
+Testare l'ipotesi che nel comune $C$ il gradimento sia uguale a quello regionale contro l'alternativa che sia maggiore.
+
+:::{.sol data-latex=""}
+```{r 2023-81,,results='asis'}
+ttest_mu(muh = 77.25,sh = 3.41,n = 25,mu0 = 76,h1 = ">")
+```
+:::
+
+### Esercizio 5
+```{r 2023-207}
+n1 <- 10
+muh <- 1200
+sdh <- 300
+mu0 <- 1100
+```
+5.a **(Punti 3)**  In uno studio sulle spese mensili dei dipendenti di un'azienda, è stato selezionato un campione di `r n1` individui. I dati campionari hanno mostrato una media di spese mensili pari a $\hat\mu = `r muh`€$ con una deviazione standard osservata pari a $\hat\sigma = `r sdh`€$. Costruire un intervallo di confidenza al 95% per la media delle spese mensili $\mu$.
+
+:::{.sol data-latex=""}
+```{r 2023-87,,results='asis'}
+idc(xm = muh,sd = sdh,alpha = .05,n = n1,dist_ = "t")
+```
+:::
+
+5.b **(Punti 11)**  L'azienda afferma che la media delle spese mensili dei dipendenti è pari a $1100€$. Effettuare un test di ipotesi per verificare se la media delle spese mensili sia superiore a $1100€$.
+
+:::{.sol data-latex=""}
+```{r 2023-88,,results='asis'}
+ttest_mu(muh = muh,sh = sdh,n = n1,mu0 = mu0,h1 = ">",um = "€")
+```
+:::
+
+### Esercizio 5
+```{r 2023-216}
+n1 <- 80
+x1 <- 48
+p0 <- 0.5
+alpha <- 0.01
+```
+
+5.a **(Punti 14)** In uno studio clinico per valutare l'efficacia di un nuovo farmaco, sono stati selezionati `r n1` pazienti con una particolare condizione medica. Tra questi, `r x1` pazienti hanno mostrato un miglioramento utilizzando il nuovo farmaco. Testare usando il $p_\text{value}$ che il farmaco sia maggiormente efficace rispetto al trattamento esistente che una proporzione pari a $\pi_0 = `r p0`$
+
+:::{.sol data-latex=""}
+```{r 2023-95,,results='asis'}
+ztest_pi(sn = x1,n = n1,p0 = p0,h1 = ">")
+```
+:::
+
+### Esercizio 5
+```{r 2023-224}
+n1 <- 80
+n2 <- 80
+x2 <- 40
+x1 <- 48
+p0 <- 0.5
+alpha <- 0.01
+```
+
+5.a **(Punti 14)** In uno studio clinico per valutare l'efficacia di un nuovo farmaco, sono stati selezionati `r n1+n2` pazienti con una particolare condizione medica. Tra questi, `r n1` sono stati trattati con un farmaco sperimentale e `r n2` col placebo. Tra i trattati, `r x1` pazienti hanno mostrato un miglioramento utilizzando il nuovo farmaco, mentre sono `r x2` quelli che hanno assunto il placebo e hanno mostrato miglioramenti. Testare l'ipotesi, usando il il $p_\text{value}$, che il farmaco sia maggiormente efficace rispetto al placebo.
+
+:::{.sol data-latex=""}
+```{r 2023-102,,results='asis'}
+cat(ztest_2c_pi(s1 = x1,s2 = x2,n1 = n1,n2 = n2,h1 = ">",a = "F",b = "P"))
+```
+:::
+
+### Esercizio 5
+```{r 2024-48}
+set.seed(9)
+n <- 50
+x <- round(runif(n = n,min = 8,20),0) # Anni di studio
+y <- round(abs(2.1*x + rnorm(n, 0, 5)) + 12) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di \(n=`r n`\) individui, sono stati analizzati il livello di istruzione (in anni di studio, \(X\)) e il reddito annuale (in migliaia di euro, \(Y\)). 
+Si osservano le seguenti statistiche:
+, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+5.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-3,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+5.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+
+5.c **(Punti 2)** Definire i punti influenti.
+
+5.d **(Punti 2)** Se in un modello di regressione $r=-1$ cosa significa?
+
+5.e **(Punti 2)** Se in un modello di regressione $r=0.55$, $\hat\sigma_X=0.9$ e $\hat\beta_1=1.5$, quanto varrà
+$\hat\sigma_Y$, la standard deviation di $Y$?
+
+5.f **(Punti 14)** Testare l'ipotesi che $\beta_1$ sia uguale a zero, contro l'alternativa che sia diverso per diversi livelli di significatività e dare una valutazione approssimativa del $p$-value (ad esempio il $p$-value è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-49}
+ttest_beta(1,0,SE = T)
+```
+:::
+
+### Esercizio 5
+```{r 2024-58}
+set.seed(90)
+n <- 50
+x <- round(runif(n = n,min = 8,20),0) # Anni di studio
+y <- round(abs(-1.1*x + rnorm(n, 0, 5)) + 30) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di \(n=`r n`\) individui, sono stati analizzati il livello di istruzione (in anni di studio, \(X\)) e la propensione a credere in teorie del complotto (in opportuna scala, \(Y\)). 
+Si osservano le seguenti statistiche:
+, $\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+5.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-6,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+5.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2024-7,,results='asis'}
+R2()
+```
+:::
+
+5.c **(Punti 2)** Definire i punti di leva.
+
+5.d **(Punti 2)** Se in un modello di regressione $r=+1$ cosa significa?
+
+5.e **(Punti 2)** Se in un modello di regressione $r<0$ è possibile che $\hat\beta_1>0$? Perché?
+
+5.f **(Punti 14)** Testare l'ipotesi che $\beta_0$ sia uguale a 35, contro l'alternativa che sia minore per diversi livelli di significatività e dare una valutazione approssimativa del $p$-value (ad esempio il $p$-value è minore di 0.0005, compreso tra 0.05 e  0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-59}
+ttest_beta(0,35,h1 = "<",SE = T)
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 3)** (**Punti 12**) In un'indagine sull'opinione sul reddito di inclusione sono stati intervistate 150 persone che vivono al nord e 180 che vivono al sud: 60 su 150 che vivono al nord sono favorevoli al reddito di cittadinanza mentre 95 su 180 che vivono al sud sono favorevoli. 
+
+Testare l'ipotesi che la proporzione di persone favorevoli al reddito di cittadinanza che vivono al sud sia uguale a quelle di quelli che vivono al nord, contro l'alternativa che siano diverse.
+
+5.b **(Punti 11)** Calcolare e discutere il $p$-value del test precedente.
+
+:::{.sol data-latex=""}
+```{r 2024-68}
+s1 <- 60
+n1 <- 150
+s2 <- 95
+n2 <- 180
+h1 <- "\\neq"
+alpha <- 0.01
+a <- "N"
+b<- "S"
+um <- ""
+ztest_2c_pi(s1 = s1,s2 = s2,n1 = n1,n2 = n2,h1 = h1,a = a,b = b)
+```
+:::
+
+### Esercizio 5
+```{r 2024-78}
+set.seed(9)
+n <- 25
+sig <- 2
+x <- round(runif(n = n,min = 0,20),2) # reddito
+y <- round(0.9+0.2*x+rnorm(n,0,sig),2) # Reddito annuo in migliaia di euro
+ls2e(regr(x, y,semp = T,ax = 2))
+```
+
+In uno studio sui consumi, in un campione di \(n=`r n`\) individui, sono stati analizzati il reddito  (in migliaia di euro, \(X\)) e il consumo (in migliaia di euro, \(Y\)).
+
+Si osservano le seguenti statistiche:
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+5.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-13,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+5.b **(Punti 3)** Qual è la percentuale di varianza spiegata dal modello?
+
+:::{.sol data-latex=""}
+```{r 2024-14,,results='asis'}
+R2()
+```
+:::
+
+
+5.c **(Punti 2)** perché la previsione per $x=`r round(mx)`$ è più affidabile di quella per $x=`r round(10*mx)`$.
+
+5.d **(Punti 2)** Se in un modello di regressione $r=-1$ cosa significa?
+
+5.e **(Punti 2)** Se in un modello di regressione $r=0.75$, $\hat\sigma_X=0.8$ e $\hat\beta_1=1.2$, calcolare
+$\hat\alpha_1$, la stima del coefficiente angolare del modello
+
+$$
+X_i = \alpha_0+\alpha_1 Y_i + \delta_i, \qquad E(\delta_i)=0; V(\delta_i)=\sigma_\delta^2
+$$
+
+dove la $X$ è spiegata dalla $Y$.
+
+:::{.sol data-latex=""}
+Per trovare la stima del coefficiente angolare \(\hat\alpha_1\), possiamo usare la relazione tra il coefficiente di correlazione \(r\), la deviazione standard di \(X\) (\(\hat\sigma_X\)) e la stima del coefficiente di regressione \(\hat\beta_1\).
+
+La formula per il coefficiente di regressione \(\hat\beta_1\) in termini di \(r\), \(\hat\sigma_X\) e \(\hat\sigma_Y\) è:
+
+\[
+\hat\beta_1 = r \cdot \frac{\hat\sigma_X}{\hat\sigma_Y}
+\]
+
+Dove \(\hat\sigma_Y\) è la deviazione standard di \(Y\). Dato che abbiamo \(\hat\beta_1 = 1.2\), \(r = 0.75\) e \(\hat\sigma_X = 0.8\), possiamo isolare \(\hat\sigma_Y\) nella formula:
+
+\[
+1.2 = 0.75 \cdot \frac{0.8}{\hat\sigma_Y}
+\]
+
+Da cui:
+
+\[
+\hat\sigma_Y = 0.75 \cdot 0.8 / 1.2
+\]
+
+Calcolando il valore:
+
+```{r 2024-79}
+sigma_X <- 0.8
+beta_1 <- 1.2
+r <- 0.75
+
+sigma_Y <- (r * sigma_X) / beta_1
+
+```
+
+\[
+\hat\sigma_Y \approx `r sigma_Y`
+\]
+
+Ora possiamo trovare \(\hat\alpha_1\) usando il valore di \(\hat\sigma_Y\):
+
+
+```{r 2024-80}
+alpha_1 <- r * (sigma_X / sigma_Y)
+```
+
+\begin{eqnarray*}
+   \hat\alpha_1 &=& r \cdot \frac{\hat\sigma_X}{\hat\sigma_Y}\\
+               &\approx& `r alpha_1`
+\end{eqnarray*}
+  
+
+Pertanto, la stima del coefficiente angolare \(\hat\alpha_1\) è approssimativamente `r alpha_1`.
+:::
+
+
+5.f **(Punti 14)** Testare l'ipotesi che $\beta_1$ sia uguale a zero, contro l'alternativa che sia diverso per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-81}
+ttest_beta(1,0,SE = T)
+```
+:::
+
+### Esercizio 5
+```{r 2024-90}
+set.seed(9)
+n <- 50
+x <- round(runif(n = n,min = 8,20),0) # Anni di studio
+y <- round(100 -.2*x^2.5 + rnorm(n, 0, 20),2) # Reddito annuo in migliaia di euro
+y <- (y - min(y))/(max(y)-min(y))*10
+ls2e(regr(x, y,semp = T,ax = 0))
+```
+
+In uno studio sul reddito, in un campione di \(n=`r n`\) individui, sono stati analizzati il livello di istruzione (in anni di studio, \(X\)) e la propensione a credere in teorie del complotto (in opportuna scala, \(Y\)). 
+
+Si osservano le seguenti statistiche:
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+5.a **(Punti 14)**  Si è osservato $x_3=`r p(x[3])`$ e $y_3=`r p(y[3])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=3$.
+
+:::{.sol data-latex=""}
+```{r 2024-17,,results='asis'}
+calcolo_beta()
+residuo(x = x[3],y = y[3])
+```
+:::
+
+5.b **(Punti 3)** Il modello si adatta bene ai dati?
+
+:::{.sol data-latex=""}
+```{r 2024-18,,results='asis'}
+R2()
+```
+:::
+
+5.c **(Punti 2)** Interpretare il diagramma dei residui.
+
+```{r 2024-19,, fig.width=5, fig.height=3.5}
+par(mar=c(4,4,0,2),cex=.8)
+plot(x, es, ylab=expression(hat(epsilon)), pch=16, cex=.5, axes=F)
+axis(1, cex=1)
+axis(2, cex=1)
+abline(h=0, lty=2)
+```
+
+:::{.sol data-latex=""}
+```{r 2024-20,,results='asis'}
+plot(x, es, ylab=expression(hat(epsilon)), pch=16, cex=.5, axes=F)
+axis(1, cex=1)
+axis(2, cex=1)
+abline(h=0, lty=2)
+spline_pat(x,es,df1 = 5,df2 = 4)
+```
+:::
+
+5.d **(Punti 2)** Se in un modello di regressione $r^2=1$ cosa significa?
+
+5.e **(Punti 2)** Se in un modello di regressione $r<0$ che segno avrà $\hat\beta_1$? Perché?
+
+5.f **(Punti 14)** Testare l'ipotesi che $\beta_0$ sia uguale a 16.4, contro l'alternativa che sia minore per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-91}
+ttest_beta(0,16.4,h1 = "<",SE = T)
+```
+:::
+
+### Esercizio 5
+```{r 2024-101}
+s1 <- 1.1
+n1 <- 18
+mu1 <- 1.8
+mu2 <- 0.8
+s2 <- 0.9
+n2 <- 21
+h1 <- "\\neq"
+alpha <- 0.01
+a <- "$N$"
+b<- "$S$"
+```
+
+5.a **(Punti 14)**  In un'indagine sui consumi in beni alimentari sono stati intervistati 13 nuclei familiari al Nord d'Italia e 15 al Sud.
+Per le $n_N=`r n1`$ famiglie del nord si è osservato un consumo medio pari a $\mu_N=`r mu1`$ mila euro con una deviazione standard pari a $\hat\sigma_N=`r s1`$ mila euro, mentre per le $n_S=`r n2`$ famiglie del sud si è osservato un consumo medio pari a $\mu_S=`r mu2`$ mila euro con una deviazione standard pari a $\hat\sigma_S=`r s2`$ mila euro.
+
+Sotto ipotesi di omogeneità, testare l'ipotesi che il consumo medio sia uguale tra nord e sud, contro l'alternativa che sia maggiore al nord,
+per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+
+:::{.sol data-latex=""}
+```{r 2024-102}
+ttest_2c_om(mu1 = mu1,mu2 = mu2,s1h = s1,s2h = s2,n1 = n1,n2 = n2,h1 = ">",a = a,b = b,um = "mila euro")
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 11)** Sia \(X\) il reddito annuale dei manager italiani.
+Si sceglie un campione di 30 manager italiani e si ottiene una
+media di 85 mila euro con una deviazione standard pari a 15 mila euro.
+
+Determinare un intervallo di confidenza al 95\% per
+il reddito medio annuale dei manager italiani.
+
+:::{.sol data-latex=""}
+```{r 2024-26,,results='asis'}
+idc(xm = 85,sd = 15,alpha = 0.05,n = 30,dist_ = "t",mus = "\\hat\\mu",ss = "S")
+```
+:::
+
+5.b **(Punti 3)** È noto che il reddito medio annuale dei manager europei
+è di 80 mila euro.
+Verificare l'ipotesi
+che il reddito medio annuale dei manager italiani sia uguale a quello
+dei manager europei contro l'alternativa che sia maggiore, per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-27,,results='asis'}
+ttest_mu(muh = 85,sh = 15,n = 30,mu0 = 80,h1 = ">")
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 3)** In uno studio sull'efficacia di due metodi di insegnamento della matematica, si è proceduto facendo seguire il metodo \(A\) ad un campione di 15 studenti (gruppo \(A\)) e il metodo \(B\) ad un secondo campione di 18 studenti (gruppo \(B\)). Si è quindi misurata la prestazione degli studenti con un test finale. La prestazione media del gruppo \(A\) risulta pari a 78 con una deviazione standard pari a 8.3, mentre la prestazione media del gruppo \(B\) risulta pari a 74 con una deviazione standard pari a 7.5. Sotto ipotesi di eterogeneità verificare l'ipotesi che la prestazione media dei due metodi di insegnamento sia uguale, contro l'alternativa che il metodo \(A\) produca prestazioni mediamente migliori di quello \(B\), per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.).
+
+:::{.sol data-latex=""}
+```{r 2024-30,,results='asis'}
+ttest_2c_et(mu1 = 78,mu2 = 74,s1h = 8.3,s2h = 7.5,n1 = 15,n2 = 18,h1 = ">",a = "A",b = "B")
+```
+:::
+
+### Esercizio 5
+5.a **(Punti 14)** Su un campione di \( n = 120 \) startup tecnologiche italiane, è stato chiesto se abbiano implementato misure di cybersecurity avanzate. Lo studio ha riportato che 84 startup su 120 (il 70% del campione) hanno implementato queste misure.
+
+Costruire un intervallo di confidenza al 95% per \(\pi\), la quota di startup italiane che hanno implementato misure di cybersecurity avanzate.
+
+:::{.sol data-latex=""}
+```{r 2024-129}
+idc(xm = 84,alpha = .05,n = 120,dist_ = "z")
+```
+:::
+
+5.b **(Punti 3)** Un'indagine molto più ampia condotta su startup europee ha mostrato che la percentuale di startup con misure di cybersecurity avanzate è del 80%. Testare l'ipotesi che in Italia la quota di startup con misure di cybersecurity avanzate sia uguale a quella europea contro l'alternativa che sia minore. Risolvere col $p_\text{value}$ e confrontarlo per $\alpha=0.1,0.05,0.01,0.001$.
+
+:::{.sol data-latex=""}
+```{r 2024-130}
+sn <- 84
+n  <- 120
+p0 <- 0.80
+h1 <- "<"
+ztest_pi(sn = sn,n = n,p0 = p0,h1 = h1)
+```
+:::
+

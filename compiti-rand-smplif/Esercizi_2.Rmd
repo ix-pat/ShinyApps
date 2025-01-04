@@ -1,0 +1,1930 @@
+### Esercizio 2
+Nel supermercato $S$ ci sono 4 casse $C_1$, $C_2$, $C_3$ e $C_4$. A mezzogiorno il numero di persone in fila ogni cassa è descritto da un Poisson di parametro 0.5, $C_i\sim\text{Pois}(0.5),~i=1,...,4$. Si assume l'indipendenza tra le variabili.
+
+2.a **(Punti 14)** Calcolare la probabilità che le persone **totali** ($C_1+...+C_4$) in fila al supermercato a mezzogiorno, siano almeno due.
+
+
+
+::: {.sol data-latex=""}
+$$
+X=C_1+...+C_4\sim \text{Pois}(2)
+$$
+e quindi
+
+\begin{eqnarray*}
+P(X\ge 2)&=&1-P(X< 2)\\
+&=&1-(P(X=0)+P(X=1))\\
+&=&1-(`r dpois(0,2)`+`r dpois(1,2)`)\\
+&=&`r 1-(dpois(0,2)+ dpois(1,2))`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Qual è la probabilità di avere esattamente _due_ casse su _quattro_ senza fila?
+
+::: {.sol data-latex=""}
+Posto `r pp <- dpois(0,0.5)`
+$$
+\pi = P(C_i=0)=\frac {0.5}{0!}e^{-0.5}=`r pp`
+$$
+la VC $X$ che conta il numero di casse con zero persone in fila su 4
+$$
+X\sim\text{Binom}(4,`r pp`)
+$$
+e quindi 
+$$
+P(X=2)=\binom{4}{2}`r pp`^2(1-`r pp`)^{4-2}=`r dbinom(2,4,pp)`
+$$
+:::
+
+2.c **(Punti 3)** Quando due eventi $A$ e $B$ si dicono _indipendenti_ e quando _incompatibili_?
+
+::: {.sol data-latex=""}
+Se $A$ e $B$ sono _incompatibili_ allora
+$$
+P(A\cap B)=0,
+$$
+mentre se $A$ e $B$ sono _indipendenti_ allora
+$$
+P(A\cap B)=P(A)P(B),
+$$
+:::
+
+
+2.d **(Punti 2)** Se $X_1\sim N(2,1)$, $X_2\sim N(1,1)$ e $X_3\sim N(1,1)$, 
+  $X_1$, $X_2$ e $X_3$ indipendenti, come si distribuisce 
+  
+$$
+  Y=X_1-(X_2+X_3) ~~~?
+$$
+
+::: {.sol data-latex=""}
+$$Y\sim N(2-(1+1),1+1+1)\sim N(0,3)$$
+:::
+
+### Esercizio 2
+```{r 2021-47}
+s1 <- 0.55
+s2 <- 0.85
+```
+
+Il flusso giornaliero d'acqua in entrata nella vasca $V$ è descritto da una variabile casuale normale $X_E\sim N(5.1,1.1)$, il flusso giornaliero in uscita è descritto da una variabile casuale normale $X_U\sim N(6.2,0.5)$.
+
+La variazione di livello nella vasca è dunque data da:
+$$
+X_L=X_E-X_U.
+$$
+2.a **(Punti 14)** Calcolare la probabilità che la variazione di livello sia negativa ($X_L<0$).
+
+::: {.sol data-latex=""}
+La variazione di livello nella vasca si distribuisce
+$$
+X_L=X_E-X_U\sim N(5.1-6.2;1.1+0.5)
+$$
+E quindi
+
+```{r 2021-48}
+vnam<-"X_L"
+mm <- 5.1-6.2
+ss <- 1.1+0.5
+x0 <- 0
+
+
+```
+
+```{r 2021-9,,results='asis'}
+cat(norm_int(x1 = 0,verso = "<",mm = mm,ss = ss,vnam = "X_L"))
+```
+:::
+
+
+2.b **(Punti 3)** Nell'ipotesi di indipendenza tra i giorni, calcolare la probabilità di avere esattamente _due_ giorni su _cinque_ con livello negativo.  `r pp <- pnorm(0,mm,sqrt(ss))`
+
+::: {.sol data-latex=""}
+Posto
+$$
+\pi = P(X_L=0)=`r pnorm(0,mm,sqrt(ss))`
+$$
+la VC $X$ che conta il numero di giorni con livello negativo in 5 giorni
+$$
+X\sim\text{Binom}(5,`r pp`)
+$$
+e quindi 
+
+```{r 2021-49}
+bin_dis(2,5,pp,sing=T)
+```
+
+:::
+
+
+2.c **(Punti 3)** Se $P(A)=0.6$ e $P(B)=0.8$, $A$ e $B$ possono essere incompatibili?
+
+::: {.sol data-latex=""}
+No, perché se fossero incompatibili allora
+$$
+P(A\cup B)=P(A)+P(B)=0.6+0.8=1.4>1
+$$
+che è impossibile.
+:::
+
+
+2.d **(Punti 2)** Se $X\sim N(\mu_X,\sigma^2_X)$ come si distribuisce 
+  $$Y=\left(\frac{X-\mu_X}{\sigma_X}\right)^2 ~~~?$$
+  
+::: {.sol data-latex=""}
+Anzitutto osserviamo che
+$$
+Z=\frac{X-\mu_X}{\sigma_X}\sim N(0,1)
+$$
+Poi che
+$$
+Y=Z^2\sim\chi_1^2
+$$
+:::
+
+### Esercizio 2
+L'urna $A$ contiene 4 palline numerate: $\fbox{-1},\fbox{0},\fbox{0},\fbox{+1}$. 
+
+L'urna $B$ contiene 3 palline numerate: $\fbox{0},\fbox{1},\fbox{2}$. 
+
+Si estrae dall'urna $A$ e dall'urna $B$ e si *sommano* i due numeri
+
+2.a **(Punti 14)** Calcolare la probabilità che la somma dei numeri sia maggiore uguale a 2.
+
+::: {.sol data-latex=""}
+```{r 2021-14,,results='asis'}
+a <- (two_way(S_1 = c(-1,0,1),S_2 = 1:2,num1 = c(1,2,1),num2 = c(1,1,1)))
+```
+$$
+P(S\ge 2)=3/12+1/12=4/12=1/3
+$$
+:::
+
+2.b **(Punti 3)** Calcolare la probabilità che la somma sia maggiore uguale a 1 dato che dall'urna $A$ è uscito $\fbox{0}$.
+
+::: {.sol data-latex=""}
+Dalla definizione stessa di probabilità condizionata
+\begin{eqnarray*}
+P(X\geq 1|X_A=0)&=&\frac{P(\{X\geq 1\}\cap\{X_A=0\})}{P(\{X_A=0\})}\\
+                &=&\frac{2/12+2/12}{2/4}\\
+                &=&4/12\cdot4/2\\
+                &=&`r 4/12*4/2`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 3)** Sia $X\sim \text{Pois}(10)$ e $Y\sim\text{Binom}(n,0.5)$.
+Sia
+$$
+W=X-Y
+$$
+Calcolare il valore atteso $E(W)$ e la varianza $V(W)$ di $W$.
+
+::: {.sol data-latex=""}
+Osserviamo
+\begin{align*}
+E(X)&=10 &E(Y)&=n\cdot 0.5\\
+V(X)&=10 &V(Y)&=n\cdot0.5(1-0.5)
+\end{align*}
+e quindi
+\begin{eqnarray*}
+E(W)&=&E(X)-E(Y)\\
+&=&10-n\cdot 0.5\\
+V(W)&=&V(X)+V(Y),\qquad\text{se e solo se $X$ e $Y$ sono indipendenti}\\
+&=&10+n\cdot 0.25
+\end{eqnarray*}
+:::
+
+2.d **(Punti 2)** Siano $X_1,...,X_6$, $6$ variabili casuali IID,
+tali che
+$$
+X_i\sim N\left(2.5,3^2\right).
+$$
+Come si distribuisce
+$$
+Y=\sum_{i=1}^6\left(\frac{X_i-2.5}{3}\right)^2~~?
+$$
+
+::: {.sol data-latex=""}
+Si osserva
+$$
+Z_i=\frac{X_i-2.5}{3}\sim N(0,1)
+$$
+e quindi
+$$
+Y=(Z_1^2+...+Z_6^2)\sim\chi_6^2
+$$
+:::
+
+### Esercizio 2
+Si consideri un'urna così formata,
+$$
+\left\{\fbox{1},\fbox{2},\fbox{3},\fbox{4},\fbox{5},\fbox{6},\fbox{7},\fbox{8}\right\}.
+$$
+Si vince se si estrae un numero maggiore o uguale a 6. 
+
+Si estrae _con_ reintroduzione.
+
+2.a **(Punti 14)** Qual è la probabilità di vincere almeno 5 volte su 6 estrazioni?
+
+::: {.sol data-latex=""}
+Sia $X$ la VC che conta il numero di di vittorie in 6 giocate,
+quindi $n=6$ replicazioni di una Bernoulli $X_i\sim\mbox{Ber}(\pi=3/8)$ e quindi
+
+$$
+X=X_1+...+X_n\sim\mbox{Binom}(n=6,\pi=`r 3/8`)
+$$
+
+la probabilità di avere almeno 5 bussolotti rossi su 6 estrazioni è
+
+
+```{r 2021-19,,results='asis'}
+pp <- .38
+cat(bin_dis(5,6,pp = 3/8,verso = ">"))
+```
+:::
+
+2.b **(Punti 3)** Calcolare la probabilità di vincere la prima volta alla quarta estrazione.
+
+::: {.sol data-latex=""}
+Ogni singola giocata $X_i$ è una Bernoulli $X_i\sim\mbox{Ber}(\pi=3/8)$ e quindi 
+\begin{eqnarray*}
+E&=&\text{Vincere la prima volta alla quarta estrazione}\\
+ &=& X_1=0~\cap~X_2=0~\cap~X_3=0~\cap~X_4=1\\
+P(E)&=&P(X_1=0~\cap~X_2=0~\cap~X_3=0~\cap~X_4=1)\\
+&=&P(X_1=0)P(X_2=0)P(X_3=0)P(X_4=1)\\
+&=&\left(1-\frac 38\right)\left(1-\frac 38\right)\left(1-\frac 38\right)\frac 38\\
+&=&\left(\frac 58\right)^3\frac 38\\
+&=&`r (5/8)^3*3/8 `
+\end{eqnarray*}
+:::
+
+2.c **(Punti 3)** Se $A$ e $B$ sono due eventi tali che, $P(A)>0$, $P(B)>0$, $P(A\cap B)=0$. 
+$A$ e $B$ possono essere indipendenti?
+
+::: {.sol data-latex=""}
+No, in quanto, se $A$ e $B$ sono indipendenti
+$$P(A\cap B)=P(A)P(B)\neq0$$
+:::
+
+2.d **(Punti 2)** Sia $X\sim N(3.2,(1.1)^2)$ e sia $Y\sim\chi_{n-1}^2$, posto
+$$
+T=\frac{\left(\frac{X-3.2}{1.1}\right)}{\sqrt{\frac{Y}{n-1}}},
+$$
+come si distribuisce $T$?
+
+::: {.sol data-latex=""}
+Si noti che
+$$
+Z=\left(\frac{X-3.2}{1.1}\right)\sim N(0,1)
+$$
+e che
+$$
+T=\frac{Z}{\sqrt{\frac{Y}{n-1}}}\sim t_{n-1}
+$$
+:::
+
+### Esercizio 2
+In una stazione ci sono 3 binari. Ogni ora il numero di persone che transita su ogni
+binario è descritto da una Poisson. In particolare
+
+- $X_1\sim\text{Pois}(1.1)$, il binario uno;
+- $X_2\sim\text{Pois}(1.1)$, il binario due;
+- $X_3\sim\text{Pois}(0.5)$, il binario tre.
+
+Il numero di persone in transito su un binario è indipendente dal numero di persone in transito sugli altri binari.
+
+2.a **(Punti 14)** Calcolare la probabilità che il *totale* delle persone in transito nella stazione, in una data ora, sia maggiore o uguale a due.
+
+::: {.sol data-latex=""}
+Il totale di persone in transito è la somma delle tre Poisson
+$$
+X=X_1+X_2+X_3\sim \text{Pois}(\lambda=1.1+1.1+0.3)
+$$
+```{r 2021-25,,results='asis'}
+cat(pois_dis(2,1.1*2+.3,verso = "\\geq"))
+```
+:::
+
+
+2.b **(Punti 3)** Calcolare la probabilità di osservare una persona su un binario, una persona su un altro binario e nessuna persona sul rimanetene.
+
+::: {.sol data-latex=""}
+```{r 2021-71}
+p10<-dpois(0,1.1)
+p11<-dpois(1,1.1)
+p30<-dpois(0,0.5)
+p31<-dpois(1,0.5)
+```
+
+Anzitutto osserviamo:
+
+\begin{eqnarray*}
+P(X_1= 0) &=& P(X_2=0)\\
+          &=& \frac{1.1^0}{0!}e^{-1.1}\\
+          &=& `r dpois(0,1.1)`\\
+P(X_1= 1) &=& P(X_2=1)\\
+          &=& \frac{1.1^1}{1!}e^{-1.1}\\
+          &=& `r dpois(1,1.1)`\\
+P(X_3= 0) &=& \frac{0.5^0}{0!}e^{-0.5}\\
+          &=& `r dpois(0,0.5)`\\
+P(X_3= 1) &=& \frac{0.5^1}{1!}e^{-0.5}\\
+          &=& `r dpois(1,0.5)`\\
+\end{eqnarray*}
+
+L'evento _una persona su un binario, una persona su un altro binario e nessuna persona sul rimanetene_
+si scompone:
+
+\begin{eqnarray*}
+E &=& \big\{(X_1=1\cap X_2=1\cap X_3=0)\cup\\
+   &&\cup(X_1=1\cap X_2=0\cap X_3=1)\cup\\
+   &&\cup(X_1=0\cap X_2=1\cap X_3=1)\big\}\\
+P(E) &=& \phantom{+} P(X_1=1\cap X_2=1\cap X_3=0)+\\
+     && + P(X_1=1\cap X_2=0\cap X_3=1)+\\
+     && + P(X_1=0\cap X_2=1\cap X_3=1)\\
+     &=& \phantom{+} P(X_1=1)P(X_2=1)P(X_3=0)+\\
+     && + P(X_1=1)P(X_2=0)P(X_3=1)+\\
+     && + P(X_1=0)P(X_2=1)P(X_3=1)\\
+     &=& \phantom{+} `r p11`\cdot`r p11`\cdot`r p30`+\\
+     && +`r p11`\cdot`r p10`\cdot`r p31`+\\
+     && +`r p10`\cdot`r p11`\cdot`r p31`\\
+     &=& `r p11*p11*p30+2*p11*p10*p31`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 3)** Siano $X_1,...,X_n$, $n$ VC IID, tali che
+$$
+X_i\sim N(0,1).
+$$
+Posto
+$$
+\bar X = \frac{X_1+...+X_n}{n},
+$$
+come si distribuisce $\bar X$?
+
+::: {.sol data-latex=""}
+$$
+\bar X = \frac{X_1+...+X_n}{n}\sim N\left(0,\frac 1n\right),
+$$
+:::
+
+2.d **(Punti 2)** Siano $X_1\sim \text{Binom}(5,0.3)$ e $X_2\sim \text{Binom}(3,0.3)$.
+Come si distribuisce,
+$$X_1+X_2\sim ~~?$$
+
+::: {.sol data-latex=""}
+$$X_1+X_2\sim \text{Binom}(8,0.3)$$
+
+**se e solo se** $X_1$ e $X_2$ sono indipendenti.
+:::
+
+### Esercizio 2
+Ci sono due urne: 
+
+- l'urna $A$: $\left\{\fbox{0},\fbox{0},\fbox{1}\right\}$ e 
+- l'urna $B$: $\left\{\fbox{0},\fbox{1},\fbox{1}\right\}$.
+
+Si estrae dalle due urne e si somma, 
+
+- se la somma fa 2 si vince, 
+- altrimenti si perde,
+
+poi si rimettono le palline nelle urne e si ripete il gioco per $n=5$ volte.
+
+2.a **(Punti 14)** Qual è la probabilità di vincere almeno 1 volta su 5 giocate?
+
+::: {.sol data-latex=""}
+$$
+\pi=P(X_A+X_B=2)=P(X_A=1)P(X_B=1)=\frac 13\times\frac23=\frac29=`r 2/9`
+$$
+
+$X\sim\text{Binom}(n=5,\pi=`r 2/9`)$ e quindi
+
+```{r 2021-31,,results='asis'}
+cat(bin_dis(1,n = 5,pp = 2/9,verso = "\\geq",comp = T))
+```
+:::
+
+2.b **(Punti 3)** Per giocare si devono puntare due euro ad ogni giocata. Se vinciamo ci vengono dati 9€, i 2€ giocati più 7€ di vincita. Quindi:
+
+- se la somma non fa 2 perdiamo 2€ 
+- se la somma fa 2 riceviamo 9€ (7€ vinti + 2€ giocati)
+
+Quale è il valore atteso della variabile causale che conta il totale di euro ottenuti dopo 5 partite?
+
+::: {.sol data-latex=""}
+Sia $X_i$ la VC che dice se alla giocata $i$ si è vinto o perso
+$$
+X_i\sim\text{Ber}\left(\pi=\frac 29\right)
+$$
+sia $Y$ il guadagno/perdita della giocata $i$
+$$
+Y_i=-2+9X_i
+$$
+e quindi
+$$
+E(Y_i)=E(-2+9X)=-2+9E(X)=-2+9~\frac29=0
+$$
+Sia $Y$ la vincita totale dopo 5 partite
+
+\begin{eqnarray*}
+  Y  &=&Y_1+...+Y_5\\
+E(Y) &=&E(Y_1+...+Y_5)\\
+     &=&E(Y_1)+...+E(Y_n)\\
+     &=& 0+...+0\\
+     &=& 0
+\end{eqnarray*}
+:::
+
+
+2.c **(Punti 3)** Se $A$ e $B$ sono due eventi tali che, $P(A)=0.5$, $P(B)=0.4$ e $P(A\cup B)=0.58$. $A$ e $B$ sono indipendenti? Perché?
+
+::: {.sol data-latex=""}
+No, perché se lo fossero
+$$
+P(A\cap B)=0.5\times 0.4=0.2
+$$
+e quindi
+\begin{eqnarray*}
+  P(A\cup B) &=& P(A)+P(B)-P(A\cap B)\\
+             &=& 0.5+0.4-0.2\\
+             &=& 0.7\ne 0.58
+\end{eqnarray*}
+:::
+
+
+2.d **(Punti 2)** Siano $Y_1,...,Y_n$, $n$ VA IID, tali che, $Y_i\sim\chi_{1}^2$, posto
+$$
+X=\sum_{i=1}^n Y_i
+$$
+come si distribuisce $X$?
+
+### Esercizio 2
+Siano $X_1\sim N(10,2)$ e sia $X_2\sim N(10,3)$. Posto $A=\{X_1<11\}$, $B=\{X_1>9\}$, e $C=\{9<X_2<10\}$
+
+2.a **(Punti 14)** Quanto vale $P\Big((A\cap B)\cap C\Big)$? 
+
+::: {.sol data-latex=""}
+\[
+(A\cap B)\cap C = \{9<X_1<11\}\cap\{9<X_2<10\}
+\]
+e quindi 
+```{r 2021-35,,results='asis'}
+x1 <- 9
+x2 <- 11
+mm <- 10
+ss <- 2
+vnam <- "X_1"
+cat(norm_int(x1 = x1,x2 = x2,verso = NULL,mm = mm,ss = ss,vnam = "X_1",mu = "\\mu_1",sigma = "\\sigma_1"))
+```
+inoltre
+```{r 2021-86}
+x1 <- 9
+x2 <- 10
+mm <- 10
+ss <- 3
+vnam <- "X_2"
+cat(norm_int(x1 = x1,x2 = x2,verso = NULL,mm = mm,ss = ss,vnam = "X_2",mu = "\\mu_2",sigma = "\\sigma_2"))
+```
+e infine
+\[
+P\Big(\{9<X_1<11\}\cap\{9<X_2<10\}\Big)=P\Big(\{9<X_1<11\}\Big)P\Big(\{9<X_2<10\}\Big)=
+`r (pnorm(11,10,sqrt(2))-pnorm(9,10,sqrt(2)))*(pnorm(10,10,sqrt(3))-pnorm(9,10,sqrt(3)))`
+\]
+:::
+
+2.b **(Punti 3)** Posto $Y=X_1-X_2$, calcolare $P(Y<-1)$.
+
+::: {.sol data-latex=""}
+$$Y=X_1-X_2\sim N(10-10,2+3)$$
+
+```{r 2021-87}
+x0 <- -1
+x2 <- 10
+mm <- 0
+ss <- 5
+vnam <- "Y"
+cat(norm_int(x1 = x0,mm = mm,ss = ss,vnam = "Y",mu = "\\mu_Y",sigma = "\\sigma_Y"))
+```
+:::
+
+2.c **(Punti 3)** Siano $X_1,...,X_n$, $n$ VC IID, tali che $X_i\sim \text{Ber}(\pi)$, posto
+\[
+ X = X_1+...+X_n
+\]
+come si distribuisce $X$? 
+
+2.d **(Punti 2)** Sia $X\sim \text{Pois}(1.5)$, per quali valori $x$, $F(x)$, la funzione di ripartizione di $X$ è minore o uguale a 0.5? Ovvero, per quali $x$ la seguente è rispettata $F(x)\le 0.5$?
+
+::: {.sol data-latex=""}
+Per definizione
+\begin{eqnarray*}
+F(x)   &=&  P(X\le x)\\
+       &=&\sum_{t=0}^x f(t)\\
+       &=&\sum_{t=0}^x \frac{\lambda^t}{t!}e^{-\lambda}\\
+\end{eqnarray*}
+
+\begin{eqnarray*}
+  F(0) &=&  \frac{1.5^0}{0!}e^{-1.5}=`r ppois(0,1.5)`\\
+  F(1) &=&  \frac{1.5^0}{0!}e^{-1.5}+  \frac{1.5^1}{1!}e^{-1.5}=`r ppois(1,1.5)`
+\end{eqnarray*}
+:::
+
+### Esercizio 2
+Siano $X\sim N(102,1.5)$ e sia $Y\sim N(50,3.5)$, $X$ e $Y$ indipendenti. Posto $A=\{X>100\}$, $B=\{X<102\}$, e $C=\{47<Y\le 53\}$.
+
+2.a **(Punti 14)** Quanto vale $P\Big((A\cap B)\cup C\Big)$?
+
+:::{.sol data-latex=""}
+```{r 2022-8}
+x1 <- 100
+x2 <- 102
+mm <- 102
+ss <- 1.5
+vnam <- "X"
+mu <- "\\mu_X"
+sigma <- "\\sigma_X"
+cat(norm_int(x1 = x1,x2 = x2,verso = NULL,mm = mm,ss = ss,vnam = vnam,mu = mu,sigma = sigma))
+pab <- pnorm(x2,mm,sqrt(ss))-pnorm(x1,mm,sqrt(ss))
+```
+
+```{r 2022-9}
+x1 <- 47
+x2 <- 53
+mm <- 50
+ss <- 3.5
+vnam <- "Y"
+mu <- "\\mu_Y"
+sigma <- "\\sigma_Y"
+cat(norm_int(x1 = x1,x2 = x2,verso = NULL,mm = mm,ss = ss,vnam = vnam,mu = mu,sigma = sigma))
+pc <- pnorm(x2,mm,sqrt(ss))-pnorm(x1,mm,sqrt(ss))
+```
+
+\begin{eqnarray*}
+  P(A\cap B\cup C) &=&  P(A\cap B)+P(C)-P(A\cap B\cap C)\\
+  &=& P(A\cap B)+P(C)-P(A\cap B)P(C)\\
+  &=& `r pab`+`r pc`-`r pab`\times`r pc`\\
+  &=& `r pab+pc-pab*pc`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Si estrae 5 volte da $X\sim N(102,1.5)$, posto $A=\{X>100\}$, quale è la probabilità che $A$ si avveri 3 volte su 5?
+
+:::{.sol data-latex=""}
+$$
+\pi=P(A)=`r 1-pnorm(100,102,1.5)`
+$$
+
+$$
+P(3\text{ su }5)=\binom{5}{3}`r 1-pnorm(100,102,1.5)`^3(1-`r 1-pnorm(100,102,1.5)`)^5=`r dbinom(3,5,1-pnorm(100,102,1.5))`
+$$
+:::
+
+2.c **(Punti 2)** Se $F$ è la funzione di ripartizione della VA $X$, posto $a < b$ due numeri qualunque, a cosa equivale
+$$
+F(b)-F(a) \qquad?
+$$
+
+:::{.sol data-latex=""}
+$$
+F(b)-F(a) = P(a<X\le b)
+$$
+:::
+
+### Esercizio 2
+Siano $X\sim \text{Pois}(1.5)$ e sia $Y\sim \text{Pois}(1.5)$, $X$ e $Y$ indipendenti. Posto $A=\{X<2\}$ e $B=\{Y\ge 2\}$
+
+2.a **(Punti 14)** Quanto vale $P(A\cup B)$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(A) &=&  P(X=0)+P(X=1)\\
+  &=& \frac{1.5^0}{0!}e^{-1.5}+\frac{1.5^1}{1!}e^{-1.5}\\
+  &=& `r dpois(0,1.5)+dpois(1,1.5)`\\
+  P(B) &=& 1-P(A)\\
+  &=&`r 1-dpois(0,1.5)-dpois(1,1.5)`\\
+  P(A\cup B) &=& P(A)+P(B)-P(A\cap B)\\
+  &=& `r 1 - (1-dpois(0,1.5)-dpois(1,1.5))*(dpois(0,1.5)+dpois(1,1.5))`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Si estrae 6 volte da $X\sim \text{Pois}(1.5)$, posto $A=\{X<2\}$, quale è la probabilità che $A$ si avveri 3 volte su 6?
+
+:::{.sol data-latex=""}
+`r pa <- dpois(0,1.5)+dpois(1,1.5) `
+\begin{eqnarray*}
+  P(A) &=&  P(X=0)+P(X=1)\\
+  &=& \frac{1.5^0}{0!}e^{-1.5}+\frac{1.5^1}{1!}e^{-1.5}\\
+  &=& `r dpois(0,1.5)`+`r dpois(1,1.5)`\\
+  &=& `r dpois(0,1.5)+dpois(1,1.5)`\\
+  P(\text{3 successi su 6}) &=& \binom{6}{3}`r pa`^3(1-`r pa`)^{6-3}\\
+  &=&`r dbinom(3,6,pa)`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X$ è una VC con valore atteso $E(X)=0.5$ e $V(X)=1.2$, posto $Y=X^2$ è vero che $E(Y)=E^2(X)$?
+
+### Esercizio 2
+Siano $X\sim \text{Binom}(5,0.4)$ e sia $Y\sim \text{Binom}(2,0.4)$, $X$ e $Y$ indipendenti. Posto $W=X+Y$
+
+2.a **(Punti 14)** Calcolare $P(W< 2)$.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  W &\sim& \text{Binom}(2+5,0.4)\\
+  P(W<2) &=& P(W=0)+P(W=1)\\
+  &=& \binom{7}{0}0.4^00.6^7+\binom{7}{1}0.4^10.6^6\\
+  &=& `r dbinom(0,7,.4)`+`r dbinom(1,7,.4)`\\
+  &=&`r dbinom(0,7,.4)+dbinom(1,7,.4)`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Posto $V=2+5\cdot W$, ricavare valore atteso e varianza di $V$.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  E(V) &=& 2+5E(X)  \\
+  &=& 2+5\times 7 \times 0.4\\
+  &=& `r 2+5 *7*0.4`\\
+  V(V) &=& 5^2V(X)  \\
+  &=& 25\times 7\times 0.4\times (1-.04)\\
+  &=& `r 5^2*7 *0.4 * (1-.4)`\\
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Se $A$ e $B$ sono due eventi diversi dal vuoto, è possibile che $P(A)+P(B)>1$?
+
+### Esercizio 2
+Siano $X\sim N(10,1)$ e sia $Y\sim N(10,1)$, $X$ e $Y$ indipendenti. Posto $A=\{X>8\}$, $B=\{X>11\}$, e $C=\{9<Y\le 10\}$.
+
+2.a **(Punti 14)** Quanto vale $P\Big((A\cup B)\cup C\Big)$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+P(A\cup B)&=&P(A)
+\end{eqnarray*}
+
+```{r 2022-43}
+x1 = 8
+verso=">"
+vnam ="X"
+mm = 10
+ss = 1
+sigma = "\\sigma_X"
+mu = "\\mu_X"
+cat(norm_int(x1 = x1,x2=NULL,verso = verso,mm = mm,ss = ss,mu = mu,sigma = sigma))
+pa <- 1-norm_semp(x1,mm,ss)
+
+x1 = 9
+x2 = 10
+vnam ="Y"
+mm = 10
+ss = 1
+sigma = "\\sigma"
+mu = "\\mu"
+cat(norm_int(x1 = x1,x2 = x2,verso = NULL,mm = mm,ss = ss,mu = mu,sigma = sigma))
+pc <- norm_semp(x2,mm,ss)-norm_semp(x1,mm,ss)
+```
+
+\begin{eqnarray*}
+P(A\cup B\cup C)&=&P(A\cup C)\\
+&=&P(A)+P(C)-P(A\cap C)\\
+&=& `r pa` +`r pc`-`r pa`\times `r pc`\\
+&=& `r pa+pc-pa*pc`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Sia $X\sim N(10,1)$, posto $A=\{X>8\}$. Si estrae ripetutamente da $X$  e si finisce quando $A$ si avvera **2** volte. Calcolare la probabilità di finire dopo 6 estrazioni.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+P(A)&=&`r pa`\\
+P(\text{vincere alla sesta})&=&5\times`r pa`\times (`r 1-pa`)^4\times `r pa`\\
+&=& `r pa*(1-pa)^4*5*pa`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Siano $A$ e $B$ due eventi diversi dal vuoto. È vero che se $A$ e $B$ sono 
+**non** indipendenti, allora sono necessariamente incompatibili?
+
+:::{.sol data-latex=""}
+No, se sono incompatibili allora sono certamente non indipendenti, in quato
+\[
+P(A\cap B)=P(\emptyset)=0\ne P(A)P(B)
+\]
+mentre se *non* sono indipendenti
+\[
+P(A\cap B)\ne P(A)P(B)
+\]
+:::
+
+2.d **(Punti 2)** Se $F$ è la funzione di ripartizione della VA $X$, 
+quali sono il valore massimo e quello minimo che $F$ può assumere?
+
+### Esercizio 2
+Una rotatoria incrocia due strade, una che porta da nord a sud e una che porta da est ad ovest.
+
+Il numero di automobili che impegna la rotatoria ogni minuto, in orario di punta, 
+
+  |
+--|--
+ dalla direzione nord è descritto da una poisson di parametro 2.1 | $X_N\sim\text{Pois}(2.1)$ 
+ dalla direzione sud è descritto da una poisson di parametro 0.1 | $X_S\sim\text{Pois}(0.1)$ 
+ dalla direzione est è descritto da una poisson di parametro 1.4 | $X_E\sim\text{Pois}(1.4)$ 
+ dalla direzione ovest è descritto da una poisson di parametro 0.2 | $X_O\sim\text{Pois}(0.2)$. 
+
+Si assume l'indipendenza tra le variabili.
+
+2.a **(Punti 14)** Si consideri l'evento $E$="più di due veicoli impegnino la rotatoria". Calcolare $P(E)$.
+
+:::{.sol data-latex=""}
+$$
+X\sim\text{Pois}(2.1+0.1+1.4+0.2)
+$$
+
+$$P(X\ge 2) = 1-P(X<2)=1-`r dpois(0,3.8)`-`r dpois(1,3.8)`= `r 1-sum(dpois(0:1,3.8))`$$
+:::
+
+2.b **(Punti 3)** Si osserva la rotatoria per $n=6$ minuti. Qual è
+la probabilità che il numero di volte in cui l'evento $E$ è vero sia uguale a 3?
+
+:::{.sol data-latex=""}
+$$
+P(\text{3 su 6})=\binom{6}{3}`r 1-sum(dpois(0:1,3.8))`^3(1-`r 1-sum(dpois(0:1,3.8))`)^3=`r dbinom(3,6,1-sum(dpois(0:1,3.8)))`
+$$
+:::
+
+2.c **(Punti 2)** Se $X\sim N(0,2)$ e $X\sim N(1,1.2)$, è vero che
+$$
+X-Y\sim N(-1,0.8) \qquad ?
+$$
+
+
+2.d **(Punti 2)** Se $X$ è una VC con supporto {0,1,2} e $Y$ è una VC con supporto {2,3,4,5}.
+Qual è il supporto di $X+Y$?
+
+:::{.sol data-latex=""}
+```{r 2022-57}
+Sxy <- unique(sort(outer(0:2,2:5,"+")))
+```
+il supporto di $X+Y$ è $\{`r Sxy`\}$.
+:::
+
+### Esercizio 2
+Una moneta perfetta viene lanciata 5 volte, se esce almeno 3 volte testa si estrae da un'urna che contiene
+un biglietto vincente ed uno perdente, altrimenti si estrae da un'urna che contine due biglietti vincenti e tre perdenti.
+
+2.a **(Punti 14)** Qual è la probabilità di vincere?
+
+:::{.sol data-latex=""}
+
+`r pe <-sum(dbinom(3:5,5,.5))`
+
+\begin{eqnarray*}
+  P(X=3) &=& `r dbinom(3,5,3/10)`\\
+  P(X=4) &=& `r dbinom(4,5,3/10)`\\
+  P(X=5) &=& `r dbinom(5,5,3/10)`\\
+  P(X\ge 3)  &=& `r pe`\\
+  P(\text{Vincere})&=& `r pe`\frac12+(1-`r pe`)\frac23\\
+  &=& `r pe*.5+(1-pe)*2/3`
+\end{eqnarray*}
+:::
+  
+`r px <-pe*.5+(1-pe)*2/3`
+
+2.b **(Punti 3)** Si ripete il gioco di sopra finché non si vince due volte. Qual è la probabilità di finire alla quarta giocata?
+
+
+:::{.sol data-latex=""}
+$$
+3\times `r px`\times (1-`r px`)^3\times `r px` = `r 3*px^2*(1-px)^3`
+$$
+:::
+
+2.c **(Punti 2)** Se $X\sim \text{Pois}(2)$ e $Y\sim\text{Pois}(1)$, è vero che
+$$
+X-Y\sim\text{Pois}(1)\qquad ?
+$$
+
+
+2.d **(Punti 2)** Se $X$ è una VC con supporto {0,1,2} e $X$ è una VC con supporto {-2,-1,0}.
+Qual è il supporto di $X\times Y$?
+
+$$
+\{-4,-2,-1,0\}
+$$
+
+### Esercizio 2
+Siano $X\sim N(5,1/2)$ e sia $Y\sim N(5,1/2)$, $X$ e $Y$ indipendenti. Posto $A=\{X>6\}$, $B=\{Y<4\}$.
+
+2.a **(Punti 14)** Calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r 2022-81}
+x1 <- 6
+verso <- ">"
+ss <- .5
+mm <- 5
+vnam <- "X"
+mu <- "\\mu_X"
+sigma <- "\\sigma_X"
+
+pa <- 1-pnorm(6,5,sqrt(.5))
+pb <- pnorm(4,5,sqrt(.5))
+cat(norm_int(x1 = x1,verso = verso,mm = mm,ss = ss))
+```
+
+```{r 2022-82}
+x1 <- 4
+verso <- "<"
+ss <- .5
+mm <- 5
+vnam <- "Y"
+mu <- "\\mu_Y"
+sigma <- "\\sigma_Y"
+cat(norm_int(x1 = x1,verso = verso,mm = mm,ss = ss,vnam = vnam,mu =mu,sigma = sigma))
+
+pa <- 1-pnorm(6,5,sqrt(.5))
+pb <- pnorm(4,5,sqrt(.5))
+```
+
+
+e quindi
+
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa`\times`r pb`\\
+  &=& `r pa+pb-pa*pb` 
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Posto $Z=X-Y$, Calcolare la probabilità che $P(Z>1|Z\le 2)$. 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  Z &=&  X-Y\\
+  &\sim& N(5-5,1/2+1/2)\\
+  &\sim& N(0,1)\\
+P(Z>1|Z\le 2) &=&\frac{P(\{Z>1\}\cap\{Z\le 2\})}{P(Z\le 2)}  \\
+&=& \frac{P(1<Z\le 2)}{P(Z\le 2)}  \\
+&=&\frac{\Phi(2)-\Phi(1)}{\Phi(2)}\\
+&=&\frac{`r pnorm(2)`-`r pnorm(1)`}{`r pnorm(2)`}\\
+&=&`r (pnorm(2)-pnorm(1))/pnorm(2)`
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Siano $A$ e $B$ due eventi diversi dal vuoto.
+Sono noti $P(A|B)=0.3$, $P(A|\bar B)=0.15$. $A$ e $B$ sono indipendenti? Perché?
+
+:::{.sol data-latex=""}
+No, perché se lo fossero
+$$
+P(A|B)=P(A|\bar B)=P(A)
+$$
+:::
+
+2.d **(Punti 2)** Sia $X\sim\text{Pois}(\lambda=1)$, disegnare la
+funzione di ripartizione $F(x)$ di $X$, per $x$ compreso tra $-1$ e $2.5$.
+
+:::{.sol data-latex=""}
+```{r 2022-83}
+curve(ppois(x,1),-1,2.5,type = "s")
+```
+:::
+
+### Esercizio 2
+In una strada, in prossimità di un dato incrocio, ci sono 3 corsie.
+In orario di punta, il numero di automobili che impegna la corsia sinistra è descritto 
+da una Poisson di parametro 1.1, $X_S\sim\text{Pois}(1.1)$, per quella di centro da una Poisson di parametro 1.0, $X_C\sim\text{Pois}(1.0)$ e per quella di destra da una Poisson di parametro 0.9,  $X_D\sim\text{Pois}(0.9)$. Si assume l'indipendenza tra le variabili.
+
+2.a **(Punti 14)** Si consideri l'evento $E$="più di due veicoli 
+impegnano l'incrocio". Calcolare $P(E)$.
+
+:::{.sol data-latex=""}
+Posto $X=X_S+X_C+X_D$ osserviamo che 
+$$X\sim\text{Pois}(\lambda=1.1+0.9+1)$$
+e quindi
+$$P(X\ge 2)=1-P(X\le 1)=1-(`r dpois(0,3)`+`r dpois(1,3)`)=`r 1-dpois(0,3)-dpois(1,3)`$$
+:::
+
+2.b **(Punti 3)** Calcolare
+$$
+P(X_S+X_C+X_D=3|X_S+X_C+X_D\ge 2).
+$$
+
+:::{.sol data-latex=""}
+Posto $X=X_S+X_C+X_D$ osserviamo che 
+$$\{X=3\}\cap\{X \ge 2\}=\{X=3\}$$
+e quindi
+\begin{eqnarray*}
+  P(X=3|X\ge 2) &=&  \frac{P(\{X=3\}\cap\{X \ge 2\})}{P(X \ge 2)}\\
+  &=&\frac{P(X=3)}{P(X \ge 2)}\\
+  &=&\frac{`r dpois(3,3)`}{`r 1-dpois(0,3)-dpois(1,3)`}=`r dpois(3,3)/(1-dpois(0,3)-dpois(1,3))`\\
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Siano $X\sim N(0,1)$ e $Y\sim N(0,1)$, $X$ e $Y$ indipendenti.
+Come si distribuisce $X^2+Y^2$?
+
+
+2.d **(Punti 2)** Se $X$ è una VC con supporto {2,3,4,5} e $Y$ è una VC con supporto 
+{1,2,6}.
+Qual è il supporto di $X-Y$?
+
+:::{.sol data-latex=""}
+$S_{X-Y}=`r sort(unique(as.numeric(outer(2:5,c(1,2,6),"-"))))`$
+:::
+
+### Esercizio 2
+Una moneta perfetta viene lanciata 2 volte, se esce almeno 1 volta testa si estrae da un'urna che contiene un biglietto vincente ed uno perdente, altrimenti si estrae da un'urna che contiene due biglietti vincenti e tre perdenti.
+
+2.a **(Punti 14)** Qual è la probabilità di vincere?
+
+:::{.sol data-latex=""}
+Sia $X\sim\text{Binom}(1/2)$
+$$P(E)=P(X\ge 1)=1-P(X=0)=1-\frac 14=\frac 34$$
+
+\begin{eqnarray*}
+  P(Vincere) &=& P(E)P(Vincere|E)+P(\bar E)P(Vincere|\bar E)\\
+  &=& \frac 34\frac 12 + \frac 14 \frac 23\\
+  &=& `r 3/4*1/2+1/4*2/3`
+\end{eqnarray*}
+
+`r pdv<- 3/4*1/2+1/4*2/3`
+:::
+
+2.b **(Punti 3)** Si ripete il gioco di sopra finché non si vince tre volte. Qual è la probabilità di finire alla quinta giocata?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(\text{Finire alla quarta}) &=&  P(\text{Vincere 2 partite su 3}\cap\text{vincere alla quarta})\\
+  &=& \left(\binom{3}{2}`r pdv`^2(1-`r pdv`)^1\right)\times `r pdv`\\
+  &=& `r dbinom(2,3,pdv)`\times `r pdv`\\
+  &=& `r dbinom(2,3,pdv)*pdv`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X$ è una VC con supporto {1,2,3} e $Y$ è una VC con 
+supporto {1,3,5}.
+Qual è il supporto di $X\times Y$?
+
+:::{.sol data-latex=""}
+$$S_{X-Y}=`r sort(unique(as.numeric(outer(1:3,c(1,3,5),"*"))))`$$
+:::
+
+### Esercizio 2
+2.a **(Punti 14)** Siano $X\sim N(10,1.5)$ e sia $Y\sim N(10,0.5)$, $X$ e $Y$ indipendenti. Posto $A=\{8<X<10\}$, $B=\{Y<11\}$. 
+Quanto vale $P(A\cup B)$? 
+
+:::{.sol data-latex=""}
+```{r 2023-1,,results='asis'}
+res1 <- norm_int(x1 = 8,x2 = 10,mm = 10,ss = 1.5,verso = NULL,vnam = "X",mu = "\\mu_X",sigma = "\\sigma_X")
+res2 <- norm_int(x1 = 11,x2 = 10,mm = 10,ss = 0.5,verso = "<",vnam = "Y",mu = "\\mu_Y",sigma = "\\sigma_Y")
+cat(res1)
+cat(res2)
+```
+
+\begin{eqnarray*}
+  P(A\cup B) &=&  `r .5-pnorm(8,10,sqrt(1.5))`+ `r pnorm(11,10,sqrt(0.5))`-`r (.5-pnorm(8,10,sqrt(1.5)))*pnorm(11,10,sqrt(0.5))`\\
+             &=&  `r .5-pnorm(8,10,sqrt(1.5)) +    pnorm(11,10,sqrt(0.5)) -   (.5-pnorm(8,10,sqrt(1.5)))*pnorm(11,10,sqrt(0.5))`\\
+\end{eqnarray*}
+:::
+
+
+2.b **(Punti 3)** Un'urna contiene due palline rosse, due bianche e una nera. Si estrae due volte senza reinserimento. Qual è la probabilità di avere due colori diversi?  
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \text{due colori diversi} &=& RB\cup BR \cup\\
+                            &&  RN\cup NR \cup\\
+                            &&  BN\cup NB\\
+  P(\text{due colori diversi}) &=& P(RB)+P(BR)+P(RN)+P(NR)+P(BN)+P(NB)\\
+  &=& \frac 25\frac 24+\frac 25\frac 24+\frac 25\frac 14+\frac 15\frac 24+\frac 25\frac 14+\frac 15\frac 24\\
+  &=& \frac{4+4+2+2+2+2}{20}\\
+  &=& `r 16/20`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X\sim\text{Pois}(3.2)$ e $Y\sim\text{Pois}(1.2)$, $X$ e $Y$ indipendenti, quali sono valore atteso e varianza di $X+Y$ e di $X-Y$? 
+
+2.d **(Punti 2)** Sia $X$ una VC e sia $F$ la sua funzione di ripartizione. Cosa significa dire che $F$ è continua a destra?
+
+### Esercizio 2
+2.a **(Punti 14)** I clienti in fila nell'ora di punta alla cassa di un supermercato sono distribuiti come una Poisson di parametro 2.5 ($X\sim\text{Pois}(\lambda=2.5)$). Qual è la probabilità di trovare almeno 2 clienti in coda ($X\ge 2$)? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(X\ge 2) &=&  1-P(X<2)\\
+  &=& 1-(P(X=0)+P(X=1))\\
+  &=& 1-(`r dpois(0,2.5)`+`r dpois(1,2.3)`)\\
+  &=& `r 1-(dpois(0,2.5)+dpois(1,2.3))`
+\end{eqnarray*}
+
+```{r 2023-118}
+pois_dis(2,2.3,">")
+```
+:::
+
+2.b **(Punti 3)** Un'urna contiene 5 palline: 2 rosse e 3 bianche. Si estrae con reintroduzione finché non escono 2 bianche consecutive. Calcolare la probabilità di finire in __esattamente__ 3 estrazioni. 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \text{esattamente tre} &=& R\cap B\cap B \\
+  P(\text{esattamente tre}) &=& P(R\cap B\cap B)\\
+  &=&\frac 25 \frac 35\frac 35\\
+  &=& `r 2*3*3/5^3`
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Se $X\sim N(3.2,1.5)$ e $Y\sim N(1.2,1.1)$, $X$ e $Y$ indipendenti, come si distribuiscono $X+Y$ e  $X-Y$? 
+
+2.d **(Punti 2)** Sia $X$ una VC e sia $F$ la sua funzione di ripartizione. Cosa significa dire che $F$ è crescente?
+
+### Esercizio 2
+2.a **(Punti 14)** Un'urna contiene 20 palline: 8 bianche e 12 nere, si estrae con reintroduzione 5 volte. 
+Qual è la probabilità avere un numero di palline bianche maggiore o uguale a 2 su 5 estrazioni? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(X\ge 2) &=&  1-P(X<2)\\
+  &=& 1-(P(X=0)+P(X=1))\\
+  &=& 1-(`r dbinom(0,5,8/20)`+`r dbinom(1,5,8/20)`)\\
+  &=& `r 1-dbinom(0,5,8/20)-dbinom(1,5,8/20)`
+\end{eqnarray*}
+:::  
+
+2.b **(Punti 3)** Dalla stessa urna di prima, si estrae con reintroduzione finché non escono due palline bianche consecutive. Qual è la probabilità di finire in __al massimo__ 3 tentativi? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  \text{al massimo tre} &=& (B\cap B)\cup(R\cap B\cap B )\\
+  P(\text{al massimo tre}) &=& P(B\cap B)+P(R\cap B\cap B)\\
+  &=&0.4\times 0.4 +0.6\times 0.4\times 0.4\\
+  &=& `r .16*1.6`
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Se $X\sim N(3.2,1.1)$ e $Y\sim\text{Binom}(12,0.3)$, $X$ e $Y$ indipendenti, quali sono valore atteso e varianza di $X+Y$ e di $X-Y$? 
+
+2.d **(Punti 2)** Sia $X$ una VC e sia $F$ la sua funzione di ripartizione. Quanto valgono $\lim_{x\to-\infty}F(x)$ e $\lim_{x\to+\infty}F(x)$?
+
+### Esercizio 2
+2.a **(Punti 14)** Siano $X\sim N(1,1.5)$ e sia $Y\sim N(1,0.5)$, $X$ e $Y$ indipendenti. Posto $A=\{-2<X<1\}$, $B=\{Y<1\}$. 
+Quanto vale $P(A\cap B)$?
+
+:::{.sol data-latex=""}
+```{r 2023-16,,results='asis'}
+cat(norm_int(x1 = -2,x2 = 1,verso = NULL,mm = 1,ss = 1.5,vnam = "X",mu = "\\mu_X",sigma = "\\sigma_X"))
+cat(norm_int(x1 =  1,verso = "<",mm = 1,ss = 1.5,vnam = "Y",mu = "\\mu_Y",sigma = "\\sigma_Y"))
+```
+
+\begin{eqnarray*}
+  P(A\cap B) &=&0.5\times 0.49 = `r .5*.49`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Un'urna contiene 10 palline rosse, 10 bianche e 10 nere. Si estrae tre volte senza reinserimento. Qual è la probabilità di avere tre colori uguali? 
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  E &=& \text{tre colori uguali}\\
+   &=& \{(R_1\cap R_2 \cap R_3)\cup (B_1\cap B_2 \cap B_3)\cup (N_1\cap N_2 \cap N_3)\}\\
+P(E) &=& P(R_1\cap R_2 \cap R_3) + P(B_1\cap B_2 \cap B_3) + P(N_1\cap N_2 \cap N_3)\\
+&=& P(R_1)P(R_2|R_1)P(R_3|R_1\cap R_2)+P(B_1)P(B_2|B_1)P(B_3|B_1\cap B_2)+\\
+& & + P(N_1)P(N_2|N_1)P(N_3|N_1\cap N_2)\\
+&=& \frac {10}{30}\frac 9{29}\frac 8{28} + \frac {10}{30}\frac 9{29}\frac 8{28} +\frac {10}{30}\frac 9{29}\frac 8{28} \\
+&=& 3\cdot \frac {10}{30}\frac 9{29}\frac 8{28} \\
+&=& `r 3*10*9*8/30/29/28`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X\sim\text{Ber}(0.2)$ e $Y\sim\text{Ber}(0.2)$, $X$ e $Y$ indipendenti, com'è distribuita $X+Y$?
+
+2.d **(Punti 2)** Se $X$ è $Y$ sono due VC, tali che $V(X)=\sigma_X^2$ e $Y=\sigma_Y^2$, quanto vale $V(X-Y)$?
+
+### Esercizio 2
+2.a **(Punti 14)** Il numero di telefonate in arrivo nell'ora di punta di un centralino è distribuito come una Poisson di parametro 3.1 ($X\sim\text{Pois}(\lambda=3.1)$). Qual è la probabilità di trovare al massimo 3 telefonate ($X\le 3$)?
+
+:::{.sol data-latex=""}
+```{r 2023-148}
+
+x <- 0:3
+l <- 3.1
+```
+
+\begin{eqnarray*}
+  P(X\le 3) &=&  \frac{3.1^0}{0!}e^{-3.1}+\frac{3.1^1}{1!}e^{-3.1}+\frac{3.1^2}{2!}e^{-3.1}+\frac{3.1^3}{3!}e^{-3.1}\\
+  &=& `r paste(round(dpois(0:3,3.1),4),collapse="+")`\\
+  &=& `r sum(round(dpois(0:3,3.1),4))`\\
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Un'urna contiene 4 palline: 2 rosse e 2 bianche. Si estrae seguendo il seguente schema: se esce rossa, rimettiamo la rossa estratta più altre due rosse, se esce bianca rimettiamo la bianca estratta più altre due bianche. Estraiamo con questo schema per tre volte. Calcolare la probabilità di avere tre palline rosse su tre estrazioni.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  E &=&  \text{tre rosse consecutive}\\
+  &=& R_1\cap R_2 \cap R_3\\
+P(E)  &=& P(R_1)P( R_2|R_1) P( R_3|R_1\cap R_2)\\
+&=& \frac 24 \frac 46 \frac 68\\
+&=& 0.25
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X\sim N(\mu_X,\sigma_X^2)$ e $Y\sim N(\mu_Y,\sigma_Y^2)$, $X$ e $Y$ indipendenti, come si distribuiscono $X+Y$ e  $X-Y$?
+
+2.d **(Punti 2)** Siano $A$ e $B$ due eventi diversi dal vuoto tali che $A\cap B=\emptyset$, motivare perché $A$ e $B$ non possono essere indipendenti.
+
+### Esercizio 2
+2.a **(Punti 14)** Si lancia una moneta perfetta 8 volte. Qual è la probabilità di avere un numero di volte Testa maggiore o uguale a 6 su 8 lanci?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  X &\sim&\text{Bin}(8;0.5)\\
+  P(X\ge 6) &=& P(X=6)+p(X=7)+P(X=8)\\
+  &=& \binom{8}{6} 0.5^8 + \binom{8}{7} 0.5^8 +\binom{8}{8} 0.5^8\\
+  &=& `r choose(8,6)`\cdot `r 0.5^8` + `r choose(8,7)`\cdot `r 0.5^8` + `r choose(8,8)`\cdot `r 0.5^8` \\
+  &=& `r choose(8,6)* 0.5^8 + choose(8,7)* 0.5^8 + choose(8,8)* 0.5^8` \\
+\end{eqnarray*}
+:::  
+
+2.b **(Punti 3)** Sia $Z\sim N(0,1)$ e siano $A=\{Z<0\}$ e $B=\{Z<1\}$. Calcolare $P(A|B)$
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(B) &=&  \Phi(1)\\
+  &=& `r pnorm(1)`\\
+  P(A\cap B) &=& P(Z<0)\\
+  &=& \Phi(0)\\
+  &=& 0.5\\
+  P(A|B) &=& \frac{P(A\cap B)}{P(B)}\\
+  &=& \frac{0.5}{`r pnorm(1)`}\\
+  &=& `r .5/pnorm(1)`
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Se $X\sim\text{Pois} (n)$, a cosa tende $X$ se $n$ diverge?
+
+:::{.sol data-latex=""}
+Se $n$ diverge allora $X$ tende ad un Normale di media $n$ e varianza $n$
+\[
+X\mathop\sim_a N(n,n)
+\]
+:::
+
+2.d **(Punti 2)** Sia $X\sim N(10,1)$  e sia $F$ la sua funzione di ripartizione. Disegnare approssimativamente $F(x)$ per $x$ che varia tra 6 e 14.
+
+### Esercizio 2
+Siano $X_A\sim \text{Pois}(1.5)$ e sia $X_B\sim \text{Pois}(1.5)$, $X_A$ e $X_B$ indipendenti. Posto $A=\{X_A\le 1\}$ e $B=\{X_B>2\}$
+
+2.a **(Punti 14)** Calcolare la probabilità di  $A\cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-34,,results='asis'}
+cat(pois_dis(x1 = 1,ll = 1.5,vnam = "X_A"))
+cat(pois_dis(x1 = 3,ll = 1.5,vnam = "X_B",verso = "\\geq"))
+pa <- ppois(1,1.5)
+pb <- 1-ppois(2,1.5)
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Calcolare la probabilità che **solo** uno dei due eventi $A$ oppure $B$ sia vero.
+
+2.c **(Punti 2)** Calcolare valore atteso e varianza di $X_A-X_B$.
+
+2.d **(Punti 2)** Sia $X\sim\text{Ber}(\pi=0.4)$. Disegnare la sua funzione di ripartizione.
+
+### Esercizio 2
+Siano $X_A\sim N(1.5,1.5)$ e sia $X_B\sim N(1.5,1.5)$, $X_A$ e $X_B$ indipendenti. Posto $A=\{X_A\le 1\}$ e $B=\{X_B>2\}$
+
+2.a **(Punti 14)** Calcolare la probabilità di  $A\cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-42,,results='asis'}
+cat(norm_int(x1 = 1,verso = "<",mm = 1.5,ss = 1.5,mu = "\\mu_A",sigma = "\\sigma_A",vnam = "X_A"))
+cat(norm_int(x1 = 2,verso = ">",mm = 1.5,ss = 1.5,mu = "\\mu_B",sigma = "\\sigma_B",vnam = "X_B"))
+pa <- pnorm(1,1.5,sqrt(1.5))
+pb <- 1-pnorm(2,1.5,sqrt(1.5))
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Si continua ad estrarre da $X_A\sim N(1.5,1.5)$ e si interrompe quando $X_A\le 1$. Calcolare la probabilità di interrompere alla quinta estrazione.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(A) &=&  `r pa`\\
+  P(\bar A) &=& `r 1-pa`\\
+  P(\bar A\cap \bar A\cap\bar A\cap\bar A\cap A)&=& (1-`r pa`)^4`r pa`\\
+  &=& `r (1-pa)^4*pa`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Come si distribuisce $X_A-X_B$?
+
+2.d **(Punti 2)** Se $A$ e $B$ sono due eventi tali che $A\cap B=\emptyset$, $A$ e $B$ possono essere indipendenti? Perché?
+
+### Esercizio 2
+Sia $X\sim\text{Binom}(5,0.5)$ e sia $y\sim\text{Binom}(5,0.4)$, $X$ e $Y$ indipendenti, posto $A=\{X\le 1\}$ e $B=\{Y\ge 2\}$
+
+2.a **(Punti 14)** Calcolare la probabilità di  $A\cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-50,,results='asis'}
+cat(bin_dis(1,5,.5))
+cat(bin_dis(2,5,.4,verso = "\\geq",comp = T,vnam = "Y"))
+pa <- pbinom(1,5,.5)
+pb <- pbinom(2,5,.4,lower.tail = F)
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Si estrae ripetutamente da $X\sim\text{Binom}(5,0.5)$ e ci si ferma quando $X\le 1$. Calcolare la probabilità di finire entro due estrazioni.
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(A) &=&  `r pa`\\
+  P(\bar A) &=& `r 1-pa`\\
+  P(A\cup (\bar A\cap A))&=& `r pa`+`r pa`\cdot (1-`r pa`)\\
+  &=& `r pa+pa*(1-pa)`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Calcolare valore atteso e varianza di $X-Y$.
+
+2.d **(Punti 2)** Siano $A$ e $B$ due eventi tali che $P(A)=0.6$ e $P(B)=0.5$. $A$ e $B$ possono essere incompatibili? Perché?
+
+### Esercizio 2
+Un impresa di soccorso stradale ha due centralini, il numero di telefonate orarie in arrivo 
+al centralino $A$ è distribuito come una Poisson $X\sim\text{Pois}(2.2)$, mentre
+il numero di telefonate orarie in arrivo al centralino $B$ è distribuito come una Poisson $Y\sim\text{Pois}(1.3)$, 
+$X$ e $Y$ indipendenti.
+
+2.a **(Punti 14)** Calcolare la probabilità che il totale di telefonate in arrivo in un'ora sia maggiore 
+o uguale a tre ($S=X+Y\ge 3$).
+
+:::{.sol data-latex=""}
+```{r 2023-58,,results='asis'}
+cat(pois_dis(x1 = 3,ll = 1.3+2.2,vnam = "X+Y",verso = "\\geq"))
+```
+:::
+
+2.b **(Punti 3)** Sapendo che $S=X+Y\ge 3$, calcolare la probabilità che $S=X+Y= 5$ ($P(S=5|S\ge 3$)
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(X+Y\ge 3) &=& `r 1-ppois(2,1.3+2.2)`\\
+  P(X+Y=5)    &=& `r dpois(5,2.2+1.3)`\\
+  P(\{X+Y=5\}\cap\{X+Y\ge 3\}) &=&P(X+Y=5)\\
+  P(\{P(X+Y=5)\}|\{X+Y\ge 3\}) &=&\frac{P(\{X+Y=5\}\cap\{X+Y\ge 3\})}{P(X+Y\ge 3)}\\
+  &=&\frac{P(X+Y=5)}{P(X+Y\ge 3)}\\
+  &=&\frac{`r dpois(5,2.2+1.3)`}{`r 1-ppois(2,1.3+2.2)`}\\
+  &=&`r dpois(5,2.2+1.3)/( 1-ppois(2,1.3+2.2))`
+\end{eqnarray*}
+  
+:::
+
+2.c **(Punti 2)** Se $X$ ed $Y$ sono due variabili casuali, è sempre vero che
+\[
+V(X-Y)=V(X)+V(Y)~~~?
+\]
+motivare la risposta.
+
+2.d **(Punti 2)** Sia $X\sim\text{Binom}(2,\pi=0.5)$. Disegnare la sua funzione di ripartizione.
+
+:::{.sol data-latex=""}
+```{r 2023-187}
+plot((-1):3,pbinom((-1):3,2,.5),type="s",xlim=c(-.1,2.1),ylim=c(0,1),axes=F)
+axis(1,0:2)
+axis(2,pbinom((-1):3,2,.5),las=2)
+```
+:::
+
+### Esercizio 2
+Si lancia una moneta perfetta $n=6$ volte. Sia $X$ la variabile casuale che conta
+il numero di volte che esce _Testa_ su 6 lanci e si considerino gli insiemi $A=\{X\le 1\}$ e $B=\{X\ge 5\}$.
+
+2.a **(Punti 14)** Calcolare la probabilità di $A\cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-67,,results='asis'}
+cat(bin_dis(x1 = 1,n = 6,pp = .5,verso = "\\leq"))
+cat(bin_dis(x1 = 5,n = 6,pp = .5,verso = "\\geq"))
+pa <- pbinom(1,6,.5)
+pb <- pa
+```
+\begin{eqnarray*}
+A\cap B &=& \emptyset\\
+P(A\cap B) &=& 0\\
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-0\\
+  &=& `r pa+pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Si lancia una moneta, se esce testa si estrae da una normale $X\sim N(0,1)$, se esce croce si estrae
+da una normale $X\sim N(1,1)$. Calcolare la probabilità che il numero estratto finale sia minore di due.
+
+:::{.sol data-latex=""}
+```{r 2023-68,,results='asis'}
+cat(norm_int(x1 = 2,mm = 0,ss = 1))
+cat(norm_int(x1 = 2,mm = 1,ss = 1))
+
+pa <- pnorm(2)
+pb <- pnorm(2,1)
+```
+\begin{eqnarray*}
+P(X<2) &=& P(T)P(X<2|T)+P(C)P(X<2|C)\\
+&=& \frac 12P(X<2|T)+\frac 12P(X<2|C)\\
+&=& \frac 12\cdot `r pa`+\frac 12 `r pb`\\
+&=& `r (pa+pb)/2`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X\sim\text{Pois}(\lambda_X)$ e $Y\sim\text{Pois}(\lambda_Y)$, quali sono valore atteso e varianza 
+di $X-Y$?
+
+2.d **(Punti 2)** Se $A$ e $B$ sono due eventi *non* indipendenti come si può scrivere $P(A\cap B)$?
+
+### Esercizio 2
+Sia $X\sim N(2,1)$ e sia $Y\sim\text{Pois}(2.9)$, si considerino gli insiemi
+$A=\{X>2.5\}$ e $B=\{Y\geq 3\}$.
+
+2.a **(Punti 14)** Calcolare la probabilità di $A\cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-78,,results='asis'}
+cat(norm_int(x1 = 2.5,verso = ">",mm = 2,ss = 1))
+cat(pois_dis(x1 = 3,ll = 2.9,verso = "\\geq",vnam = "Y"))
+pa <- 1-pnorm(2.5,2)
+pb <- 1-ppois(2,2.9)
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa`\cdot`r pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Sia $X\sim N(2,1)$ e sia $A=\{X>2.5\}$.
+Se $A$ è vero si estrae una volta da un'urna che contiene una pallina rossa e una bianca,
+se $A$ è falso si estrae una volta da un'urna che contiene due palline rosse e una bianca.
+Qual è la probabilità di estrarre una rossa?
+
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+P(X<2) &=& P(A)P(R|A)+P(\bar A)P(R|\bar A)\\
+&=& `r pa`\frac 12 + (1-`r pa`)\frac 23\\
+&=& `r pa*1/2+(1-pa)*2/3`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Se $X\sim\text{Pois}(\lambda_X)$ e $Y\sim\text{Pois}(\lambda_Y)$, quali sono valore atteso e varianza 
+di $X-Y$?
+
+2.d **(Punti 2)** Se due eventi $A\ne\emptyset$ e $B\ne\emptyset$ non sono indipendenti allora sono necessariamente incompatibili? Motivare la risposta.
+
+### Esercizio 2
+Il numero di automobili in fila al semaforo $A$ in orario di punta è distribuito come una
+Poisson di parametro $\lambda_A=2.2$ ($X_A\sim \text{Pois}(2.2)$). 
+Mentre il numero di automobili in fila al semaforo $B$ in orario di punta è distribuito come una
+Poisson di parametro $\lambda_B=1.5$ ($X_B\sim \text{Pois}(1.5)$). $X_A$ e $X_B$ indipendenti. 
+
+2.a **(Punti 14)** Calcolare la probabilità che in almeno uno dei due semafori ci siano 2 o più automobili in coda (suggerimento: _almeno uno_ si rappresenta con l'unione).
+
+:::{.sol data-latex=""}
+Diretta
+```{r 2023-85,,results='asis'}
+cat(pois_dis(x1 = 2,ll = 2.2,vnam = "X_A",verso = "\\geq"))
+cat(pois_dis(x1 = 2,ll = 1.5,vnam = "X_B",verso = "\\geq"))
+pa <- 1-ppois(1,2.2)
+pb <- 1-ppois(1,1.5)
+```
+\begin{eqnarray*}
+  A =\{X_A\ge 2\} && B =\{X_B\ge 2\}\\
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+Indiretta
+\begin{eqnarray*}
+  \overline{\text{almeno uno}} &=&  \text{nessuno}\\
+  \overline{A\cup B} &=& \bar A\cap \bar B\\
+  P(\overline{A\cup B}) &=& P(\bar A)P(\bar B)\\
+  P(A\cup B) &=& 1- P(X_A<2)(X_B<2)\\
+  &=& 1-(1-`r pa` )\times(1-`r pb`)\\
+  &=& `r 1-(1-pa)*(1-pb)`
+\end{eqnarray*}
+  
+:::
+
+2.b **(Punti 3)** Per andare al lavoro Michele prende la strada che 
+lo porta al semaforo $A$, ($X_A\sim \text{Pois}(2.2)$) se la tangenziale è libera, altrimenti
+prende la strada che lo porta al semaforo $B$ ($X_B\sim \text{Pois}(1.5)$).
+La probabilità di trovare la tangenziale sia libera è pari a
+$P(\text{Libera})=0.65$. Qual è la probabilità che Michele incontri più di due auto in fila?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+E &=& \{X\ge 2\}\\
+P(E) &=& P(\text{Libera})P(E|\text{Libera})+P\left(\overline{\text{Libera}}\right)P\left(E|\overline{\text{Libera}}\right)\\
+   &=&  0.65\times`r pa`+(1-0.65)\times `r pb`\\
+  &=& `r .65*pa+(1-.65)*pb`
+\end{eqnarray*}
+:::
+
+2.c **(Punti 2)** Sia $Z\sim N(0,1)$ e $Y\sim \chi^2_2$, $Z$ e $Y$ indipendenti.
+Come si distribuisce
+\[
+\frac{Z}{\sqrt{Y/2}} ~~~?
+\]
+
+2.d **(Punti 2)** Se $P(A)=0.3$, $P(B|A)=0.6$, e $P(B|\bar A)=0.4$, quanto valgono $P(B)$ e $P(A|B)$?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+P(B) &=& P(A)P(B|A)+P(\bar A)P(B|\bar A)\\
+     &=& 0.3\times0.6+0.7\times 0.4\\
+     &=& `r .3*.6+.7*.4`\\
+P(A|B) &=& \frac {P(A)P(B|A)}{P(B)}\\
+       &=& \frac {`r .3*.6`}{`r .3*.6+.7*.4`}\\
+       &=& `r .3*.6/(.3*.6+.7*.4)`
+\end{eqnarray*}
+:::
+
+### Esercizio 2
+Siano $X$ e $Y$ due variabili casuali che rappresentano rispettivamente il tempo di manutenzione per due tipi di macchinari diversi in un'azienda manifatturiera. Si sa che $X\sim N(15,1.5)$ e $Y\sim N(12,1.5)$. L'azienda ha definito due eventi $A=\{X< 14\}$ e $B=\{Y<13\}$
+Si suppone inoltre che i tempi di manutenzione dei due macchinari siano indipendenti tra loro.
+
+2.a **(Punti 14)**  Calcola la probabilità che almeno uno dei due eventi sia vero ($A \cup B$).
+
+
+:::{.sol data-latex=""}
+```{r 2023-93,,results='asis'}
+cat(norm_int(x1 = 14,verso = "<",mm = 15,ss = 1.5,mu = "\\mu_X",sigma = "\\sigma_X",vnam = "X"))
+cat(norm_int(x1 = 13,verso = "<",mm = 12,ss = 1.5,mu = "\\mu_Y",sigma = "\\sigma_Y",vnam = "Y"))
+pa <- pnorm(14,15,sqrt(1.5))
+pb <- pnorm(13,12,sqrt(1.5))
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 3)** Quando il tempo di manutenzione del macchinario $X$ è inferiore a 14 ore ($A=\{X< 14\}$), la perdita economica dell'azienda è di €100. Mentre quando è superiore a 14 la perdita è di 500€.
+
+Quando il tempo di manutenzione del macchinario $Y$ è inferiore a 12 ore ($B=\{Y< 12\}$), l'azienda subisce una perdita economica di €70, mentre quando è superiore a 12 il danno economico è di 600€.
+
+Calcolare la probabilità che l'azienda abbia una perdita economica totale superiore ai 600€.
+
+:::{.sol data-latex=""}
+```{r 2023-213}
+two_way2(c(100,500),c(70,600),c(pa,1-pa),c(pb,1-pb),EV = F)
+0.0429 + 0.1642
+```
+:::
+
+2.c **(Punti 2)**  Siano $Z_1\sim N(0,1)$, $Z_2\sim N(0,1)$, $Z_3\sim N(0,1)$, tre VC normali standard indipendenti.
+Come si distribuisce
+\[
+Y=Z_1^2+Z_2^2+Z_3^3~~~?
+\]
+
+2.d **(Punti 2)** Se $A$ e $B$ sono due eventi tali che $A\cap B\ne\emptyset$, $A$ e $B$ sono indipendenti? (scegliere tra _sempre, mai, dipende_ e motivare la risposta)
+
+### Esercizio 2
+Supponiamo di avere due urne, urna A e urna B, contenenti palline di due colori: rosse e blu.
+Nell'urna A, ci sono 10 palline di cui 4 rosse e 6 blu. Nell'urna B, ci sono 20 palline di cui 8 rosse e 12 blu.
+Estraiamo con reintroduzione 5 palline da ciascuna urna in modo indipendente.
+Definiamo gli eventi: 
+
+- $A=$ "l'estrazione dall'urna A dà al massimo una pallina rossa (1 pallina rossa o meno)".
+- $B=$ "L'estrazione dall'urna B dà come risultato almeno 4 palline blu (4 o più palline blu)".
+
+**(Punti 14)** Calcola la probabilità che almeno uno dei due eventi sia vero, ovvero la probabilità di $A \cup B$.
+
+:::{.sol data-latex=""}
+```{r 2023-100,,results='asis'}
+cat(bin_dis(1,5,1/3))
+cat(bin_dis(4,5,2/3,verso = "\\geq",comp = F,vnam = "Y"))
+pa <- pbinom(1,5,1/3)
+pb <- sum(dbinom(4:5,5,2/3))
+```
+\begin{eqnarray*}
+  P(A\cup B) &=&  P(A)+P(B)-P(A\cap B)\\
+  &=& `r pa`+`r pb`-`r pa*pb`\\
+  &=& `r pa+pb-pa*pb`
+\end{eqnarray*}
+:::
+
+2.a **(Punti 3)** Qual è la probabilità di avere **esattamente** uno solo due eventi sia vera?
+
+:::{.sol data-latex=""}
+\begin{eqnarray*}
+  P(A) &=&  `r pa`\\
+  P(B) &=& `r pb`\\
+  P(\text{Solo uno dei due vero}) &=& P(A\cap\bar B)+P(\bar A\cap B)\\
+  &=& `r pa`\times (1 - `r pb`)+(1-`r pa`)\times  `r pb`\\
+  &=& `r pa*(1-pb)+pb*(1-pa)`
+\end{eqnarray*}
+:::
+
+2.b **(Punti 2)** Siano $X_1\sim N(5,1)$ e $X_2\sim N(5,1)$, $X_1$ e $X_2$ indipendenti. Come si distribuisce
+\[
+\bar X = \frac 12 (X_1+X_2) ~~~?
+\]
+
+2.c **(Punti 2)** Siano $A$ e $B$ due eventi tali che $P(A)=0.3$ e $P(B)=0.3$. $A$ e $B$ possono essere incompatibili? (scegliere tra _sempre, mai, dipende_ e motivare la risposta)
+
+### Esercizio 2
+2.a **(Punti 14)**  Si lancia una moneta perfetta 4 volte. Sia $X$ la variabile casuale che conta il numero di Teste su 4 lanci. Calcolare la probabilità che $X\leq 2$.
+
+:::{.sol data-latex=""}
+```{r 2024-1,,results='asis'}
+bin_dis(x1 = 2,n = 4,pp = .5)
+```
+:::  
+
+2.b **(Punti 3)** Sia lancia una seconda moneta perfetta 3 volte. Sia $Y$ la variabile casuale che conta il numero di Teste su 3 lanci. Calcolare la probabilità che $X+Y=3$.
+
+:::{.sol data-latex=""}
+Siccome $X+Y\sim\text{Binom(4+3,0.5)}$, allora
+```{r 2024-2,,results='asis'}
+bin_dis(x1 = 3,n = 7,pp = .5,sing = T,vnam = "X+Y")
+```
+:::  
+
+2.c **(Punti 2)** Se $P(A)=0.4$ e $P(B)=0.8$, $A$ e $B$ possono essere incompatibili? Perché?
+
+:::{.sol data-latex=""}
+Se $A$ e $B$ fossero incompatibili, allora $A\cap B=\emptyset$ allora $P(A\cup B)=P(A)+P(B)$, ma essendo $0.4+0.8=1.2>1$ allora $A\cap B\neq\emptyset$
+:::
+
+2.d **(Punti 2)** Cosa significa che la funzione di ripartizione è continua a destra?
+
+### Esercizio 2
+2.a **(Punti 14)**  Sia $X$ numero settimanale di pratiche inevase dall'ufficio provinciale, si assume $X\sim\text{Pois}(3.5)$. Calcolare la probabilità che $X\geq 3$.
+
+:::{.sol data-latex=""}
+```{r 2024-4,,results='asis'}
+pois_dis(x1 = 3,ll = 3.5,verso = "\\geq")
+```
+:::  
+
+2.b **(Punti 3)** Sia $Y$ numero settimanale di pratiche inevase dall'ufficio comunale, si assume $Y\sim\text{Pois}(2)$ e si assume $X$ indipendente da $Y$. Calcolare la probabilità che $X+Y=5$.
+
+:::{.sol data-latex=""}
+```{r 2024-5,,results='asis'}
+pois_dis(x1 = 5,ll = 3.5+2,sing = T)
+```
+:::  
+
+2.c **(Punti 2)** Se $P(A)=0.4$ e $P(B)=0.4$, $A$ e $B$ possono essere incompatibili? Perché?
+
+2.d **(Punti 2)** Sia $X$ una variabile casuale e sia $F$ la sa funzione di ripartizione. Siano $a$ e $b$ due numeri reali, $a<b$, esprimere
+\[
+P(a<X\leq b)
+\]
+in termini di $F$.
+
+### Esercizio 2
+2.a **(Punti 14)**  Sia $X\sim N(5,2)$ sia $A=\{X>4\}$ e $B=\{X<6\}$. Calcolare $P(A\cap B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-8,,results='asis'}
+norm_int(x1 = 4,x2 = 6,verso = NULL,5,2)
+```
+:::  
+
+2.b **(Punti 3)** Sia $Y\sim N(3,1)$, $X$ e $Y$ indipendenti, posto $W=X-Y$, calcolare $P(W<0)$.
+
+:::{.sol data-latex=""}
+```{r 2024-9,,results='asis'}
+norm_int(x1 = 0,verso = "<",mm = 5-3,ss = 2+1)
+```
+:::  
+
+2.c **(Punti 2)** Se $P(A)=0.4$ e $P(B)=0.6$, in che relazione sono $A$ e $B$?
+
+
+2.d **(Punti 2)** Sia $X$ una variabile casuale e sia $F$ la sua funzione di ripartizione. Cosa significa che $F$ è una funzione crescente?
+
+### Esercizio 2
+2.a **(Punti 14)**  Si consideri un'urna che ha una pallina bianche e due nere. Si estrae 4 volte con reinserimento. Sia $X$ la variabile casuale che conta il numero di bianche su 4 estrazioni. Calcolare la probabilità che $X\leq 2$.
+
+:::{.sol data-latex=""}
+```{r 2024-11,,results='asis'}
+bin_dis(x1 = 2,n = 4,pp = 1/3,comp = F)
+```
+:::  
+
+2.b **(Punti 3)** Sia $X$ la VC del punto precedente e sia $Y\sim N(0,1)$, $X$ ed $Y$ indipendenti. Considerato $A=\{X\leq 2\}$, $B=\{Y<1\}$, calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-12,,results='asis'}
+pa <- pbinom(2,4,1/3)
+pb <- pnorm(1)
+p_aub(pa,pb)
+```
+:::  
+
+
+2.c **(Punti 2)** Se $A$ e $B$, sono due eventi tali che $P(B|A)=1$, determinare $A\cap B$.
+
+:::{.sol data-latex=""}
+Se $P(B|A)=P(A\cap B)/P(A)$ e $P(B|A)=P(A\cap B)/P(A)=1$ se e solo se $P(A\cap B)=P(A)$ e quindi $A\cap B = A$.
+:::
+
+2.d **(Punti 2)** Sia $X$ una Bernoulli di parametro $\pi$, $X\sim\text{Ber}(\pi)$ e sia $F$ la sua funzione di ripartizione. Se $F(0)=0.6$, quanto vale $\pi$?
+
+### Esercizio 2
+2.a **(Punti 14)**  Sia $X$ il numero di telefonate in arrivo ad un centralino di emergenza, si assume $X\sim\text{Pois}(1.2)$. Calcolare la probabilità che $X\geq 2$.
+
+:::{.sol data-latex=""}
+```{r 2024-15,,results='asis'}
+pois_dis(x1 = 2,ll = 1.2,verso = "\\geq")
+```
+:::  
+
+2.b **(Punti 3)** Siano $X\sim\text{Pois}(1.2)$ e $Y\sim\text{Binom}(n=2,\pi=0.5)$, $X$ e $Y$ indipendenti, posto $A=\{X\geq 2\}$, $B=\{Y=0\}$, calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-16,,results='asis'}
+pa <- 1-sum(dpois(0:1,1.2))
+pb <- .5^2
+```
+\begin{eqnarray*}
+  P(A) &=&  `r pa`\\
+  P(B) &=& 0.5^2 = `r pb`
+\end{eqnarray*}
+  
+```{r 2024-87}
+p_aub(pa = pa,pb = pb)
+```
+:::  
+
+2.c **(Punti 2)** Se $A$ e $B$ sono due eventi diversi da $\emptyset$, se
+$P(A|B)=0$ in che relazione sono $A$ e $B$?
+
+
+2.d **(Punti 2)** Sia $X$ una variabile casuale con supporto $S_X=c\{-1,0,2\}$ e con funzione di probabilità
+$$
+f(x)=\begin{cases}
+\frac 25, &\text{ se $x=-1$}\\
+\frac 25, &\text{ se $x=\phantom{-} 0$}\\
+\frac 15, &\text{ se $x=\phantom{-} 2$}\\
+\end{cases}
+$$
+Disegnare le sua funzione di ripartizione, $F(x)$, nell'intervallo $-2\leq x\leq 3$.
+
+:::{.sol data-latex=""}
+```{r 2024-88}
+x <- c(-2,-1,0,2,3)
+px <- c(0,c(2,2,1)/5,0)
+plot(x,pbinom(x,2,.5),type="n",ylab="F(x)",axes = F)
+axis(1,x)
+axis(2,cumsum(px),las=2)
+segments(x[1:4],cumsum(px)[1:4],x[2:5],cumsum(px)[1:4])
+segments(x[2:4],cumsum(px)[1:3],x[2:4],cumsum(px)[2:4],lty=2)
+points(x[2:4],cumsum(px)[1:3])
+points(x[2:4],cumsum(px)[2:4],pch=16)
+```
+:::
+
+### Esercizio 2
+2.a **(Punti 14)**  Sia $X\sim N(6,0.5)$ e sia $Y\sim N(6,0.5)$, $X$ e $Y$ indipendenti sia $A=\{X>5\}$ e $B=\{Y<7\}$. 
+Calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-21,,results='asis'}
+norm_int(x1 =  5,verso = ">",mm =  6,ss = 0.5,vnam = "X")
+norm_int(x1 = 7,verso = "<",mm = 6,ss = 0.5,vnam = "Y")
+zx <- round((5-6)/sqrt(0.5),2)
+zy <- round((7-6)/sqrt(0.5),2)
+pa <- pnorm(zx,lower.tail = F)
+pb <- pnorm(zy,lower.tail = T)
+p_aub(pa,pb)
+```
+:::  
+
+2.b **(Punti 3)** , posto $W=X-Y$, calcolare $P(W<1|W>-1)$.
+
+:::{.sol data-latex=""}
+```{r 2024-22,,results='asis'}
+pab <- pnorm(1)-pnorm(-1)
+pb  <- pnorm(-1,lower.tail = F)
+```
+$$ 
+P(W<1|W>-1)=\frac{P(-1<W<1)}{P(W>-1)}=\frac{`r pab`}{`r pb`}=`r pab/pb`
+$$
+:::  
+
+2.c **(Punti 2)** Se $P(A)=0.4$ e $P(B)=0.7$, è possibile che $A\cap B=\emptyset$? Perché?
+
+:::{.sol data-latex=""}
+No perché se fosse $A\cap B=\emptyset$, allora
+\begin{eqnarray*}
+P(A \cup B)    &=&  P(A) + P(B) - P(A\cap B)\\
+               &=&  P(A) + P(B) - P(\emptyset)\\
+               &=&  P(A) + P(B) - 0 \\
+               &=&  0.4 + 0.7\\
+               &=& 1.3 > 1 \qquad\text{impossibile}
+\end{eqnarray*}
+  
+:::
+
+2.d **(Punti 2)** Sia $X\sim\text{Binom}(n=2,\pi=0.5)$ e sia $F$ la sua funzione di ripartizione. Disegnare $F(x)$ nell'intervallo $-1\leq x\leq 3$
+
+:::{.sol data-latex=""}
+```{r 2024-97}
+bin_dis(x1 = 0,n = 2,pp = .5)
+bin_dis(x1 = 1,n = 2,pp = .5)
+bin_dis(x1 = 2,n = 2,pp = .5)
+x <- (-1):3
+px <- dbinom(x,2,.5)
+plot(x,pbinom(x,2,.5),type="n",ylab="F(x)",axes = F)
+axis(1,x)
+axis(2,cumsum(px),las=2)
+segments(x[1:4],cumsum(px)[1:4],x[2:5],cumsum(px)[1:4])
+segments(x[2:4],cumsum(px)[1:3],x[2:4],cumsum(px)[2:4],lty=2)
+points(x[2:4],cumsum(px)[1:3])
+points(x[2:4],cumsum(px)[2:4],pch=16)
+```
+:::
+
+### Esercizio 2
+2.a **(Punti 14)** Si consideri un'urna che ha una pallina bianche, due nere e due verdi. Si estrae 5 volte con reinserimento. Sia $X$ la variabile casuale che conta il numero di bianche su 5 estrazioni. Calcolare la probabilità che $X\leq 1$.
+
+:::{.sol data-latex=""}
+```{r 2024-24,,results='asis'}
+bin_dis(x1 = 1,n = 5,pp = 1/5,comp = F)
+```
+:::  
+
+2.b **(Punti 3)** Sia $X$ la VC del punto precedente. Considerato $A=\{X\leq 1\}$, $B=\{X\leq 2\}$, calcolare $P(A|B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-25,,results='asis'}
+pa <- pbinom(1,5,1/5)
+pb <- pbinom(2,5,1/5)
+pab <- pa
+```
+
+\begin{eqnarray*}
+  P(B) &=&  `r pb`\\
+  P(A\cap B) &=& P( \{X \leq 1\} \cap \{X \leq 2\})\\
+             &=& P(  X \leq 1)\\
+             &=& `r pab`\\
+  P(A|B)     &=& \frac{P(A\cap B)}{P(B)}\\
+             &=& \frac{`r pab`}{`r pb`}\\
+             &=& `r pab/pb`
+\end{eqnarray*}
+:::  
+
+
+2.c **(Punti 2)** Se $A$ e $B$, sono due eventi tali che $P(A)=0.2$, $P(B)=0.6$, e $P(A\cap B)=0.18$, $A$ e $B$ sono indipendenti? Perché?
+
+2.d **(Punti 2)** Sia $X$ una variabile casuale con supporto $S_X=c\{-1,+1\}$ e con funzione di probabilità
+$$
+f(x)=\begin{cases}
+\frac 25, &\text{ se $x=-1$}\\
+\frac 35, &\text{ se $x=+1$}
+\end{cases}
+$$
+Disegnare le sua funzione di ripartizione, $F(x)$, nell'intervallo $-2\leq x\leq 2$.
+
+:::{.sol data-latex=""}
+```{r 2024-108}
+x <- c(-2,-1,1,2)
+px <- c(0,c(2,3)/5,0)
+kk <- length(px)
+plot(x,pbinom(x,2,.5),type="n",ylab="F(x)",axes = F)
+axis(1,x)
+axis(2,cumsum(px),las=2)
+segments(x[1:(kk-1)],cumsum(px)[1:(kk-1)],x[2:kk],cumsum(px)[1:(kk-1)])
+segments(x[2:kk],cumsum(px)[1:(kk-1)],x[2:kk],cumsum(px)[2:4],lty=2)
+points(x[2:(kk-1)],cumsum(px)[1:(kk-2)])
+points(x[2:(kk-1)],cumsum(px)[2:(kk-1)],pch=16)
+```
+:::
+
+### Esercizio 2
+2.a **(Punti 3)** Sia $X$ il numero di telefonate in arrivo ad un centralino di emergenza, si assume $X\sim\text{Pois}(1.3)$. Calcolare la probabilità che $X\geq 1$.
+
+:::{.sol data-latex=""}
+```{r 2024-29,,results='asis'}
+pois_dis(x1 = 1,ll = 1.3,verso = "\\geq")
+```
+:::  
+
+2.b **(Punti 2)** Sia $X\sim\text{Pois}(1.3)$, posto $A=\{X\geq 2\}$, $B=\{X\geq 1\}$, calcolare $P(A|B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-118}
+pa <- 1-ppois(1,1.3)
+pb <- 1-ppois(0,1.3)
+pab <- pa
+```
+
+\begin{eqnarray*}
+  P(B) &=&  `r pb`\\
+  P(A\cap B) &=& P( \{X \geq 1\} \cap \{X \geq 2\})\\
+             &=& P(  X \geq 2)\\
+             &=& `r pab`\\
+  P(A|B)     &=& \frac{P(A\cap B)}{P(B)}\\
+             &=& \frac{`r pab`}{`r pb`}\\
+             &=& `r pab/pb`
+\end{eqnarray*}
+:::  
+
+2.c **(Punti 2)** Se $A$ e $B$, sono due eventi tali che $P(A)=0.2$, $P(B)=0.6$, e $P(A\cup B)=0.8$, $A$ e $B$ sono indipendenti? Perché?
+
+
+2.d **(Punti 14)** Sia $X$ una variabile casuale con supporto $S_X=\{-1,0,1\}$ e con funzione di probabilità
+$$
+f(x)=\begin{cases}
+\frac 13, &\text{ se $x=-1$}\\
+\frac 13, &\text{ se $x=\phantom{-} 0$}\\
+\frac 13, &\text{ se $x=+ 1$}\\
+\end{cases}
+$$
+Disegnare le sua funzione di ripartizione, $F(x)$, nell'intervallo $-2\leq x\leq 3$.
+
+:::{.sol data-latex=""}
+```{r 2024-119}
+x <- c(-1,0,1)
+px <- c(1,1,1)/3
+plot_FdR(x,px,-2,3)
+```
+:::
+
+### Esercizio 2
+2.a **(Punti 3)** Sia $X\sim N(1,1.5)$ e sia $Y\sim N(-1,1.5)$, $X$ e $Y$ indipendenti sia $A=\{X>0\}$ e $B=\{Y<0\}$. 
+Calcolare $P(A\cup B)$.
+
+:::{.sol data-latex=""}
+```{r 2024-35,,results='asis'}
+norm_int(x1 =  0,verso = ">",mm =  1,ss = 1.5,vnam = "X")
+norm_int(x1 = 0,verso = "<",mm = -1,ss = 1.5,vnam = "Y")
+zx <- round((0-1)/sqrt(1.5),2)
+zy <- round((0+1)/sqrt(1.5),2)
+pa <- pnorm(zx,lower.tail = F)
+pb <- pnorm(zy,lower.tail = T)
+p_aub(pa,pb)
+```
+:::  
+
+2.b **(Punti 2)** , posto $W=(X+Y)/2$, calcolare $P(W<1|W>-1)$.
+
+:::{.sol data-latex=""}
+```{r 2024-36,,results='asis'}
+pab <- pnorm(1,0,sqrt(3/4))-pnorm(-1,0,sqrt(3/4))
+pb  <- pnorm(-1,0,sqrt(3/4),lower.tail = F)
+```
+
+$$
+W\sim N(+1-1,(1/2)^2(1.5+1.5))
+$$
+
+$$ 
+P(W<1|W>-1)=\frac{P(-1<W<1)}{P(W>-1)}=\frac{`r pab`}{`r pb`}=`r pab/pb`
+$$
+:::  
+
+2.c **(Punti 2)** Se $A\neq\emptyset$ e $B\neq\emptyset$, sono due eventi tali che $P(A)=0.2$, $P(B)=0.6$, e $P(A\cup B)=0.6$, $A$ e $B$ sono indipendenti? Perché?
+
+
+2.d **(Punti 14)** Sia $X\sim\text{Binom}(n=2,\pi=0.5)$ e sia $F$ la sua funzione di ripartizione. Disegnare $F(x)$ nell'intervallo $-1\leq x\leq 3$
+
+:::{.sol data-latex=""}
+```{r 2024-126}
+bin_dis(x1 = 0,n = 2,pp = .5)
+bin_dis(x1 = 1,n = 2,pp = .5)
+bin_dis(x1 = 2,n = 2,pp = .5)
+x <- (-1):3
+px <- dbinom(x,2,.5)
+plot(x,pbinom(x,2,.5),type="n",ylab="F(x)",axes = F)
+axis(1,x)
+axis(2,cumsum(px),las=2)
+segments(x[1:4],cumsum(px)[1:4],x[2:5],cumsum(px)[1:4])
+segments(x[2:4],cumsum(px)[1:3],x[2:4],cumsum(px)[2:4],lty=2)
+points(x[2:4],cumsum(px)[1:3])
+points(x[2:4],cumsum(px)[2:4],pch=16)
+```
+:::
+

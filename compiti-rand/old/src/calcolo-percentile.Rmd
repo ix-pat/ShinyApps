@@ -1,0 +1,36 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, echo=FALSE}
+##########################
+######
+###### p-esimo quantile
+######
+##########################
+X<- dat2
+K <- nrow(X)+1
+xp_inf <- X$xinf[X$Fj>=p][1]
+xp_sup <- X$xsup[X$Fj>=p][2]
+kp     <- (1:(K-1))[X$Fj>=p][1]
+Fp_sup <- X$Fj[X$Fj>=p][1]
+bp     <- X$bj[X$Fj>=p][1]
+fp     <- X$fj[X$Fj>=p][1]
+hp     <- X$hj[X$Fj>=p][1]
+if (kp == 1) Fp_inf <- 0 else Fp_inf <- X$Fj[kp-1]
+xp_apr <- xp_inf + (p-Fp_inf)/fp*bp
+
+```
+
+
+  <!-- x_p           &=& x_{j_p} + \frac {p - F_{j_p - 1}} {f_{j_p}} b_{j_p} \\ -->
+
+
+\begin{eqnarray*}
+  p &=& `r p`, \text{essendo }F_{`r kp`}=`r Fp_sup` >`r p` \Rightarrow j_{`r p`}=`r kp`\\
+  x_{`r p`} &=& x_{\text{inf};`r kp`} + \frac{ {`r p`} - F_{`r kp-1`}} {f_{`r kp`}} \cdot b_{`r kp`} \\
+                &=& `r xp_inf` + \frac {{`r p`} - `r Fp_inf`} {`r fp`} \cdot `r bp` \\
+                &=& `r xp_apr`
+\end{eqnarray*}
+

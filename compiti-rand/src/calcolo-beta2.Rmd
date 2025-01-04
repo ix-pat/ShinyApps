@@ -1,0 +1,17 @@
+```{r, echo=FALSE}
+# Calcolo beta0 e beta1 se sono note le statistiche somma y, x, yx
+```
+
+\begin{eqnarray*}
+\bar y &=&\frac 1 n\sum_{i=1}^n y_i = \frac {1}{`r n`} `r sumy`= `r my`\\
+\bar x &=&\frac 1 n\sum_{i=1}^n x_i = \frac {1}{`r n`} `r sumx`= `r mx`\\
+\hat\sigma_y^2&=&\frac 1 n\sum_{i=1}^n y_i^2-\bar y^2=\frac {1}{`r n`} `r sumy2` -`r my`^2=`r vy`\\
+\hat\sigma_x^2&=&\frac 1 n\sum_{i=1}^n x_i^2-\bar x^2=\frac {1}{`r n`} `r sumx2` -`r mx`^2=`r vx`\\
+\text{cov}(y,x)&=&\frac 1 n\sum_{i=1}^n y_i~x_i-\bar y\bar x=\frac {1}{`r n`} `r sumxy`-`r my`\cdot`r mx`=`r co`\\
+\hat\alpha_1 &=& \frac{\text{cov}(y,x)}{\hat\sigma_y^2} \\
+            &=& \frac{`r co`}{`r vy`}  = `r b1`\\
+\hat\alpha_0 &=& \bar x - \hat\alpha_1 \bar y\\
+            &=& `r mx`-`r p(b1)`\times `r p(my)`=`r b0`
+\end{eqnarray*}
+
+
