@@ -1,15 +1,4 @@
-
-library(DT)
-library(shinythemes)
-library(shinyWidgets)
-library(shiny)
-library(knitr)
-library(rmarkdown)
-
-
-ui <- tagList(#shinythemes::themeSelector(),
-navbarPage("Variabili Casuali", # Titolo dell'applicazione
-           theme = shinytheme("flatly"),
+ui <- navbarPage("Variabili Casuali", # Titolo dell'applicazione
                  tabPanel("Convoluzione", 
                           sidebarLayout(
                             sidebarPanel(
@@ -20,8 +9,8 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                               selectInput("ope", label = "Seleziona l'operatore",
                                           choices = list("+" = "+", "-" = "-", "*" = "*", "/" = "/"),
                                           selected = "+"),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
-                            ),
+                              "v 1.2, Patrizio Frederic, 2021-2024"
+                              ),
                             mainPanel(
                               uiOutput("two_way")
                             )
@@ -33,12 +22,12 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                             sidebarPanel(
                               numericInput("p",label = "pigreco",value = 0.5,min = 0,max = 1,step = 0.1),
                               numericInput("n",label = "n",value = 5,min = 0.,step = 1),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
+                              "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("binTitle"),
                               plotOutput("binPlot")
-                            )
+                              )
                           )
                           # Aggiungi ulteriori tabPanel qui se necessario
                  ),
@@ -50,10 +39,10 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                               numericInput("nn",label = "n",value = 5,min = 0.,step = 1),
                               numericInput("x1",label = "x",value = 2,min = 0.,step = 1),
                               selectInput("verso", label = "Seleziona l'operatore",
-                                          choices = list("=" = "=", "≤" = "\\leq", "≥" = "\\geq"),
-                                          selected = "="),
+                                           choices = list("=" = "=", "≤" = "\\leq", "≥" = "\\geq"),
+                                           selected = "="),
                               checkboxInput("comp",label = "Complementare"),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
+                              "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("bin")
@@ -66,7 +55,7 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                           sidebarLayout(
                             sidebarPanel(
                               numericInput("l",label = "lambda",value = 1,min = 0,step = 0.1),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
+                              "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("poisTitle"),
@@ -82,15 +71,15 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                               numericInput("ll",label = "lambda",value = 1,min = 0,step = 0.1),
                               numericInput("xp",label = "x",value = 2,min = 0.,step = 1),
                               selectInput("verso1", label = "Seleziona l'operatore",
-                                          choices = list("=" = "=", "≤" = "\\leq", "≥" = "\\geq"),
-                                          selected = "="),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
+                                           choices = list("=" = "=", "≤" = "\\leq", "≥" = "\\geq"),
+                                           selected = "="),
+                              "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("pos")
                             )
                           ),
-                          
+                    
                           # Aggiungi ulteriori tabPanel qui se necessario
                  ),
                  tabPanel("Normale", 
@@ -105,7 +94,7 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                                                      min = -40, max = 40, value = 10, step = .5),
                                          sliderInput("sigma2", "sigma² 2",
                                                      min = 0, max = 40, value = 2, step = .05),
-                                         "v 2.0, Patrizio Frederic, 2021-2024"
+                                         "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               plotOutput("norm")
@@ -126,7 +115,7 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                                                                            "Densità" = "densPlot",
                                                                            "Tavole" = "mon"),
                                                             selected = c("distPlot", "densPlot", "mon")),
-                                         "v 2.0, Patrizio Frederic, 2021-2024"
+                                         "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("plotsPanel") # Modificato per renderizzare dinamicamente i grafici selezionati
@@ -141,14 +130,12 @@ navbarPage("Variabili Casuali", # Titolo dell'applicazione
                               numericInput("mm",label = "mu",value = 0,step = 0.1),
                               numericInput("ss",label = "sigma",value = 1,min = 0.01,step = .01),
                               uiOutput("xx"),
-                              "v 2.0, Patrizio Frederic, 2021-2024"
+                              "v 1.2, Patrizio Frederic, 2021-2024"
                             ),
                             mainPanel(
                               uiOutput("sol")
                             )
                           )
                           # Aggiungi ulteriori tabPanel qui se necessario
-                 ),
-       
-)
+                 )
 )

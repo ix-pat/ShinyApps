@@ -253,7 +253,7 @@ two_way <- function(S_1,S_2,num1,num2,op=`+`,EV=T,vnam="X",size="\\normalsize ")
 if (EV){   
    cat("\\normalsize Calcoliamo valore atteso e varianza\n\n")
    cat(size,"\n\n")
-   cat(stat_(urn,semp = T),"\\normalsize\n\n")
+   cat(stat_(urn,semp = T,mnam = "\\mu_W",vnam = "\\sigma_W^2"),"\\normalsize\n\n")
    }
   return(list(S_3=S_3,num3=num3,den3=den3,urn=urn))
 }
@@ -622,8 +622,8 @@ tlc <- function(tipo, x1, x2=NULL,verso, mu = F, s2 = NULL, n){
   
 
 draw_dist <- function(dist,z1,z2,density = 20, border = NA,col=1,...){   # aggiunge una distribuzione tratteggiata
-  xx <- c(z1,seq(z1,z2,length=100),z2)
-  yy <- c(0 ,dist(seq(z1,z2,length=100)),0)
+  xx <- c(z1,seq(z1,z2,length=1001),z2)
+  yy <- c(0 ,dist(seq(z1,z2,length=1001)),0)
   polygon(xx,yy,...,border = border,density = density,col=col)
   curve(dist,z1,z2,add=T,col=col)
 }

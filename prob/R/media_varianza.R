@@ -85,10 +85,10 @@ stat_ <- function(x,p=NULL,mnam="\\mu",vnam="\\sigma^2",semp=F){
       p2[xx<0]<-")"
       xx <- paste(p1,xx,p2)
       cat("\\begin{eqnarray*}",
-          mnam,"&=& E(X_i) = \\sum_{x\\in S_X}x P(X=x)\\\\ \n",
+          mnam,"&=& E(W) = \\sum_{w\\in S_W}w P(W=w)\\\\ \n",
           "&=&",paste(paste(xx,"\\frac {",freq,"}{",n,"}"),collapse = "+"),"\\\\ 
             &=&",mean(x),"\\\\ \n",
-          vnam,"&=& V(X_i) = \\sum_{x\\in S_X}x^2 P(X=x)-\\mu^2\\\\ \n",
+          vnam,"&=& V(W) = \\sum_{w\\in S_W}w^2 P(W=w)-\\mu^2\\\\ \n",
           "&=&\\left(",paste(paste(xx,"^2\\frac {",freq,"}{",n,"}"),collapse = "+"),"\\right)-(",m,")^2\\\\ 
             &=&",s2c(x),
           "\n\\end{eqnarray*}\n")

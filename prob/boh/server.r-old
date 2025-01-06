@@ -1,45 +1,12 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
-
-# pat_book <- "pat.book" %in% installed.packages()[,1]
-# if (pat_book) library(pat.book) else {
-#   fun <- dir("R/")
-#   lapply(fun, function(x) source(paste0("R/",x)))
-#   }
-fun <- dir("R/")
-lapply(fun, function(x) source(paste0("R/",x)))
-
-bprint <- function(expr) {
-  out <- paste0(capture.output(expr),collapse = "\n")
-  gsub("\\\\normalsize", "", out)
-  }
-
 library(DT)
 library(shinythemes)
 library(shinyWidgets)
 library(shiny)
 library(knitr)
 library(rmarkdown)
-
+source("script.R")
 # Define server logic required to draw a histogram
-function(input, output, session) {
-
-  # Aggiorna lo slider quando cambiano i numericInput
-  observe({
-    updateSliderInput(session, "it", value = c(input$it_min, input$it_max))
-  })
-  
-  # Aggiorna i numericInput quando cambia lo slider
-  observe({
-    updateNumericInput(session, "it_min", value = input$it[1])
-    updateNumericInput(session, "it_max", value = input$it[2])
-  })  
+shinyServer(function(input, output) {
   
   # Expression that generates a histogram. The expression is
   # wrapped in a call to renderPlot to indicate that:
@@ -58,8 +25,8 @@ function(input, output, session) {
                 value = c(minVal, maxVal), step = .01)
   })
   output$distPlot <- renderPlot({
-    sss(input,"dist")
-  })
+   sss(input,"dist")
+      })
   output$densPlot <- renderPlot({
     sss(input,"dens")
   })
@@ -75,25 +42,14 @@ function(input, output, session) {
     curve(dnorm(x,mu2,s2),add=T,n = 1001,col=2)
   },height = 800)
   output$sol <- renderUI({
-    x1 <- input$xx[1]
-    x2 <- input$xx[2]
-    mm <- input$mm
-    ss <- input$ss
-    if (x1<=mm-4*ss & x2 >=mm+4*ss) {verso <- NULL} else
-      if (x1<=mm-4*ss & x2 <mm+4*ss) {
-        x1 <- x2
-        x2 <- NULL
-        verso <- "<"
-        } else
-      if (x1> mm-4*ss & x2 >=mm+4*ss) {
-        verso <- ">"
-        x2 <- NULL
-      } else { verso = NULL}
-    vnm <- ifelse(mm == 0 & ss == 1,"Z","X")
-    withMathJax(paste(
-      paste("$$\\Large ",vnm,"\\sim N(\\mu=",mm,",\\sigma^2=",ss,")$$"),
-      paste("$$\\Large",bprint(norm_int(x1 = x1,x2 = x2,mm = mm,ss = ss,verso = verso,vnam = vnm)),"$$")
-    ))
+      x1 <- input$xx[1]
+      x2 <- input$xx[2]
+      mm <- input$mm
+      ss <- input$ss
+      vnm <- ifelse(mm == 0 & ss == 1,"Z","X")
+      withMathJax(paste(
+        paste("$$\\Large ",vnm,"\\sim N(\\mu=",mm,",\\sigma^2=",ss,")$$"),paste("$$",n_int(x1 = x1,x2 = x2,mm = mm,ss = ss),"$$")
+        ))
   })
   output$plotsPanel <- renderUI({
     plotsToShow <- input$showPlots # Ottiene le scelte dell'utente
@@ -112,18 +68,15 @@ function(input, output, session) {
     # Restituisce la lista degli elementi UI per il rendering
     do.call(tagList, plotsUI)
   })  
-  
+
   output$bin <- renderUI({
     x1 <- input$x1
     n <- input$nn
     pp <- input$pp
     verso <- input$verso
     comp <- input$comp
-    sing <- F
-    if (verso == "=") sing <- T
     withMathJax(paste(
-      paste("$$\\Large X\\sim \\text{Binom}(n=",n,";\\pi=",pp,")$$"),
-      paste("$$\\Large ",bprint(bin_dis(x1 = x1,n = n, pp=pp,verso = verso,comp = comp,size = "\\Large",sing = sing)),"$$")
+      paste("$$\\Large X\\sim \\text{Binom}(n=",n,";\\pi=",pp,")$$"),paste("$$",b_int(x1 = x1,n = n, pp=pp,verso = verso,comp = comp),"$$")
     ))
   })
   output$binTitle <- renderUI({
@@ -148,11 +101,8 @@ function(input, output, session) {
     x1 <- input$xp
     ll <- input$ll
     verso <- input$verso1
-    sing <- F
-    if (verso == "=") sing <- T
     withMathJax(paste(
-      paste("$$\\Large X\\sim \\text{Pois}(\\lambda=",ll,")$$"),
-      paste("$$\\Large",bprint(pois_dis(x1 = x1,ll=ll,verso = verso,sing = sing)),"$$")
+      paste("$$\\Large X\\sim \\text{Pois}(\\lambda=",ll,")$$"),paste("$$",p_int(x1 = x1,ll=ll,verso = verso),"$$")
     ))
   })
   
@@ -202,13 +152,14 @@ function(input, output, session) {
       if(!is.null(input[[num2InputId]])) num2[i] <- input[[num2InputId]]
     }
     
-    if (ope == "+") tw <- bprint(invisible(two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `+`,size = "")))
-    if (ope == "-") tw <- bprint(invisible(two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `-`,size = "")))
-    if (ope == "*") tw <- bprint(invisible(two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `*`,size = "")))
-    if (ope == "/") tw <- bprint(invisible(two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `/`,size = "")))
+    if (ope == "+") tw <- two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `+`)
+    if (ope == "-") tw <- two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `-`)
+    if (ope == "*") tw <- two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `*`)
+    if (ope == "/") tw <- two_way(S_1 = S_1,S_2 = S_2,num1 = num1,num2 = num2,vnam = "W",op = `/`)
     
     
-    withMathJax(paste("$$ W = X ",ope," Y $$",tw,collapse = "\n"))
+    withMathJax(paste("$$ W = X ",ope," Y $$",tw$c1,"\n\n",tw$c2,tw$c4,tw$c5,tw$c7,collapse = "\n"))
   })
   
-}
+})
+

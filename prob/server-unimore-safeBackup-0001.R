@@ -28,18 +28,7 @@ library(knitr)
 library(rmarkdown)
 
 # Define server logic required to draw a histogram
-function(input, output, session) {
-
-  # Aggiorna lo slider quando cambiano i numericInput
-  observe({
-    updateSliderInput(session, "it", value = c(input$it_min, input$it_max))
-  })
-  
-  # Aggiorna i numericInput quando cambia lo slider
-  observe({
-    updateNumericInput(session, "it_min", value = input$it[1])
-    updateNumericInput(session, "it_max", value = input$it[2])
-  })  
+function(input, output) {
   
   # Expression that generates a histogram. The expression is
   # wrapped in a call to renderPlot to indicate that:
