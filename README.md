@@ -13,3 +13,4 @@ Qui ospito solo i sorgenti, le app sono sviluppate su [https://www.shinyapps.io/
 -   [Test](https://ixpat.shinyapps.io/Test/)
 -   [Generatore di Compiti (beta)](https://ixpat.shinyapps.io/compiti-rand/)
 -   [Calcolatrice Statistica](https://ixpat.shinyapps.io/calc/)
+-   [Minimi Quadrati](https://ixpat.shinyapps.io/Least-Squares/)
