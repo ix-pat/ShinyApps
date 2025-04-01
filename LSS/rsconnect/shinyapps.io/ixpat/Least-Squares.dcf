@@ -1,0 +1,13 @@
+name: Least-Squares
+title: Least-Squares
+username: ixpat
+account: ixpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13735068
+bundleId: 9706437
+url: https://ixpat.shinyapps.io/Least-Squares/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app-unimore-safeBackup-0001.R|app1.R|prove.R
