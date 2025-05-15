@@ -1,19 +1,13 @@
 library(shiny)
 library(ggplot2)
-library(shinythemes)
-library(shinyWidgets)
-library(shiny)
-library(knitr)
-library(rmarkdown)
 
 ui <- navbarPage("App Statistiche",
-                 theme = shinytheme("flatly"),
                  tabPanel("Campionamento",
                           sidebarLayout(
                             sidebarPanel(
-                              numericInput("mu2", "Seleziona il valore di μ:", value = 175),
-                              numericInput("sg2", "Seleziona il valore di σ:", value = 15, min = 0.01),
-                              numericInput("n2", "Inserisci il valore di n:", value = 30, min = 1),
+                              numericInput("mu2", "Media popolazione:", value = 175),
+                              numericInput("sg2", "Deviazione standard:", value = 15, min = 0.01),
+                              numericInput("n2", "Campione n:", value = 30, min = 1),
                               actionButton("go1", "CAMPIONA"),
                               actionButton("go100", "CAMPIONA 100 volte"),
                               actionButton("reset2", "AZZERA")
@@ -21,20 +15,6 @@ ui <- navbarPage("App Statistiche",
                             mainPanel(plotOutput("plt"))
                           )
                  ),
-                 tabPanel("Verosimiglianza",
-                          withMathJax(),
-                          sidebarLayout(
-                            sidebarPanel(
-                              numericInput("pi_", "Pi stimato", value = .6, min = 0, max = 1,step = .1),
-                              numericInput("nv", "Numero di prove (n):", value = 5, min = 0, max = 100000,step = 5)
-                            ),
-                            mainPanel(
-                              plotOutput("likelihoodPlot", height = "450px"),
-                              uiOutput("Sn_print"),
-                              uiOutput("SE_print")
-                            )
-                          )
-                          ),
                  tabPanel("Intervalli di Confidenza",
                           sidebarLayout(
                             sidebarPanel(
@@ -85,56 +65,8 @@ server <- function(input, output, session) {
       axis(4); mtext("Densità", side = 4, line = 3)
     }
   })
+  
   # TAB 2
-  output$likelihoodPlot <- renderPlot({
-    
-    n <- input$nv
-    sn <- input$pi_ * n
-    l0 <- function(x) sn*log(x) + (n-sn)*log(1-x)
-    l <- function(x) l0(x)-l0(sn/n)
-    L <- function(x) exp(l(x))
-    if (sn > n) return(NULL)
-    
-    pp <- (0:10)/10
-    par(mfrow = c(1, 2), cex = 1.2)
-    
-    curve(L(x), 0, 1, n = 10001,
-          axes = FALSE, xlab = expression(pi), ylab = expression(L(pi)),
-          main = "Verosimiglianza", col = "blue")
-    axis(1, pp)
-    axis(2, las = 2)
-    segments(sn / n, 0, sn / n, 1, lty = 2)
-    
-    curve(l(x), 0, 1, ylim = c(-20,0), n = 10001,
-          axes = FALSE, xlab = expression(pi), ylab = expression(log~L(pi)),
-          main = "Log-Verosimiglianza", col = "red")
-    axis(1, pp)
-    axis(2, las = 2)
-    segments(sn / n, -20, sn / n, 0, lty = 2)
-  }) 
-  output$Sn_print <- renderUI({
-    n <- input$nv
-    sn <- input$pi_*n
-    pi_ <- input$pi_
-    
-    withMathJax(HTML(paste(
-      "<div style='font-size: 150%;'>",
-      "$$S_n=",sn,",~~~n=",n,",~~~\\hat\\pi=\\frac{",sn,"}{",n,"}=",pi_,"$$</div>")))
-  })
-  output$SE_print <- renderUI({
-    n <- input$nv
-    sn <- input$pi_*n
-    pi_ <- input$pi_
-    se_val <- round(sqrt((pi_ * (1 - pi_)) / n), 4)
-    
-    withMathJax(HTML(paste0(
-      "<div style='font-size: 150%;'>",
-      "$$ \\widehat{SE(\\hat{\\pi})} = \\sqrt{\\frac{\\hat{\\pi}(1 - \\hat{\\pi})}{n} } = ",
-      "\\sqrt{\\frac{", pi_, "(1 - ", pi_, ")}{", n, "} } = ", se_val,
-      "$$</div>"
-    )))
-  })
-  # TAB 3
   xms <- reactiveValues(data = list(), count = 0)
   observeEvent(input$reset1, {
     xms$data <- list()
@@ -162,17 +94,14 @@ server <- function(input, output, session) {
     text(-.3, mu - za2 * se, round(mu - za2 * se, 3))
     text(-.3, mu + za2 * se, round(mu + za2 * se, 3))
     text(-.3, mu, mu)
-    for (i in seq_along(xms$data)) {
-      colr <- ifelse(i == length(seq_along(xms$data)),"blue","grey")
-      intc(xms$data[[i]], i, za2, mu, se, colr)
-    }
+    for (i in seq_along(xms$data)) intc(xms$data[[i]], i, za2, mu, se)
   })
 }
 
-intc <- function(xbar, i, za2, mu, se, col){
+intc <- function(xbar, i, za2, mu, se){
   arrows(-1,0,5,0,length = .1); arrows(0,-1,0,5,length = .1)
   points(0, xbar, pch=4, cex=.8, col=i)
-  text(-.5, xbar, bquote(mu["obs"]^.(i) == .(round(xbar,2))),col=col)
+  text(-.5, xbar, bquote(mu["obs"]^.(i) == .(round(xbar,2))))
   segments(0, mu-za2*se, mu, col='grey', lty=3)
   segments(0, mu+za2*se, mu, col='grey', lty=3)
   segments(0, xbar, xbar, xbar, col='grey', lty=3)
@@ -181,11 +110,11 @@ intc <- function(xbar, i, za2, mu, se, col){
   segments(xbar-za2*se, 0, xbar-za2*se, xbar, lty=2)
   segments(xbar+za2*se, 0, xbar+za2*se, xbar, lty=2)
   segments(xbar, 0, xbar, xbar, lty=2)
-  segments(xbar-za2*se, xbar, xbar+za2*se, col=col, lwd=2)
+  segments(xbar-za2*se, xbar, xbar+za2*se, col=i, lwd=2)
   segments(xbar-za2*se, 0, xbar+za2*se, col=1, lwd=2)
-  points(xbar, 0, pch=4, col=col, cex=.8)
-  text(xbar-za2*se, -.3, round(xbar-za2*se,2),col=col)
-  text(xbar+za2*se, -.3, round(xbar+za2*se,2),col=col)
+  points(xbar, 0, pch=4, col=i, cex=.8)
+  text(xbar-za2*se, -.3, round(xbar-za2*se,2))
+  text(xbar+za2*se, -.3, round(xbar+za2*se,2))
 }
 
 shinyApp(ui, server)
