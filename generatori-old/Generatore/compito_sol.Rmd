@@ -1,0 +1,400 @@
+---
+editor_options:
+  chunk_output_type: console
+date: " "
+output:
+  bookdown::pdf_document2:
+    latex_engine: xelatex
+    keep_tex: true
+    toc: false
+    includes:
+      in_header: preamble.tex
+    number_sections: false
+  pdf_document:
+    toc: false
+    toc_depth: '6'
+  html_document:
+    css: sol.css
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      df_print: paged
+fontsize: 10pt
+geometry: top=2cm,bottom=1.5cm,left=1.5cm,right=1.5cm
+---
+
+```{r setup, echo=FALSE}
+html <- knitr::is_html_output()
+if (html){
+  knitr::opts_chunk$set(echo = FALSE,fig.height = 2.5*3, fig.width = 4*3,warning = F, message = F,results='asis')
+} else {
+  knitr::opts_chunk$set(echo = FALSE,fig.height = 2.5, fig.width = 4,warning = F, message = F,results='asis')
+}
+options(digits=4,nsmall=4,knitr.kable.NA = '',scipen = 1000000,dev.args = list(bg = 'transparent'))
+library(knitr)
+library(xtable)
+library(kableExtra)
+library(colorspace)
+library(xaringan)
+source("pat-book.R")
+cex <- .8
+
+
+
+anagrafica <- function(seed = NULL,new.page=F,cod.comp = NULL) { 
+  if (!is.null(seed)) set.seed(seed)
+  if (is.null(cod.comp)) cod.comp <- paste0(sample(c(0:9, LETTERS), 15), collapse = "")
+
+  if (html) cat("# Prova di Statistica (CLEAM)\n\n")
+  if (new.page)cat("\\newpage\n")
+  cat("\\vspace*{-1.4cm}\n\\anagrafica{}\n\n")
+  cat("\\thispagestyle{fancy}\n")
+  cat("\\fancypagestyle{firstpage}{%\n")
+  cat("  \\lhead{\\textbf{Prova di Statistica (CLEAM)}}\n") 
+  cat(paste0("  \\rhead{\\texttt{", cod.comp, "}}\n"))
+  cat("  \\cfoot{} % Rimuove il numero di pagina\n")
+  cat("}\n")
+  cat("\\pagestyle{firstpage}\n")
+}
+punti_p <- function(start=F,nex=F,num=F){
+  tot <- sum(unlist(punti))
+  it <- ifelse(start,item_start(num),item_(num))
+  it <- ifelse(nex,item_next(num),it)
+  ptt <- punti[[i1]][i2]
+  ptt_30 <- format(round(ptt/tot*31,1),nsmall=1)
+  sep <- ifelse(html," ","\\hspace{.1em}")
+  if(html) paste(it,"(pt",sep,ptt,"/",tot," → ",ptt_30,"/31)",sep="") else paste(it,"(pt",sep,ptt_30,"/31)",sep="")
+}
+
+par(bg="transparent")
+cod.comp <- function(x,i1 = 1, i2 = 13){ paste0(c(sample(c(0:9,LETTERS),i1),x,sample(c(0:9,LETTERS),i2)),collapse = "")}
+```
+
+
+<div class="button-container"></div>
+
+```{r preparazione}
+anagrafica(new.page = F,cod.comp = cod.comp(x = "",i2 = 14))
+```
+
+
+```{r setup-punti, echo=FALSE}
+punti <- list(
+  e1 = c(14, 3, 2, 2),
+  e2 = c(14, 3, 2, 2),
+  e3 = c(14),
+  e4 = c(3, 3, 3),
+  e5 = c(4, 10),
+  e6 = c(14, 3, 2, 2, 2)
+)
+```
+
+
+
+### Esercizio 1 
+
+
+```{r 2022-78}
+# Basic settings
+set.seed(2)   # per ottenere sempre la stessa simulazione
+n <- 220      # ampiezza campionaria
+nnn <- c(10,140,120,60,20)
+nnn  <- round(nnn/sum(nnn)*n)
+nomex <- "Bilancio 2020"
+
+samp <- genera_dati(brk = brk,nnn=nnn,n=n)
+ls2e(stat_base(samp,brk))
+```
+
+Su un campione di $`r n`$ imprese della provincia di Milano è stato 
+rilevato il bilancio, espresso in migliaia di euro, del 2020. Qui di seguito i dati raccolti in classi
+e le frequenze percentuali.
+
+:::{.sol data-latex=""}
+```{r 2022-79}
+tabl(dat3[,c(1,2,12)])
+```
+:::
+
+`r punti_p(start=T)` Individuare la classe modale.
+
+:::{.sol data-latex=""}
+```{r 2022-80}
+tabl(dat3[,1:7])
+
+histp()
+axis(1,brk)
+```
+:::
+
+`r punti_p()` Quante imprese hanno un bilancio compreso tra $-4$ mila 
+euro e zero.
+
+:::{.sol data-latex=""}
+$$\#(-1<X<0)=\frac{(0-(-4))`r dat2$hj[2]`}{100}\times `r n`=`r (F.int(0)-F.int(-4))*n`$$
+:::
+
+`r punti_p()`  La media è risultata essere $\bar x=`r mean(samp)`$; che
+relazione mi devo aspettare tra mediana e moda?
+
+:::{.sol data-latex=""}
+$$\bar x<x_{0.5}<x_{Mo}$$
+:::
+
+`r punti_p()` Siano $x_1,...,x_n$, $n$ numeri, $n$ dispari. 
+Si consideri la funzione:
+$$g(x)=|x_1-x|+...+|x_n-x|.$$
+Per quale valore di $x$, $g(x)$ è minima?
+
+:::{.sol data-latex=""}
+La funzione $g$ è minimizzata nel valore della mediana.
+$$x_{0.5}=x_{((n+1)/2)}$$
+:::
+
+
+
+
+
+
+### Esercizio 2 
+
+  
+Una moneta perfetta viene lanciata 5 volte, se esce almeno 3 volte testa si estrae da un'urna che contiene
+un biglietto vincente ed uno perdente, altrimenti si estrae da un'urna che contine due biglietti vincenti e tre perdenti.
+
+`r punti_p(nex = T)` Qual è la probabilità di vincere?
+
+:::{.sol data-latex=""}
+
+`r pe <-sum(dbinom(3:5,5,.5))`
+
+\begin{eqnarray*}
+  P(X=3) &=& `r dbinom(3,5,3/10)`\\
+  P(X=4) &=& `r dbinom(4,5,3/10)`\\
+  P(X=5) &=& `r dbinom(5,5,3/10)`\\
+  P(X\ge 3)  &=& `r pe`\\
+  P(\text{Vincere})&=& `r pe`\frac12+(1-`r pe`)\frac23\\
+  &=& `r pe*.5+(1-pe)*2/3`
+\end{eqnarray*}
+:::
+  
+`r px <-pe*.5+(1-pe)*2/3`
+
+`r punti_p()` Si ripete il gioco di sopra finché non si vince due volte. Qual è la probabilità di finire alla quarta giocata?
+
+
+:::{.sol data-latex=""}
+$$
+3\times `r px`\times (1-`r px`)^3\times `r px` = `r 3*px^2*(1-px)^3`
+$$
+:::
+
+`r punti_p()` Se $X\sim \text{Pois}(2)$ e $Y\sim\text{Pois}(1)$, è vero che
+$$
+X-Y\sim\text{Pois}(1)\qquad ?
+$$
+
+
+`r punti_p()` Se $X$ è una VC con supporto {0,1,2} e $X$ è una VC con supporto {-2,-1,0}.
+Qual è il supporto di $X\times Y$?
+
+$$
+\{-4,-2,-1,0\}
+$$
+
+
+
+
+
+
+
+### Esercizio 3 
+
+
+```{r 2022-96}
+n <- 100
+ex <- mean(1:4)
+vx <- s2c(1:4)
+es <- mm <- ex
+vs <- ss <- vx/n
+#ss <- sqrt(vs)
+# 
+ # curve(dnorm(x,es,sqrt(ss)),from = es-4*sqrt(ss),to = es+4*sqrt(ss),axes=F)
+ # axis(1)
+ # curve(dnorm(x,es,sqrt(ss)),from = 30,to = es+4*sqrt(ss),add=T,type = "h",n=101)
+vnam<- "\\bar X"
+mu <- "\\mu"
+sigma <- "\\sigma/\\sqrt{n}"
+x1 <- 2.5
+x2 <- 2.6
+
+```
+
+`r punti_p(nex = T)` Un'urna contiene 4 palline numerate da 1 a 4. 
+Si estrae 100 volte con reinserimento e si fa la media dei 100 numeri
+estratti. Qual è la probabilità che la media sia compresa tra 2.5 e 2.6?
+
+:::{.sol data-latex=""}
+```{r 2022-97}
+cat(stat_(1:4,semp = T))
+tlc(tipo = "media",x1 = 2.5,x2 = 2.6,verso = NULL,mu = mean(1:4),s2 = s2c(1:4),n = 100)
+```
+:::
+
+
+
+
+
+
+### Esercizio 4 
+
+
+`r punti_p(nex = T)` Sia $h$ uno stimatore per theta, tale che
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}
+$$
+$h$ è corretto? $h$ è asintoticamente corretto?
+
+::: {.sol data-latex=""}
+$h$ **non è corretto**, infatti
+$$
+E(h)=\theta+\frac\theta {\sqrt{ n}}\neq\theta
+$$
+$h$ **è asintoticamente corretto**, infatti
+$$
+\lim_{n\to\infty}E(h)=\lim_{n\to\infty}\left(\theta+\frac\theta {\sqrt{ n}}\right)=\theta+0=\theta
+$$
+:::
+
+`r punti_p()` Siano $h_1$ e $h_2$ due stimatori per $\theta$, tali che:
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n
+\end{eqnarray*}
+Quale dei due stimatori è più efficiente? Perché?
+
+::: {.sol data-latex=""}
+$h_1$ **è più efficiente** di $h_2$, infatti
+\begin{eqnarray*}
+MSE(h_1) &=&   \frac\theta n\\
+MSE(h_2) &=&   \frac{2\theta} n =2\cdot MSE(h_1)>MSE(h_1)
+\end{eqnarray*}
+:::
+
+`r punti_p()` Si sono osservati due gruppi di dati quantitativi e si è osservato, $\hat\mu_1=10.2$ e $\hat\mu_2=15.6$. Posto a test
+$$
+\begin{cases}
+H_0:\mu_1=\mu_2\\
+H_1:\mu_1\ne \mu_2
+\end{cases}
+$$
+è risultato $p_\text{value}=0.0612$. La differenza tra $\hat\mu_1$ e $\hat\mu_2$ è significativa? Perché?
+
+::: {.sol data-latex=""}
+Il $p_\text{value}$ è maggiore di 0.05, la differenza **non è significativa** per ogni livello di significatività.
+:::
+
+
+
+
+
+
+
+### Esercizio 5 
+
+
+`r punti_p(nex=T)` Su un campione di \( n = 120 \) startup tecnologiche italiane, è stato chiesto se abbiano implementato misure di cybersecurity avanzate. Lo studio ha riportato che 84 startup su 120 (il 70% del campione) hanno implementato queste misure.
+
+Costruire un intervallo di confidenza al 95% per \(\pi\), la quota di startup italiane che hanno implementato misure di cybersecurity avanzate.
+
+:::{.sol data-latex=""}
+```{r 2024-129}
+idc(xm = 84,alpha = .05,n = 120,dist_ = "z")
+```
+:::
+
+`r punti_p()` Un'indagine molto più ampia condotta su startup europee ha mostrato che la percentuale di startup con misure di cybersecurity avanzate è del 80%. Testare l'ipotesi che in Italia la quota di startup con misure di cybersecurity avanzate sia uguale a quella europea contro l'alternativa che sia minore. Risolvere col $p_\text{value}$ e confrontarlo per $\alpha=0.1,0.05,0.01,0.001$.
+
+:::{.sol data-latex=""}
+```{r 2024-130}
+sn <- 84
+n  <- 120
+p0 <- 0.80
+h1 <- "<"
+ztest_pi(sn = sn,n = n,p0 = p0,h1 = h1)
+```
+:::
+
+
+
+
+
+### Esercizio 6 
+
+
+```{r 2024-112}
+set.seed(42)
+n <- 30
+sig <- 1.5
+x <- round(runif(n = n, min = 10, max = 50), 2) # sales in thousands of units
+y <- round(1.2 + 0.5 * x + rnorm(n, 0, sig), 2) # annual profit in thousands of euros
+ls2e(regr(x, y, semp = TRUE, ax = 2))
+```
+
+
+In uno studio sulla formazione aziendale, in un campione di \(n=`r n`\) dipendenti, sono state analizzate le ore di formazione (in ore, \(X\)) e il punteggio di performance (in opportuna, \(Y\)).
+
+Si osservano le seguenti statistiche:
+$\sum_{i=1}^{`r n`}x_i=`r sumx`$, $\sum_{i=1}^{`r n`}y_i=`r sumy`$,
+$\sum_{i=1}^{`r n`}x_i^2=`r sumx2`$, $\sum_{i=1}^{`r n`}y_i^2=`r sumy2`$ e $\sum_{i=1}^{`r n`}x_iy_i=`r sumxy`$.
+
+
+`r punti_p(nex=T)` Si è osservato $x_7=`r p(x[7])`$ e $y_7=`r p(y[7])`$, stimare il modello di regressione dove $Y$ viene spiegata da $X$ e calcolare il residuo per il punto $i=7$.
+
+:::{.sol data-latex=""}
+```{r 2024-28,,results='asis'}
+calcolo_beta()
+residuo(x = x[7],y = y[7])
+```
+:::
+
+`r punti_p()` Dare un'interpretazione dei parametri di regressione stimati.
+
+`r punti_p()` Perché la previsione per $x=`r round(mx)`$ è più affidabile di quella per $x=`r round(10*mx)`$?
+
+`r punti_p()` Cosa significa che $r$ è un numero puro?
+
+`r punti_p()` Se in un modello di regressione \(r=0.65\), \(\hat\sigma_X=1.1\) e \(\hat\sigma_Y=0.9\), calcolare \(\hat\beta_1\).
+
+:::{.sol data-latex=""}
+Per calcolare \(\hat\beta_1\) in un modello di regressione, si usa la formula:
+
+\[
+\hat\beta_1 = r \frac{\hat\sigma_Y}{\hat\sigma_X}
+\]
+
+Dati:
+- \(r = 0.65\)
+- \(\hat\sigma_X = 1.1\)
+- \(\hat\sigma_Y = 0.9\)
+
+Calcolo:
+
+\[
+\hat\beta_1 = 0.65 \times \frac{0.9}{1.1} = 0.65 \times 0.8182 = 0.532
+\]
+:::
+
+<!-- `r punti_p()` Testare l'ipotesi che $\beta_1$ sia uguale a zero, contro l'alternativa che sia diverso per $\alpha=0.1,0.05,0.01,0.001$ e dare una valutazione approssimativa del $p_\text{value}$ (ad esempio il $p_\text{value}$ è minore di 0.001, compreso tra 0.05 e tra 0.01, ecc.). -->
+
+<!-- :::{.sol data-latex=""} -->
+<!-- ```{r 2024-113} -->
+<!-- ttest_beta(1,0,SE = T) -->
+<!-- ``` -->
+<!-- ::: -->
+
+
+
+

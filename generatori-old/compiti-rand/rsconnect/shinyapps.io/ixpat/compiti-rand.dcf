@@ -1,0 +1,13 @@
+name: compiti-rand
+title: compiti-rand
+username: ixpat
+account: ixpat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11126093
+bundleId: 9590037
+url: https://ixpat.shinyapps.io/compiti-rand/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: www/compito_com.html|www/compito_sol.html

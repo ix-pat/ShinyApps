@@ -57,8 +57,8 @@ ui <- fluidPage(
                ),
                mainPanel(
                  splitLayout(
-                   plotOutput("plot_rette"),
-                   plotOutput("plot_beta")
+                   plotOutput("plot_rette", width = "100%", height = "700px"),
+                   plotOutput("plot_beta", width = "100%", height = "700px")
                  )
                )
              )
